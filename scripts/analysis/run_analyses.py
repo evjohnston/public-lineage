@@ -6,7 +6,8 @@ census, writes figures to docs/analysis/figs/ and numbers to docs/analysis/resul
   A1  Placement concentration: how concentrated is US sociology faculty production?
   A2  Fecundity transmission: do advisors with many students produce students with many students?
   A3  Subfield inheritance: do students share their advisor's subfield beyond cohort chance?
-  A4  Schools over time: what share of each decade's PhDs descend from each curated school?
+  A3b Topic inheritance: the same test on OpenAlex publication topics (no ProQuest circularity)
+  A4  Schools over time: what share of each decade's documented PhDs descend from each curated school?
 
 Usage: python -I scripts/analysis/run_analyses.py
 """
@@ -49,7 +50,8 @@ plt.rcParams.update({
 def load():
     lin = json.loads((ROOT / "explorer" / "data" / "lineage.json").read_text())
     ctx = json.loads((ROOT / "explorer" / "data" / "context.json").read_text())
-    people = {r[0]: {"name": r[1], "f": r[3], "ns": r[4], "nd": r[5], "phd": r[12] if len(r) > 12 else None}
+    people = {r[0]: {"name": r[1], "f": r[3], "ns": r[4], "nd": r[5], "phd": r[12] if len(r) > 12 else None,
+                     "year": r[13] if len(r) > 13 else None, "basis": r[14] if len(r) > 14 else None}
               for r in lin["people"]}
     phd_edges = [(m, t) for m, t, rel, *_ in lin["edges"] if rel == 1 and m in people and t in people]
     all_edges = [(m, t) for m, t, *_ in lin["edges"] if m in people and t in people]
@@ -218,56 +220,167 @@ def a3(res, ctx, people, phd_edges):
     fig.savefig(FIGS / "a3_subfields.png"); plt.close(fig)
 
 
-# ------------------------------------------------------------------ A4 coverage of dated PhDs
+# ------------------------------------------------------------------ A3b topic inheritance
+def a3b(res, ctx, people, phd_edges):
+    """Do students publish on their advisor's OpenAlex topics? Topics come from each person's own
+    papers, so unlike the ProQuest subfield codes in A3 they can't be copied down a subtree."""
+    tp = {int(k): set(v[5]) for k, v in ctx["person"].items() if v[5]}
+    names = [t["name"] for t in ctx["topics"]]
+    dec = lambda p: (people[p]["year"] or 0) // 10 * 10
+    pairs = [(a, s, dec(s)) for a, s in phd_edges if a in tp and s in tp and a != s]
+    df = pd.DataFrame(pairs, columns=["a", "s", "decade"])
+    adv, stu = df.a.values, df.s.values
+    groups = [g.index.values for _, g in df.groupby("decade") if len(g) > 1]
+
+    def stats_(students):
+        any_hit, hit, tot = 0, Counter(), Counter()
+        for a, s in zip(adv, students):
+            shared = tp[a] & tp[s]
+            any_hit += bool(shared)
+            for k in tp[a]:
+                tot[k] += 1
+                hit[k] += k in shared
+        return any_hit, hit, tot
+
+    obs_any, hit, tot = stats_(stu)
+    null_any, null_hits = [], defaultdict(list)
+    for _ in range(200):
+        ss = stu.copy()
+        for idx in groups:
+            ss[idx] = RNG.permutation(ss[idx])
+        na, h, _ = stats_(ss)
+        null_any.append(na)
+        for k in tot:
+            null_hits[k].append(h[k])
+    n = len(df)
+    p = float((np.sum(np.array(null_any) >= obs_any) + 1) / (len(null_any) + 1))
+    # joint papers make topics match mechanically: repeat for pairs who never co-authored
+    co = json.loads((ROOT / "explorer" / "data" / "coauthors.json").read_text())
+    coset = {frozenset(e[:2]) for e in co["edges"]}
+    solo = np.array([frozenset((a, s)) not in coset for a, s in zip(adv, stu)])
+    solo_any = sum(bool(tp[a] & tp[s]) for a, s, k in zip(adv, stu, solo) if k)
+    rows = []
+    for k, m in tot.items():
+        if m < 60:
+            continue
+        exp = float(np.mean(null_hits[k]))
+        rows.append({"topic": names[k], "pairs": int(m), "observed": hit[k] / m, "expected": exp / m,
+                     "lift": (hit[k] / m) / (exp / m) if exp else None})
+    rows.sort(key=lambda r: -r["pairs"])
+    res["A3b"] = {"pairs": n, "share_any_topic": obs_any / n, "expected_any_topic": float(np.mean(null_any)) / n,
+                  "perm_p": p, "topics": rows,
+                  "non_coauthor_pairs": int(solo.sum()), "non_coauthor_share_any_topic": solo_any / max(1, solo.sum())}
+
+    top = rows[:15][::-1]
+    fig, ax = plt.subplots(figsize=(6.8, 5.6))
+    ys = np.arange(len(top))
+    for i, r in enumerate(top):
+        ax.plot([r["expected"], r["observed"]], [i, i], color=RULE, lw=3, solid_capstyle="round", zorder=1)
+    ax.scatter([r["expected"] for r in top], ys, s=34, facecolor="white", edgecolor=INK3, lw=1.3, zorder=2, label="Expected by chance (same cohort)")
+    ax.scatter([r["observed"] for r in top], ys, s=40, color=INK, zorder=3, label="Observed")
+    ax.set_yticks(ys, [f"{r['topic']}  ({r['pairs']:,})" for r in top])
+    ax.xaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(1))
+    ax.set_xlabel("Share of an advisor's students who publish on the advisor's topic")
+    ax.legend(loc="lower left", bbox_to_anchor=(0, 1.0), ncol=2, frameon=False, fontsize=9)
+    ax.grid(axis="y", visible=False)
+    ax.set_title("Students publish on their advisor's topics far more than chance", pad=26)
+    fig.text(0, -0.05, f"Advisor–student pairs where both are matched to OpenAlex (n = {n:,}); topics = each person's 3 most frequent OpenAlex topics.\n"
+             f"{obs_any / n:.0%} of pairs share at least one topic vs {np.mean(null_any) / n:.0%} expected (students shuffled within PhD decade, 200 runs); "
+             f"{solo_any / max(1, solo.sum()):.0%} among the {solo.sum():,} pairs who never co-authored.",
+             color=INK3, fontsize=8.5)
+    fig.savefig(FIGS / "a3b_topics.png"); plt.close(fig)
+
+
+# ------------------------------------------------------------------ A4 schools over time
+DOCUMENTED = {1: "Recorded training years", 2: "Dissertation, grant or ORCID record", 3: "Wikidata birth year + 28"}
+
+
 def a4(res, ctx, people, all_edges):
-    """Can we track schools over time? Check how dated PhDs connect to the classic lineages."""
+    """Share of each decade's sociology PhDs that descend from each curated school.
+    Only documented years count (basis 1-3). Years estimated from relatives (basis 5) exist only for
+    people with dated relatives, i.e. linked people, so they would inflate the linked share."""
     kids = defaultdict(list)
     for a, s in all_edges:  # school membership follows every advisor link, as in the explorer
         kids[a].append(s)
-    member = set()
+    members = {}
     for sch in ctx["schools"]:
         seen, st = set(sch["founders"]), list(sch["founders"])
         while st:
             for c in kids.get(st.pop(), []):
                 if c not in seen:
                     seen.add(c); st.append(c)
-        member |= seen
-    soc = {p: v["phd"] for p, v in people.items() if not v["f"] & F_OUTSIDE and v["phd"]}
-    years = list(range(1950, 2016))
-    n = Counter(y for y in soc.values() if 1950 <= y <= 2015)
-    linked = Counter(y for p, y in soc.items() if 1950 <= y <= 2015 and p in member)
-    pre2000 = sum(v for k, v in n.items() if k < 2000)
-    res["A4"] = {"dated_by_year": {y: n[y] for y in years}, "linked_by_year": {y: linked[y] for y in years},
-                 "dated_before_2000": pre2000, "dated_2000_2014": sum(n[y] for y in range(2000, 2015)),
-                 "share_linked_2000_2014": sum(linked[y] for y in range(2000, 2015)) / max(1, sum(n[y] for y in range(2000, 2015)))}
+        members[sch["id"]] = seen - set(sch["founders"])
+    anyschool = set().union(*members.values())
+    soc = {p: (v["year"] // 10 * 10, v["basis"]) for p, v in people.items()
+           if not v["f"] & F_OUTSIDE and v["year"] and v["basis"] in DOCUMENTED and 1880 <= v["year"] <= 2019}
+    decades = list(range(1880, 2020, 10))
+    by_basis = {b: Counter(d for d, bb in soc.values() if bb == b) for b in DOCUMENTED}
+    n = Counter(d for d, _ in soc.values())
+    MIN_N = 100
+    shown = [d for d in decades if n[d] >= MIN_N]
+    share = {sid: {d: sum(1 for p in m if p in soc and soc[p][0] == d) / n[d] for d in shown} for sid, m in members.items()}
+    share_any = {d: sum(1 for p in anyschool if p in soc and soc[p][0] == d) / n[d] for d in shown}
+    res["A4"] = {"documented_by_decade": {d: n[d] for d in decades},
+                 "by_basis": {DOCUMENTED[b]: {d: c[d] for d in decades} for b, c in by_basis.items()},
+                 "min_n": MIN_N, "decades_shown": shown, "share_any_school": share_any,
+                 "share_by_school": {sid: v for sid, v in share.items()},
+                 "excluded_estimated": sum(1 for v in people.values() if v["basis"] in (4, 5) and not v["f"] & F_OUTSIDE)}
 
+    # coverage: documented PhDs per decade, by where the year comes from
     fig, ax = plt.subplots(figsize=(7.2, 3.8))
-    ax.bar(years, [n[y] for y in years], width=0.8, color=RULE, edgecolor="none", label="Dated sociology PhDs")
-    ax.bar(years, [linked[y] for y in years], width=0.8, color=INK, edgecolor="none", label="…of whom descend from a curated school")
-    ax.set_xlim(1949, 2016)
-    ax.set_ylabel("PhDs per year")
+    shades = {1: INK, 2: INK3, 3: "#b9b5ac"}
+    styles = {1: "-", 2: "-", 3: (0, (3, 2))}
+    for b in DOCUMENTED:  # separate lines, not stacked: stacked segments on a log axis misstate size
+        ax.plot(decades, [by_basis[b][d] or np.nan for d in decades], color=shades[b], lw=2, ls=styles[b], marker="o", ms=4, label=DOCUMENTED[b])
+    ax.set_yscale("log"); ax.set_ylim(1, max(max(c.values()) for c in by_basis.values()) * 3)
+    ax.set_xticks(decades[::2], [f"{d}s" for d in decades[::2]])
+    ax.set_ylabel("Sociology PhDs (log scale)")
     ax.legend(loc="upper left", frameon=False, fontsize=9)
     ax.grid(axis="x", visible=False)
-    ax.set_title("PhD years exist almost only for 2000–14, and few of those link to classic lineages")
-    fig.text(0, -0.08, f"{pre2000:,} dated sociology PhDs before 2000 vs {res['A4']['dated_2000_2014']:,} in 2000–14; "
-             f"{res['A4']['share_linked_2000_2014']:.0%} of the latter descend from one of the 12 curated schools.\n"
-             "Years from the AFT-MAG mentorship file (Ke et al. 2022). Tracking schools over time needs dated pre-2000 records (ProQuest).",
-             color=INK3, fontsize=8.5)
+    ax.set_title("Documented PhD years now reach back a century, thinly")
+    pre = sum(n[d] for d in decades if d < 2000)
+    fig.text(0, -0.08, f"{pre:,} documented sociology PhDs before 2000, {sum(n[d] for d in decades if d >= 2000):,} from 2000. "
+             f"Excludes {res['A4']['excluded_estimated']:,} years estimated from relatives or first papers.", color=INK3, fontsize=8.5)
     fig.savefig(FIGS / "a4_coverage.png"); plt.close(fig)
-    old = FIGS / "a4_schools.png"
-    if old.exists():
-        old.unlink()
+
+    # one small panel per school, same y scale, so shares compare across schools
+    order = sorted(ctx["schools"], key=lambda s: -max(share[s["id"]].values() or [0]))
+    cols = 4
+    rows_ = int(np.ceil(len(order) / cols))
+    ymax = max(max(v.values() or [0]) for v in share.values()) * 1.15
+    fig, axes = plt.subplots(rows_, cols, figsize=(9, 2.0 * rows_ + 0.6), sharex=True, sharey=True)
+    for ax, sch in zip(axes.flat, order):
+        v = share[sch["id"]]
+        ax.plot(shown, [v[d] for d in shown], color=INK, lw=2, marker="o", ms=3.5)
+        ax.set_title(sch["name"], fontsize=10, pad=4)
+        ax.set_ylim(0, ymax)
+        ax.yaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(1, decimals=0))
+        ax.tick_params(labelsize=8.5)
+    for ax in list(axes.flat)[len(order):]:
+        ax.set_visible(False)
+    for ax in axes[-1]:
+        ax.set_xticks(shown[::2], [f"{d}s" for d in shown[::2]])
+    fig.suptitle("Share of each decade's documented sociology PhDs descending from each school", x=0.01, ha="left", fontweight=700, fontsize=12)
+    fig.text(0.01, -0.03, f"Decades with at least {MIN_N} documented PhDs: {shown[0]}s–{shown[-1]}s. A person can descend from several schools. "
+             f"Founders from data/schools.json; descent follows every advisor link.\nAny school: "
+             + ", ".join(f"{d}s {share_any[d]:.0%}" for d in shown) + ".", color=INK3, fontsize=8.5)
+    fig.tight_layout()
+    fig.savefig(FIGS / "a4_schools.png"); plt.close(fig)
 
 
 def main():
     lin, ctx, people, phd_edges, all_edges = load()
     res = {"data": {"people": len(people), "phd_links": len(phd_edges), "sources": lin["meta"].get("outside_sources", {})}}
-    a1(res); a2(res, people, phd_edges); a3(res, ctx, people, phd_edges); a4(res, ctx, people, all_edges)
+    a1(res); a2(res, people, phd_edges); a3(res, ctx, people, phd_edges); a3b(res, ctx, people, phd_edges); a4(res, ctx, people, all_edges)
     (OUT / "results.json").write_text(json.dumps(res, indent=2))
     print(json.dumps({k: v for k, v in res["A1"].items() if k != "top10"}, indent=1))
     print({k: res["A2"][k] for k in ("pairs", "spearman_rho", "null_overall_rho_mean", "within_decade_rho", "within_perm_p")}, res["A2"]["rho_by_decade"])
     print([(b["bin"], b["n"], round(b["mean"], 2)) for b in res["A2"]["bins"]])
     print([(r["subfield"], r["pairs"], round(r["observed"], 2), round(r["expected"], 3)) for r in res["A3"]["subfields"][:8]])
+    print({k: res["A3b"][k] for k in ("pairs", "share_any_topic", "expected_any_topic", "perm_p")},
+          [(r["topic"], r["pairs"], round(r["observed"], 2), round(r["expected"], 3)) for r in res["A3b"]["topics"][:8]])
+    print(res["A4"]["documented_by_decade"], {d: round(v, 3) for d, v in res["A4"]["share_any_school"].items()})
+    print({k: {d: round(x, 3) for d, x in v.items()} for k, v in res["A4"]["share_by_school"].items()})
 
 
 if __name__ == "__main__":
