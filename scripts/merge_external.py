@@ -33,7 +33,8 @@ ROOT = Path(__file__).resolve().parents[1]
 EXT = ROOT / "data" / "external"
 DB = Path(sys.argv[sys.argv.index("--db") + 1]) if "--db" in sys.argv else ROOT / "data" / "lineage.duckdb"
 EXT_BASE = 900_000_000
-VETTED = ["nsf_ddrig_edges.parquet", "wikidata_edges.parquet", "dissertations_edges.parquet"]
+VETTED = ["nsf_ddrig_edges.parquet", "wikidata_edges.parquet", "dissertations_edges.parquet",
+          "wdanc_edges.parquet"]  # wdanc: Wikidata advisors of known people, any field (fetch_wikidata_ancestors.py)
 SUFFIX = {"jr", "sr", "ii", "iii", "iv", "phd", "dr", "prof"}
 STOP = {"university", "of", "the", "at", "college", "and", "state", "institute", "de", "la", "du", "des"}
 
@@ -163,6 +164,21 @@ def main() -> None:
                     "year": r.year, "institution": r.institution, "url": r.url,
                     "title": r.title if isinstance(r.title, str) else None,
                     "advisor_match": am, "student_match": sm, "in_aft": (a, s) in aft_edges})
+    # ---- links entered by hand (data/manual_edges.csv, e.g. from the explorer's Data gaps tab).
+    # A pid, when given, is used as is; otherwise the name is matched like any outside source.
+    for man in sorted((ROOT / "data").glob("manual_edges*.csv")):
+        md = pd.read_csv(man, dtype=str).fillna("")
+        for i, r in enumerate(md.itertuples(index=False)):
+            a = int(r.advisor_pid) if r.advisor_pid.strip() else resolve(r.advisor_name, r.institution, "manual")[0]
+            s = int(r.student_pid) if r.student_pid.strip() else resolve(r.student_name, r.institution, "manual")[0]
+            if a is None or s is None or a == s:
+                print(f"{man.name} row {i + 2}: could not place {r.advisor_name!r} -> {r.student_name!r}")
+                continue
+            out.append({"advisor_pid": a, "student_pid": s, "source": "manual", "source_id": f"{man.stem}-{i + 2}",
+                        "year": int(r.year) if r.year.strip().isdigit() else None, "institution": r.institution or None,
+                        "url": r.url or None, "title": r.note or None, "advisor_match": "pid" if r.advisor_pid.strip() else "name",
+                        "student_match": "pid" if r.student_pid.strip() else "name", "in_aft": (a, s) in aft_edges})
+        print(f"{man.name}: {len(md)} rows")
     m = pd.DataFrame(out).drop_duplicates(["advisor_pid", "student_pid", "source"])
     m.to_parquet(EXT / "merged_edges.parquet", index=False)
     pd.DataFrame(new_rows).to_parquet(EXT / "ext_people.parquet", index=False)

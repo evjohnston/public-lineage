@@ -5,7 +5,7 @@
 
   const F = { OUTSIDE: 1, ISOLATED: 2, NO_ADVISOR: 4, MULTI_ADVISOR: 8, EDUC: 16, SMALL: 32, PROF_INST: 64, EDU_AREA: 128, DUP: 256, EXTERNAL: 512 };
   const SRC = { AFT: 1, NSF: 2, WIKIDATA: 4, DISS: 8 };
-  const SRC_LABEL = { nsf_ddrig: "NSF dissertation grant", wikidata: "Wikidata", "theses.fr": "theses.fr" };
+  const SRC_LABEL = { nsf_ddrig: "NSF dissertation grant", wikidata: "Wikidata", "theses.fr": "theses.fr", manual: "Entered by hand" };
   const srcLabel = (s) => SRC_LABEL[s] || (s.startsWith("oai:") ? `Dissertation repository (${s.slice(4)})` : s);
   const PROFDOC = F.EDUC | F.PROF_INST | F.EDU_AREA;
   const INK = "#161616", RED = "#c8102e", FAINT = "#c9c6be", PAPER = "#ffffff", INK3 = "#6a6a67";
@@ -26,7 +26,7 @@
   const norm = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ").trim();
   const plural = (n, one, many) => `${fmt(n)} ${n === 1 ? one : many || one + "s"}`;
 
-  const els = { stage: $("#stage"), cy: $("#cy"), map: $("#map"), sheet: $("#sheet"), toolbar: $("#toolbar"), panel: $("#panel"), legend: $("#legend"), colorkey: $("#colorkey"), credit: $("#credit") };
+  const els = { stage: $("#stage"), cy: $("#cy"), net: $("#net3d"), map: $("#map"), sheet: $("#sheet"), toolbar: $("#toolbar"), panel: $("#panel"), legend: $("#legend"), colorkey: $("#colorkey"), credit: $("#credit") };
 
   /* ---------------------------------------------------------------- data */
   const P = new Map();       // pid -> person
@@ -228,6 +228,8 @@
     if (view === "kin") return showKin(parts[0] ? +parts[0] : null, params);
     if (view === "co") return showCoauthors(parts[0] ? +parts[0] : null, params);
     if (view === "connect") return showConnect(parts[0] ? +parts[0] : null, parts[1] ? +parts[1] : null);
+    if (view === "school") return showSchoolTree(+parts[0], params);
+    if (view === "net") return showNet(params);
     if (view === "schools") return showSchools(parts[0] || "curated", parts[1] != null ? +parts[1] : null);
     if (view === "institutions") return showInstitutions(null, params);
     if (view === "i") return showInstitutions(+parts[0], params);
@@ -305,6 +307,13 @@
       const id = +d.id;
       if (state.view === "connect") return renderPanel(id, { inConnect: true });
       if (state.view === "co") return go(`#/co/${id}`);
+      if (state.view === "school") {  // stay in the school; the panel offers the full lineage
+        renderPanel(id);
+        panelActions(`<div class="actions"><a class="btn primary" href="${lineageHash(id, new URLSearchParams())}">Open this person's full lineage</a>
+          <button type="button" class="btn" id="backSchool">Back to the school</button></div>`);
+        $("#backSchool").addEventListener("click", () => renderSchoolPanel("curated", +parseHash().parts[0]));
+        return;
+      }
       go(lineageHash(id, state.params));
     });
   }
@@ -323,7 +332,7 @@
     return { group: "edges", data: { id: `e${m}-${t}`, source: String(m), target: String(t) }, classes: [cls, rel === 2 ? "postdoc" : "", outside ? "ext" : ""].filter(Boolean).join(" ") };
   }
 
-  function draw(elements, { fitTo, layoutOpts, after } = {}) {
+  function draw(elements, { fitTo, layoutOpts, after, overview = false } = {}) {
     els.cy.classList.add("fading");
     requestAnimationFrame(() => {
       cy.batch(() => { cy.elements().remove(); cy.add(elements); });
@@ -339,7 +348,7 @@
       let z = Math.min((W - 2 * pad) / Math.max(bb.w, 1), (H - 2 * pad) / Math.max(bb.h, 1));
       z = Math.min(z, 1.25);
       const anchor = fitTo ? cy.$(fitTo) : null;
-      if (z >= 0.85 || !anchor || !anchor.length) {
+      if (z >= 0.85 || !anchor || !anchor.length || (overview && z >= 0.45)) {
         // everything fits legibly: centre the whole drawing in the usable area
         cy.zoom(Math.max(z, cy.minZoom()));
         cy.pan({ x: W / 2 - (bb.x1 + bb.w / 2) * cy.zoom(), y: top + bottom / 4 + H / 2 - (bb.y1 + bb.h / 2) * cy.zoom() });
@@ -359,6 +368,7 @@
   }
 
   function showCanvas(on, { map = false } = {}) {
+    if (els.net && !els.net.hidden) { els.net.hidden = true; NET.graph?.pauseAnimation(); }
     els.cy.hidden = !on || map;
     els.map.hidden = !map;
     els.legend.hidden = !on || map;
@@ -664,6 +674,7 @@
       <div class="actions">
         ${onLineage ? "" : `<a class="btn primary" href="${lineageHash(pid, state.params)}">Open lineage</a>`}
         <a class="btn" href="#/connect/${pid}">${inConnect ? "Start a new connection here" : "Connect to someone"}</a>
+        ${state.view !== "net" ? `<a class="btn" href="#/net?p=${pid}${NET.byId.size && NET.byId.get(pid)?.comp !== 0 ? "&scope=clusters" : ""}">See in sociogram</a>` : ""}
         ${p.oa ? `<a class="btn" href="https://openalex.org/${esc(p.oa)}" target="_blank" rel="noopener">OpenAlex<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3L5 11"/></svg></a>` : ""}
         ${pid < 900000000 ? `<a class="btn" href="https://academictree.org/sociology/peopleinfo.php?pid=${pid}" target="_blank" rel="noopener">Academic Tree<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3L5 11"/></svg></a>` : ""}
       </div>`;
@@ -860,7 +871,7 @@
   /* ---------------------------------------------------------------- tables */
   const COLS = { nd: "Descendants", ns: "Students", dep: "Generations below", cs: "Cluster" };
 
-  function personTable(rows, { sortKey, onSort, ranked = true, selected }) {
+  function personTable(rows, { sortKey, onSort, ranked = true, selected, onPick = null }) {
     const caret = `<svg class="caret" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg>`;
     const th = (k, label, num = true) => `<th class="${num ? "num" : ""}" ${sortKey === k ? 'aria-sort="descending"' : ""} scope="col"><button type="button" data-sort="${k}">${label}${sortKey === k ? caret : ""}</button></th>`;
     const html = `
@@ -869,7 +880,7 @@
     return { html, bind(root) {
       root.querySelectorAll("[data-sort]").forEach((b) => b.addEventListener("click", () => onSort(b.dataset.sort)));
       root.querySelectorAll("tbody tr").forEach((tr) => {
-        const pick = () => { root.querySelectorAll("tbody tr[aria-selected=true]").forEach((x) => x.setAttribute("aria-selected", "false")); tr.setAttribute("aria-selected", "true"); renderPanel(+tr.dataset.id); };
+        const pick = () => { root.querySelectorAll("tbody tr[aria-selected=true]").forEach((x) => x.setAttribute("aria-selected", "false")); tr.setAttribute("aria-selected", "true"); renderPanel(+tr.dataset.id); onPick?.(+tr.dataset.id); };
         tr.addEventListener("click", pick);
         tr.addEventListener("dblclick", () => go(lineageHash(+tr.dataset.id, state.params)));
         tr.addEventListener("keydown", (e) => { if (e.key === "Enter") go(lineageHash(+tr.dataset.id, state.params)); else if (e.key === " ") { e.preventDefault(); pick(); } else if (e.key === "ArrowDown") tr.nextElementSibling?.focus(); else if (e.key === "ArrowUp") tr.previousElementSibling?.focus(); });
@@ -900,7 +911,7 @@
   }
 
   const GAPS = [
-    { key: "no-advisor", label: "No advisor recorded", why: "Roots of the tree. A few are founders; most are missing links.", test: (p) => (p.f & F.NO_ADVISOR) && !isOut(p) },
+    { key: "no-advisor", label: "Missing advisors, biggest lines first", why: "Students on record but no advisor. A few are true founders; most are missing links, and each one filled at the top reconnects the most of the tree.", test: (p) => (p.f & F.NO_ADVISOR) && !isOut(p) && p.nd > 0, sort: "nd", curate: true },
     { key: "isolated", label: "No links at all", why: "Tagged sociology, but no advisor or student on record.", test: (p) => p.f & F.ISOLATED },
     { key: "small", label: "Small fragments", why: "Clusters of three or fewer, cut off from the main tree.", test: (p) => (p.f & F.SMALL) && !isOut(p) },
     { key: "prof-inst", label: "Practitioner-doctorate institution", why: "Capella, Walden, Alliant, La Verne and similar. Likely Ed.D.-style or professional doctorates.", test: (p) => (p.f & F.PROF_INST) && !isOut(p) },
@@ -918,11 +929,13 @@
     const shown = Math.max(200, +(params.get("n") || 200));
     let table = "";
     if (cur) {
-      const all = index.filter(cur.test).sort((x, y) => y.ns - x.ns || y.nd - x.nd || x.name.localeCompare(y.name));
-      const t = personTable(all.slice(0, shown), { sortKey: "ns", ranked: false, onSort: () => {} });
-      table = `<h2>${esc(cur.label)}</h2><p class="lede">${fmt(all.length)} people, most students first. ${esc(cur.why)}</p>${t.html}
+      const sk = cur.sort || "ns";
+      const all = index.filter(cur.test).sort((x, y) => y[sk] - x[sk] || y.nd - x.nd || x.name.localeCompare(y.name));
+      const t = personTable(all.slice(0, shown), { sortKey: sk, ranked: !!cur.curate, onSort: () => {}, onPick: cur.curate ? curateBlock : null });
+      table = `<h2>${esc(cur.label)}</h2><p class="lede">${fmt(all.length)} people, ${sk === "nd" ? "most descendants" : "most students"} first. ${esc(cur.why)}</p>
+        ${cur.curate ? `<p class="note">Pick a person, look them up, and record their advisor in the panel. Links stay in this browser until you download them (${plural(manualRows().length, "link")} saved now).</p>` : ""}${t.html}
         <div class="tbl-foot"><span>Showing ${fmt(Math.min(shown, all.length))} of ${fmt(all.length)}</span>${all.length > shown ? `<button type="button" class="btn" id="more">Show ${fmt(Math.min(200, all.length - shown))} more</button>` : ""}</div>`;
-      setTimeout(() => { t.bind(els.sheet); $("#more")?.addEventListener("click", () => go(`#/gaps/${cur.key}?n=${shown + 200}`)); if (all[0]) { renderPanel(all[0].id); els.sheet.querySelector("tbody tr")?.setAttribute("aria-selected", "true"); } });
+      setTimeout(() => { t.bind(els.sheet); $("#more")?.addEventListener("click", () => go(`#/gaps/${cur.key}?n=${shown + 200}`)); if (all[0]) { renderPanel(all[0].id); if (cur.curate) curateBlock(all[0].id); els.sheet.querySelector("tbody tr")?.setAttribute("aria-selected", "true"); } });
     }
     els.sheet.innerHTML = `
       <h2>Data gaps</h2>
@@ -936,6 +949,273 @@
 
 
 
+
+  // view-specific buttons go under the person's name, not above it
+  function panelActions(html) {
+    const at = els.panel.querySelector("p.inst") || els.panel.querySelector("h2");
+    if (at) at.insertAdjacentHTML("afterend", html); else els.panel.insertAdjacentHTML("afterbegin", html);
+  }
+
+  /* ---------------------------------------------------------------- 3D sociogram */
+  // The whole field as a force-directed network in 3D. Centrality comes precomputed from
+  // scripts/export_network.py (data/network.json); the 3D library loads on first use.
+  const NET = { data: null, graph: null, byId: new Map(), scopeKey: null, sel: null };
+  const NET_SCOPES = {
+    backbone: { label: "Advisors in the main tree", test: (n) => n.comp === 0 && (kids.get(n.id) || []).length > 0 },
+    main: { label: "Whole main tree", test: (n) => n.comp === 0, heavy: true },
+    clusters: { label: "All clusters of 10+", test: (n) => n.size >= 10, heavy: true },
+  };
+  const NET_SIZE = {
+    pagerank: { label: "Influence (PageRank)", get: (n) => n.pr, why: "Credit flows from students up to advisors, so people whose lines grew large score high." },
+    betweenness: { label: "Brokerage (betweenness)", get: (n) => n.bt, why: "How often someone sits on the shortest path between two others: the people who join lineages together." },
+    degree: { label: "Ties (degree)", get: (n) => n.deg, why: "Advisors plus students." },
+    eigenvector: { label: "Well-tied ties (eigenvector)", get: (n) => n.ev, why: "Tied to people who are themselves well tied." },
+    descendants: { label: "Descendants", get: (n) => P.get(n.id)?.nd || 0, why: "Everyone below them in the tree." },
+  };
+  const NET_COLOR = { "": "Ink", school: "School of thought", community: "Detected community", cohort: "PhD cohort", phd: "PhD institution" };
+  const EDGE_INK = "#b9b5ac";
+  const loadScript = (src) => new Promise((ok, fail) => { const t = document.createElement("script"); t.src = src; t.onload = ok; t.onerror = () => fail(new Error("couldn't load " + src)); document.head.appendChild(t); });
+
+  async function netData() {
+    if (NET.data) return NET.data;
+    const res = await fetch("data/network.json");
+    if (!res.ok) throw new Error("data/network.json: " + res.status);
+    const d = await res.json();
+    const sizes = new Map();
+    for (const r of d.nodes) sizes.set(r[1], (sizes.get(r[1]) || 0) + 1);
+    for (const [id, comp, deg, pr, bt, ev, core] of d.nodes) if (P.has(id)) NET.byId.set(id, { id, comp, size: sizes.get(comp), deg, pr, bt: bt || 0, ev: ev || 0, core });
+    NET.data = d;
+    return d;
+  }
+
+  async function showNet(params) {
+    state.view = "net"; setTab("net");
+    showCanvas(false); els.sheet.hidden = true; clearNotice();
+    els.net.hidden = false;
+    const scope = NET_SCOPES[params.get("scope")] ? params.get("scope") : "backbone";
+    const size = NET_SIZE[params.get("size")] ? params.get("size") : "pagerank";
+    const color = NET_COLOR[params.get("c")] != null && CTX ? (params.get("c") || "") : "";
+    try {
+      if (!window.ForceGraph3D) { notice(`<h2>Loading the 3D view</h2><p>Reading the network measures.</p>`, "loading"); await loadScript("vendor/3d-force-graph.min.js"); }
+      await netData();
+      clearNotice();
+    } catch (err) {
+      notice(`<h2>The sociogram couldn't load</h2><p>Run <b>scripts/export_network.py</b> to build data/network.json, then reload.</p><p class="note">${esc(err.message)}</p>`);
+      return;
+    }
+    if (state.view !== "net") return;
+    const nodes = [...NET.byId.values()].filter(NET_SCOPES[scope].test);
+    const inScope = new Set(nodes.map((n) => n.id));
+    const setQ = (k, v) => { const q = new URLSearchParams(state.params); if (v == null || v === "") q.delete(k); else q.set(k, v); go(`#/net${q.toString() ? "?" + q : ""}`); };
+
+    // colour: up to three categories in fixed order (most common in view), the rest "Other"
+    let colorOf = (n) => (isOut(P.get(n.id)) ? FAINT : INK), key = "";
+    if (color === "cohort") {
+      colorOf = (n) => { const i = cohortOf(P.get(n.id)?.yr); return i < 0 ? OTHER_FILL : COHORT[i][3]; };
+      key = `<b>PhD cohort</b>` + COHORT.map(([lab, , , c]) => `<span class="ck"><i style="background:${c}"></i>${lab}</span>`).join("");
+    } else if (color) {
+      const cb = CB[color], counts = new Map();
+      for (const n of nodes) { const k = cb.key(n.id); if (k != null) counts.set(k, (counts.get(k) || 0) + 1); }
+      const slots = [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([k]) => k).filter((k) => cb.name(k)).slice(0, CAT.length);
+      colorOf = (n) => { const k = cb.key(n.id); if (k == null) return OTHER_FILL; const i = slots.indexOf(k); return i >= 0 ? CAT[i] : "#8f8b82"; };
+      key = `<b>${esc(cb.label)}</b>` + slots.map((k, i) => `<span class="ck"><i style="background:${CAT[i]}"></i>${esc(cb.name(k))}<span class="muted">${fmt(counts.get(k))}</span></span>`).join("")
+        + `<span class="ck"><i style="background:#8f8b82"></i>Other</span><span class="ck"><i style="background:${OTHER_FILL}"></i>None recorded</span>`;
+    }
+    const get = NET_SIZE[size].get;
+    const vmax = Math.max(1e-9, ...nodes.map(get));
+    const valOf = (n) => 0.6 + 40 * Math.pow(get(n) / vmax, 0.75);
+
+    els.toolbar.innerHTML = `
+      <span class="title">Sociogram</span>
+      <span class="sub">${fmt(nodes.length)} people in view${NET_SCOPES[scope].heavy ? " · large view, give it a few seconds" : ""}</span>
+      <label class="selectlbl">Show <select id="netScope">${Object.entries(NET_SCOPES).map(([k, v]) => `<option value="${k}" ${k === scope ? "selected" : ""}>${v.label}</option>`).join("")}</select></label>
+      <label class="selectlbl">Size by <select id="netSize">${Object.entries(NET_SIZE).map(([k, v]) => `<option value="${k}" ${k === size ? "selected" : ""}>${v.label}</option>`).join("")}</select></label>
+      ${CTX ? `<label class="selectlbl">Color by <select id="netColor">${Object.entries(NET_COLOR).map(([k, v]) => `<option value="${k}" ${k === color ? "selected" : ""}>${v}</option>`).join("")}</select></label>` : ""}
+      <div class="picker" role="combobox" aria-expanded="false" aria-haspopup="listbox"><input id="netFind" type="search" placeholder="Find someone in view" aria-label="Find someone in the sociogram" autocomplete="off"><ul id="netRes" class="results" role="listbox" hidden></ul></div>
+      <button type="button" class="btn" id="netReset">Reset view</button>`;
+    $("#netScope").addEventListener("change", (e) => setQ("scope", e.target.value === "backbone" ? null : e.target.value));
+    $("#netSize").addEventListener("change", (e) => setQ("size", e.target.value === "pagerank" ? null : e.target.value));
+    $("#netColor")?.addEventListener("change", (e) => setQ("c", e.target.value));
+    attachSearch($("#netFind"), $("#netRes"), (p, input) => {
+      input.value = "";
+      if (inScope.has(p.id)) netFocus(p.id);
+      else notice(`<p class="note">${esc(p.name)} isn't in this view. Try "Whole main tree" or "All clusters of 10+", or open their lineage.</p>`, "lonely");
+    });
+    $("#netReset").addEventListener("click", () => { netClear(); NET.graph.zoomToFit(600, 40); });
+    if (key) { els.colorkey.innerHTML = key; els.colorkey.hidden = false; }
+
+    // build or reuse the graph
+    const W = els.net.clientWidth, H = els.net.clientHeight;
+    if (!NET.graph) {
+      NET.graph = ForceGraph3D({ controlType: "trackball" })(els.net)
+        .backgroundColor(PAPER).showNavInfo(true).enableNodeDrag(false)
+        .nodeId("id").nodeResolution(8).nodeOpacity(0.95).linkOpacity(0.5)
+        .cooldownTime(15000).d3AlphaDecay(0.025)
+        .onNodeClick((n) => netFocus(n.id))
+        .onBackgroundClick(() => { if (NET.sel != null) netClear(); });
+      window.addEventListener("resize", () => { if (!els.net.hidden) NET.graph.width(els.net.clientWidth).height(els.net.clientHeight); });
+    }
+    const g = NET.graph.width(W).height(H);
+    g.nodeVal(valOf)
+      .nodeLabel((n) => { const p = P.get(n.id); return `<div class="nt"><b>${esc(p.name)}</b><span>${esc(p.inst || "No institution recorded")}</span><span>${esc(NET_SIZE[size].label)}: ${fmtMeasure(get(n))}</span></div>`; });
+    NET.colorOf = colorOf; NET.nodes = nodes; NET.size = size;
+    const sk = scope;
+    if (NET.scopeKey !== sk) {
+      const links = [];
+      for (const n of nodes) for (const c of kids.get(n.id) || []) if (inScope.has(c)) links.push({ source: n.id, target: c });
+      NET.sel = null;
+      g.graphData({ nodes: nodes.map((n) => ({ ...n })), links });
+      NET.scopeKey = sk;
+      setTimeout(() => g.zoomToFit(800, 40), 2500);
+    }
+    refreshNet();
+    g.resumeAnimation();
+    const want = +params.get("p");
+    if (want && inScope.has(want)) { NET.sel = want; refreshNet(); netFocus(want, { fly: false }); setTimeout(() => state.view === "net" && NET.sel === want && netFocus(want), 3500); }
+    else if (NET.sel != null && inScope.has(NET.sel)) netFocus(NET.sel, { fly: false });
+    else renderNetPanel(nodes, size);
+  }
+  const fmtMeasure = (v) => (v >= 100 ? fmt(Math.round(v)) : v >= 1 ? v.toFixed(1) : v.toFixed(3));
+  function refreshNet() {
+    const g = NET.graph, sel = NET.sel;
+    const near = new Set();
+    if (sel != null) { near.add(sel); for (const x of [...(kids.get(sel) || []), ...(parents.get(sel) || [])]) near.add(x); }
+    const lid = (x) => (typeof x === "object" ? x.id : x);
+    g.nodeColor((n) => (n.id === sel ? RED : sel != null && !near.has(n.id) ? OTHER_FILL : NET.colorOf(n)))
+      .linkColor((l) => (sel != null && (lid(l.source) === sel || lid(l.target) === sel) ? RED : EDGE_INK))
+      .linkWidth((l) => (sel != null && (lid(l.source) === sel || lid(l.target) === sel) ? 1.2 : 0));
+  }
+  function netFocus(id, { fly = true } = {}) {
+    NET.sel = id; refreshNet();
+    { const q = new URLSearchParams(state.params); q.set("p", id); history.replaceState(null, "", `#/net?${q}`); state.params = q; }
+    const n = NET.graph.graphData().nodes.find((x) => x.id === id);
+    if (fly && n && n.x != null) {
+      const d = 360, r = Math.hypot(n.x, n.y, n.z) || 1;
+      NET.graph.cameraPosition({ x: n.x * (1 + d / r), y: n.y * (1 + d / r), z: n.z * (1 + d / r) }, n, 1200);
+    }
+    renderPanel(id);
+    const m = NET.byId.get(id), ranks = netRanks(id);
+    panelActions(`<div class="actions"><a class="btn primary" href="${lineageHash(id, new URLSearchParams())}">Open this person's lineage</a>
+      <button type="button" class="btn" id="netBack">Back to the rankings</button></div>`);
+    const anchor = els.panel.querySelector(".stats");
+    const html = `<h3>Position in the field</h3><div class="stats">${Object.entries(NET_SIZE).map(([k, v]) => `<div class="stat"><span>${esc(v.label)}</span><b>${ranks[k] ? `#${fmt(ranks[k])}` : "—"}</b></div>`).join("")}</div>
+      <p class="muted">Rank among the ${fmt(NET.nodes.length)} people in this view.${m && m.comp !== 0 ? " Outside the main tree, so brokerage and eigenvector aren't measured." : ""}</p>`;
+    if (anchor) anchor.insertAdjacentHTML("afterend", html); else els.panel.insertAdjacentHTML("beforeend", html);
+    $("#netBack").addEventListener("click", netClear);
+  }
+  function netClear() {
+    NET.sel = null; refreshNet(); renderNetPanel(NET.nodes, NET.size);
+    const q = new URLSearchParams(state.params); q.delete("p"); history.replaceState(null, "", `#/net${q.toString() ? "?" + q : ""}`); state.params = q;
+  }
+  function netRanks(id) {
+    const out = {};
+    const me = NET.byId.get(id);
+    if (!me) return out;
+    for (const [k, v] of Object.entries(NET_SIZE)) {
+      const mine = v.get(me);
+      out[k] = mine > 0 ? 1 + NET.nodes.reduce((c, n) => c + (v.get(n) > mine ? 1 : 0), 0) : null;
+    }
+    return out;
+  }
+  function renderNetPanel(nodes, size) {
+    const m = NET.data.meta, v = NET_SIZE[size];
+    const top = [...nodes].sort((a, b) => v.get(b) - v.get(a)).slice(0, 25);
+    els.panel.innerHTML = `
+      <h2>The field as a network</h2><p class="inst">Advisor links, treated as ties. Drag to rotate, scroll to zoom, click a person.</p>
+      <div class="stats">
+        <div class="stat"><span>People</span><b>${fmt(m.people)}</b></div>
+        <div class="stat"><span>Advisor links</span><b>${fmt(m.links)}</b></div>
+        <div class="stat"><span>In the main tree</span><b>${pct(m.largest_share)}</b></div>
+        <div class="stat"><span>Separate clusters</span><b>${fmt(m.components)}</b></div>
+        <div class="stat"><span>Mean steps apart (main tree)</span><b>${m.mean_distance_sampled.toFixed(1)}</b></div>
+        <div class="stat"><span>Longest path, at least</span><b>${fmt(m.diameter_lower_bound)}</b></div>
+        <div class="stat"><span>Degree assortativity</span><b>${m.assortativity.toFixed(2)}</b></div>
+      </div>
+      <p class="note">Negative assortativity: prolific advisors mostly tie to people with few ties (their students), as in a tree. The deepest k-core is ${m.max_core}, so the network has almost no dense clusters.</p>
+      <h3>Top 25 by ${esc(v.label.toLowerCase())}</h3>
+      <p class="muted">${esc(v.why)}</p>
+      <ol class="plist ranked">${top.map((n, i) => `<li><button type="button" class="linklike" data-id="${n.id}"><span class="rk">${i + 1}</span><span class="nm">${esc(P.get(n.id).name)}</span></button><span class="ct">${fmtMeasure(v.get(n))}</span></li>`).join("")}</ol>`;
+    els.panel.querySelectorAll("[data-id]").forEach((b) => b.addEventListener("click", () => netFocus(+b.dataset.id)));
+    els.panel.scrollTop = 0;
+  }
+
+  /* ---------------------------------------------------------------- recording missing links */
+  // Advisor links typed here stay in this browser (a per-viewer draft) until downloaded as a CSV.
+  // Saved in data/ as manual_edges*.csv, merge_external.py picks them up as source "manual".
+  const MANUAL_KEY = "lineage:manual";
+  const MANUAL_COLS = ["advisor_pid", "advisor_name", "student_pid", "student_name", "year", "institution", "url", "note"];
+  const manualRows = () => { try { return JSON.parse(localStorage.getItem(MANUAL_KEY) || "[]"); } catch { return []; } };
+  const saveManual = (rows) => { try { localStorage.setItem(MANUAL_KEY, JSON.stringify(rows)); return true; } catch { return false; } };
+  const csvCell = (v) => { const x = v == null ? "" : String(v); return /[",\n]/.test(x) ? `"${x.replace(/"/g, '""')}"` : x; };
+  function downloadManual() {
+    const rows = manualRows();
+    const csv = [MANUAL_COLS.join(","), ...rows.map((r) => MANUAL_COLS.map((k) => csvCell(r[k])).join(","))].join("\n") + "\n";
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+    a.download = `manual_edges_${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+  function lookupLinks(p) {
+    const q = encodeURIComponent(p.name);
+    const ext = `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3L5 11"/></svg>`;
+    return [
+      ["Wikipedia", `https://en.wikipedia.org/w/index.php?search=${q}`],
+      ["Wikidata", `https://www.wikidata.org/w/index.php?search=${q}`],
+      ["Web: “dissertation advisor”", `https://duckduckgo.com/?q=${encodeURIComponent(`"${p.name}" dissertation advisor`)}`],
+      ["Stanford SearchWorks", `https://searchworks.stanford.edu/?q=${encodeURIComponent(`${p.name} dissertation`)}&search_field=search`],
+    ].map(([l, u]) => `<a href="${u}" target="_blank" rel="noopener">${esc(l)}${ext}</a>`).join("");
+  }
+  function curateBlock(pid) {
+    const p = P.get(pid);
+    const saved = manualRows();
+    const mine = saved.filter((r) => +r.student_pid === pid);
+    const html = `<section class="curate-box" aria-labelledby="curateH">
+      <h3 id="curateH">Record ${esc(p.name)}'s advisor</h3>
+      <p class="lookups">${lookupLinks(p)}</p>
+      ${mine.length ? `<p class="note">Already recorded here: ${mine.map((r) => esc(r.advisor_name)).join(", ")}.</p>` : ""}
+      <form class="curate" id="curate" novalidate>
+        <label>Advisor
+          <div class="picker" role="combobox" aria-expanded="false" aria-haspopup="listbox"><input id="advPick" type="search" placeholder="Search people, or type a new name" autocomplete="off" required><ul id="advRes" class="results" role="listbox" hidden></ul></div></label>
+        <div class="row2">
+          <label>PhD year<input id="advYear" inputmode="numeric" maxlength="4" value="${p.yr && p.yb && p.yb <= 2 ? p.yr : ""}"></label>
+          <label>Institution<input id="advInst" value="${esc(p.inst || "")}"></label>
+        </div>
+        <label>Source<input id="advUrl" type="url" placeholder="Link to where you found it"></label>
+        <label>Note<input id="advNote" placeholder="Optional, e.g. “dissertation acknowledgments, p. iii”"></label>
+        <div class="actions"><button type="submit" class="btn primary">Add link</button></div>
+        <p class="note" id="curateMsg" role="status" aria-live="polite"></p>
+      </form>
+      <div class="actions"><button type="button" class="btn" id="dlManual" ${saved.length ? "" : "disabled"}>Download ${plural(saved.length, "link")} as CSV</button>${saved.length ? `<button type="button" class="btn" id="clearManual">Clear saved links</button>` : ""}</div>
+      <p class="muted">Save the file in the project's data/ folder (keep the name starting manual_edges) and run scripts/build_all.sh.</p>
+    </section>`;
+    const anchor = els.panel.querySelector(".stats");
+    if (anchor) anchor.insertAdjacentHTML("afterend", html); else els.panel.insertAdjacentHTML("beforeend", html);
+    let chosen = null;
+    const input = $("#advPick");
+    attachSearch(input, $("#advRes"), (q) => { chosen = q; input.value = q.name; });
+    input.addEventListener("input", () => { chosen = null; });
+    $("#curate").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = input.value.trim(), msg = $("#curateMsg");
+      const yr = $("#advYear").value.trim(), url = $("#advUrl").value.trim();
+      if (!name) { msg.textContent = "Type or pick the advisor's name."; input.focus(); return; }
+      if (chosen?.id === pid) { msg.textContent = "Someone can't be their own advisor."; return; }
+      if (yr && !/^\d{4}$/.test(yr)) { msg.textContent = "PhD year should be four digits, or blank."; $("#advYear").focus(); return; }
+      if (url && !/^https?:\/\//.test(url)) { msg.textContent = "The source should be a web link starting with http, or blank."; $("#advUrl").focus(); return; }
+      const rows = manualRows();
+      rows.push({ advisor_pid: chosen && chosen.name === name ? chosen.id : "", advisor_name: name, student_pid: pid, student_name: p.name,
+        year: yr, institution: $("#advInst").value.trim(), url, note: $("#advNote").value.trim() });
+      if (!saveManual(rows)) { msg.textContent = "This browser won't store data here (private window?). Copy the details somewhere safe."; return; }
+      renderPanel(pid); curateBlock(pid);
+      $("#curateMsg").textContent = `Added ${name} → ${p.name}. ${plural(rows.length, "link")} saved in this browser.`;
+    });
+    $("#dlManual")?.addEventListener("click", downloadManual);
+    $("#clearManual")?.addEventListener("click", () => {
+      if (!confirm(`Delete the ${plural(saved.length, "link")} saved in this browser? Download them first if you haven't.`)) return;
+      saveManual([]); renderPanel(pid); curateBlock(pid);
+    });
+  }
 
   /* ---------------------------------------------------------------- ORCID careers */
   function careerBlock(pid) {
@@ -1309,7 +1589,95 @@
     if (kind === "detected") return CTX.communities[id].top;
     return schoolMembers(kind, id)[0];
   }
+  /* ---------------------------------------------------------------- school lineage */
+  // The whole school as one tree: every founder at the top, then the lines that carry it. Small
+  // branches collapse into "+N more" boxes so a 1,700-person school stays readable.
+  const SCHOOL_MIN = [0, 3, 10, 30];
+  function schoolTree(id) {
+    const key = "tree:" + id;
+    if (memberCache.has(key)) return memberCache.get(key);
+    const mem = new Set(schoolMembers("curated", id));
+    const below = new Map();  // distinct descendants inside the school
+    for (const p of mem) {
+      const seen = new Set(); const st = [p];
+      while (st.length) for (const c of kids.get(st.pop()) || []) if (mem.has(c) && !seen.has(c)) { seen.add(c); st.push(c); }
+      below.set(p, seen.size);
+    }
+    const out = { mem, below };
+    memberCache.set(key, out);
+    return out;
+  }
+  function schoolShown(id, min, showOut) {
+    const { mem, below } = schoolTree(id);
+    const founders = CTX.schools[id].founders.filter((f) => P.has(f));
+    const ok = (p) => mem.has(p) && (showOut || !isOut(P.get(p)) || founders.includes(p));
+    const shown = new Set(founders);
+    for (const p of mem) if (ok(p) && below.get(p) >= min) shown.add(p);
+    return { shown, ok, founders, below, mem };
+  }
+  function schoolElements(id, min, showOut) {
+    const { shown, ok, founders, below } = schoolShown(id, min, showOut);
+    const nodes = [], edges = [];
+    for (const p of shown) {
+      const q = P.get(p), n = below.get(p);
+      const el = nodeEl(q, founders.includes(p) ? "focus" : "");
+      el.data.label = n ? `${q.name}\n${fmt(n)} in school` : q.name;
+      nodes.push(el);
+      let hidden = 0;
+      for (const c of kids.get(p) || []) {
+        if (shown.has(c)) edges.push(edgeEl(p, c));
+        else if (ok(c)) hidden++;
+      }
+      if (hidden) {
+        const mid = `more-${p}`;
+        nodes.push({ group: "nodes", data: { id: mid, label: `+${fmt(hidden)} more`, more: p, size: 22 }, classes: "more" });
+        edges.push({ group: "edges", data: { id: `e${p}-${mid}`, source: String(p), target: mid }, classes: "faint" });
+      }
+    }
+    return [...nodes, ...edges];
+  }
+
+  function showSchoolTree(id, params) {
+    state.view = "school"; setTab("schools");
+    if (!CTX) return noContext();
+    if (!CTX.schools[id]) return go("#/schools/curated");
+    showCanvas(true); clearNotice();
+    const s = CTX.schools[id];
+    const showOut = params.get("out") !== "0";
+    let min = params.has("min") ? +params.get("min") : null;
+    if (!SCHOOL_MIN.includes(min)) {  // default: the most detail that stays readable
+      min = SCHOOL_MIN.find((m) => schoolShown(id, m, showOut).shown.size <= 70) ?? SCHOOL_MIN.at(-1);
+    }
+    const { shown, mem, founders } = schoolShown(id, min, showOut);
+    const setQ = (k, v) => { const q = new URLSearchParams(state.params); if (v == null) q.delete(k); else q.set(k, v); go(`#/school/${id}${q.toString() ? "?" + q : ""}`); };
+    els.toolbar.innerHTML = `
+      <a class="btn" href="#/schools/curated/${id}">All schools</a>
+      <label class="selectlbl">School <select id="schoolPick">${CTX.schools.map((x, i) => `<option value="${i}" ${i === id ? "selected" : ""}>${esc(x.name)}</option>`).join("")}</select></label>
+      <span class="sub">${plural(mem.size, "member")} · founders ${esc(founders.map((f) => P.get(f).name).join(", "))} · showing ${fmt(shown.size)}</span>
+      <span class="seg-label">Lines with descendants</span>
+      <span class="seg" role="group" aria-label="Show lines with at least this many descendants in the school">${SCHOOL_MIN.map((m) => `<button type="button" data-min="${m}" aria-pressed="${m === min}">${m ? fmt(m) + "+" : "All"}</button>`).join("")}</span>
+      <label class="check"><input type="checkbox" id="showOut" ${showOut ? "checked" : ""}> Show people outside the field</label>
+      <label class="check"><input type="checkbox" id="byYear" ${params.get("t") === "1" ? "checked" : ""}> Arrange by year</label>
+      <label class="selectlbl">Color by <select id="colorBy"><option value="">Nothing</option>${Object.entries(CB).map(([k, v]) => `<option value="${k}" ${params.get("c") === k ? "selected" : ""}>${v.label}</option>`).join("")}</select></label>
+      <button type="button" class="btn" id="fitAll">Fit whole school</button>`;
+    $("#fitAll").addEventListener("click", () => cy.animate({ fit: { eles: cy.elements(), padding: 30 } }, { duration: 250 }));
+    $("#schoolPick").addEventListener("change", (e) => go(`#/school/${e.target.value}`));
+    els.toolbar.querySelectorAll("[data-min]").forEach((b) => b.addEventListener("click", () => setQ("min", b.dataset.min)));
+    $("#showOut").addEventListener("change", (e) => setQ("out", e.target.checked ? null : "0"));
+    $("#byYear").addEventListener("change", (e) => setQ("t", e.target.checked ? "1" : null));
+    $("#colorBy").addEventListener("change", (e) => setQ("c", e.target.value || null));
+    const elements = schoolElements(id, min, showOut);
+    const mode = CB[params.get("c")] ? params.get("c") : null;
+    if (mode) colorize(elements, mode); else setColorKey(null);
+    const byYear = params.get("t") === "1";
+    if (byYear && !mode) colorizeCohort(elements);
+    draw(elements, { fitTo: `node[id="${founders[0]}"]`, overview: true, after: byYear ? () => timelineLayout(founders[0]) : null });
+    renderSchoolPanel("curated", id);
+    if (founders.length < s.founders.length) notice(`<p class="note">${s.founders.length - founders.length} founder(s) in data/schools.json are not in this export.</p>`);
+  }
+
   function openSchoolLineage(kind, id) {
+    if (kind === "curated") return go(`#/school/${id}`);
     const mode = kind === "curated" ? "school" : kind === "detected" ? "community" : kind === "topics" ? "topic" : "subfield";
     const lead = schoolLead(kind, id);
     if (lead != null && P.has(lead)) pinAndColor(mode, id, lead);
@@ -1349,8 +1717,12 @@
       <h3>Leading members</h3>${personList(leaders)}
       <h3>Where members trained</h3>${instCountList(kind === "curated" ? CTX.schools[id].top_institutions : trainedAt(members), "PhDs")}
       <p class="note">${esc(note)}</p>
-      <div class="actions"><button type="button" class="btn primary" id="colorSchool">Color a lineage by this</button></div>`;
-    $("#colorSchool").addEventListener("click", () => openSchoolLineage(kind, id));
+      <div class="actions">${kind === "curated" ? `<a class="btn primary" href="#/school/${id}">See the school's lineage</a>` : ""}<button type="button" class="btn${kind === "curated" ? "" : " primary"}" id="colorSchool">Color a lineage by this</button></div>`;
+    $("#colorSchool").addEventListener("click", () => {
+      if (kind !== "curated") return openSchoolLineage(kind, id);
+      const lead = schoolLead(kind, id);
+      if (lead != null && P.has(lead)) pinAndColor("school", id, lead);
+    });
     els.panel.scrollTop = 0;
   }
 
@@ -1548,7 +1920,7 @@
   /* ---------------------------------------------------------------- boot */
   async function boot() {
     showCanvas(true);
-    const n = notice(`<h2>Loading the sociology tree</h2><p>Reading 27,254 people and their advisor links.</p>`, "loading");
+    const n = notice(`<h2>Loading the sociology tree</h2><p>Reading the people and their advisor links.</p>`, "loading");
     let data;
     try {
       const res = await fetch("data/lineage.json");

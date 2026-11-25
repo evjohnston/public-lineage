@@ -303,3 +303,28 @@ svg.career rect.open { opacity: 0.75; }
 .career-key { font-size: var(--t-xs); display: flex; align-items: center; gap: 6px; margin: 2px 0 6px; }
 .career-key .sw { display: inline-block; width: 14px; height: 8px; }
 .career-key .sw.edu { background: #cba762; } .career-key .sw.emp { background: var(--ink); margin-left: 8px; }
+
+/* recording a missing advisor (Data gaps) */
+.curate-box { border-top: var(--stroke) solid var(--ink); margin-top: 14px; padding-top: 4px; }
+.lookups { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: var(--t-sm); margin: 4px 0 8px; }
+.lookups a svg { width: 10px; height: 10px; margin-left: 3px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.curate { display: grid; gap: 8px; margin: 4px 0 6px; }
+.curate label { display: grid; gap: 3px; font-size: var(--t-sm); color: var(--ink-2); font-weight: 600; }
+.curate input { height: 32px; width: 100%; padding: 0 10px; font: inherit; font-weight: 400; color: var(--ink); border: var(--stroke) solid var(--ink); background: var(--paper); border-radius: 0; }
+.curate input:focus-visible { outline: none; border-color: var(--red); box-shadow: 0 0 0 1px var(--red); }
+.curate .picker input { width: 100%; }
+.curate .picker .results { width: 100%; }
+.curate .row2 { display: grid; grid-template-columns: 96px 1fr; gap: 8px; }
+.curate .note:empty { display: none; }
+.btn[disabled] { opacity: .45; cursor: default; }
+
+/* 3D sociogram */
+.net3d { position: absolute; inset: 0; background: var(--paper); }
+.net3d[hidden] { display: none; }
+.net3d .scene-nav-info { color: var(--ink-3); font-size: var(--t-xs); bottom: 8px; }
+.net3d .float-tooltip-kap, .net3d .scene-tooltip { color: var(--ink); background: var(--paper); border: var(--stroke) solid var(--ink); padding: 5px 8px; border-radius: 0; font-family: inherit; }
+.nt { display: grid; gap: 1px; font-size: var(--t-sm); }
+.nt span { color: var(--ink-2); }
+.plist .rk { display: inline-block; min-width: 2.2em; color: var(--ink-3); font-size: var(--t-sm); font-variant-numeric: tabular-nums; }
+.linklike { background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer; text-align: left; }
+.linklike:hover .nm, .linklike:focus-visible .nm { text-decoration: underline; }

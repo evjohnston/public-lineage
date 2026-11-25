@@ -9,4 +9,5 @@ $PY scripts/export_orcid.py                        # ORCID careers -> careers.js
 $PY scripts/export_explorer.py                     # final export with merges applied
 $PY scripts/export_context.py                      # schools, communities, institutions
 $PY scripts/export_coauthors.py                    # co-author network from OpenAlex
+$PY -I scripts/export_network.py                   # centrality for the 3D sociogram
 $PY -I scripts/analysis/run_analyses.py            # figures + results.json

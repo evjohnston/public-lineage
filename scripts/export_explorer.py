@@ -40,12 +40,12 @@ FLAG_DUPLICATE = 256   # another record looks like the same person
 FLAG_EXTERNAL = 512    # person known only from an outside source (NSF, Wikidata, a repository)
 
 EXT = ROOT / "data" / "external"
-# edge source bits: 1 = Academic Family Tree, 2 = NSF dissertation grant, 4 = Wikidata, 8 = dissertation repository
-SRC_AFT, SRC_NSF, SRC_WIKIDATA, SRC_DISS = 1, 2, 4, 8
+# edge source bits: 1 = Academic Family Tree, 2 = NSF dissertation grant, 4 = Wikidata, 8 = dissertation repository, 16 = manual
+SRC_AFT, SRC_NSF, SRC_WIKIDATA, SRC_DISS, SRC_MANUAL = 1, 2, 4, 8, 16  # 16 = entered by hand (data/manual_edges.csv)
 
 
 def src_bit(source: str) -> int:
-    return SRC_NSF if source == "nsf_ddrig" else SRC_WIKIDATA if source == "wikidata" else SRC_DISS
+    return {"nsf_ddrig": SRC_NSF, "wikidata": SRC_WIKIDATA, "manual": SRC_MANUAL}.get(source, SRC_DISS)
 
 # Practitioner-focused doctorate granters that appear in the sociology tree (checked against the data).
 PROF_INST = re.compile(
@@ -236,6 +236,11 @@ def main() -> None:
     if wp.exists() and merged.exists():                                 # 3: Wikidata birth year + 28
         import pandas as pd
         births = {r.qid: int(r.birth_year) for r in pd.read_parquet(wp).itertuples(index=False) if pd.notna(r.birth_year)}
+        anc = EXT / "wdanc_people.parquet"  # advisors added by fetch_wikidata_ancestors.py
+        if anc.exists():
+            for r in pd.read_parquet(anc).itertuples(index=False):
+                if pd.notna(r.birth_year):
+                    births.setdefault(r.qid, int(r.birth_year))
         for r in pd.read_parquet(merged).itertuples(index=False):
             if r.source != "wikidata" or "-" not in str(r.source_id):
                 continue
@@ -275,12 +280,24 @@ def main() -> None:
         pass
     propagate()
 
+    # advisors added from Wikidata in any field (wdanc) count as sociology only if Wikidata says so
+    outside_ext = set()
+    ancp = EXT / "wdanc_people.parquet"
+    if ancp.exists() and merged.exists():
+        import pandas as pd
+        nonsoc = set(pd.read_parquet(ancp).query("not is_sociologist").qid)
+        for r in pd.read_parquet(merged).itertuples(index=False):
+            if r.source == "wikidata" and "-" in str(r.source_id):
+                p = R(int(r.advisor_pid))
+                if str(r.source_id).split("-", 1)[0] in nonsoc and p >= 900_000_000:
+                    outside_ext.add(p)
+
     rows = []
     for pid, name, loc, in_soc, major, hindex, area, _first, _last in people:
         tags = set((major or "").split(","))
         in_g = pid in G
         f = 0
-        if not in_soc:
+        if not in_soc or pid in outside_ext:
             f |= FLAG_OUTSIDE
         if in_soc and not in_g:
             f |= FLAG_ISOLATED

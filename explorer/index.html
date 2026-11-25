@@ -13,13 +13,14 @@
     <a class="brand" href="#/">Lineage Explorer <span>Sociology</span></a>
     <div class="search" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-owns="search-results">
       <svg class="search-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4.5 4.5"/></svg>
-      <input id="search" type="search" placeholder="Search 27,254 people" autocomplete="off" spellcheck="false" aria-label="Search people" aria-controls="search-results" aria-autocomplete="list">
+      <input id="search" type="search" placeholder="Search people" autocomplete="off" spellcheck="false" aria-label="Search people" aria-controls="search-results" aria-autocomplete="list">
       <ul id="search-results" class="results" role="listbox" hidden></ul>
     </div>
     <nav class="tabs" aria-label="Views">
       <a href="#/" data-view="lineage">Lineage</a>
       <a href="#/connect" data-view="connect">Connect</a>
       <a href="#/co" data-view="co">Co-authors</a>
+      <a href="#/net" data-view="net">Sociogram</a>
       <a href="#/schools" data-view="schools">Schools</a>
       <a href="#/institutions" data-view="institutions">Institutions</a>
       <a href="#/dynasties" data-view="dynasties">Dynasties</a>
@@ -32,6 +33,7 @@
       <div class="toolbar" id="toolbar"></div>
       <div id="cy" class="cy" aria-label="Lineage diagram"></div>
       <div id="map" class="map" hidden aria-label="Map of institutions"></div>
+      <div id="net3d" class="net3d" hidden aria-label="3D sociogram of the field"></div>
       <div id="sheet" class="sheet" hidden></div>
       <div class="legend" id="legend">
         <span class="colorkey" id="colorkey" hidden></span>
