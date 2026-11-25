@@ -7,22 +7,22 @@ related_targets: []
 
 # Lineage Explorer (explorer/index.html)
 
-Scope: the whole local explorer app. Visitor mode: Operate.
-Audience and job: one researcher, at a laptop beside their DuckDB analysis, looking up sociology lineages, tracing connections, surveying dynasties and auditing data gaps.
-Constraints: static HTML/JS, no build step, data precomputed to JSON; must work before OpenAlex matching lands.
-Home route: reopens the last-viewed lineage, so the first viewport is a tree; only a first visit shows the starter screen, an Operate empty state that teaches the tool with real starting lineages.
-Unresolved: how OpenAlex fields (topics, citations) join the person panel.
+Scope: the whole local explorer app, including the overview (home) route. Visitor mode: Operate.
+Audience and job: one researcher at a laptop beside a dark-themed notebook and DuckDB, looking up sociology lineages, tracing connections, reading the field as a network, and auditing and filling data gaps. 45.6k people, 38.9k advisor links, 12 curated schools, a 3D sociogram, institutions and a curation workflow.
+Constraints: static HTML/JS, no build step, data precomputed to JSON; vendored libraries only; works offline.
+Replaces: the Moreno-sociogram paper world, which the user found odd, hard to follow, overlapping and cluttered (too many tabs, crowded toolbars, wall-of-text panel, a home page with no story).
+Unresolved: how much of the review queue (data/review/*.csv) the explorer should edit directly.
 
 ## Direction contract
 
-THESIS: Draw the lineage the way Moreno drew sociology's first networks: ink circles, arrows and typed labels on white, with red pencil kept for the one thing the researcher is tracing. Refuses the dark neon force-graph hairball and the gray-blue SaaS graph explorer.
+THESIS: A graphite workbench of persistent panels: navigation, canvas, record and list each own a tile, divided by hairline seams, so nothing ever overlaps and every job has a fixed place. Refuses the floating-toolbar canvas with overlays stacked on the graph, and the white SaaS card dashboard.
 
-OWN-WORLD: White paper ground, ink #161616 at 1.5px strokes, red pencil #c8102e only for the active path and focus, blue pencil #1f4e9c only for data-quality notes written in italic, warm rule #e9e6df. Source Sans 3 throughout, tabular numerals. Hollow circle = sociology, dashed circle = outside the field, filled ink = focused person. 1.5px ink rules divide regions; no shadows, no rounded panels.
+OWN-WORLD: Graphite ground #16181d, panels #1b1e24, seams 1px #2c313a, text #e6e8eb / #a9b1bd. One accent blue #7aa2f7 for focus, selection and the traced path; amber #e0af68 for data notes and stamped states; red #f7768e only for errors and destructive actions. Category hues teal, violet, orange, validated on graphite. Source Sans 3 for words, Source Code Pro for every figure; panel headers in tiny tracked small caps; person names large.
 
-STORY: Search a name, see ancestors above and descendants below by generation, click any person to recenter; open Connect to trace two people's path in red; scan Dynasties ranked by descendants and students; open Data gaps to see what is missing, flagged in blue.
+STORY: Land on the overview, search or pick a starting person; the lineage fills the canvas, the record sits right in collapsible sections, the list strip below lists students or members; switch views from the left rail grouped Person / Field / Data with counts; trace a path in blue; open gaps and record a missing advisor.
 
-FIRST VIEWPORT: 56px top bar with name, search and four tabs (Lineage, Connect, Dynasties, Data gaps; red underline on the active tab). Canvas fills the left with a top-to-bottom layered tree, focus filled ink; legend bottom-left. A 360px panel on the right, ruled in ink, holds name, institution, tabular counts, clickable advisor and student lists, and blue flags.
+FIRST VIEWPORT: 48px header (brand, search with / hint, field counts). Left rail 220px: Overview, then Person, Field, Data groups with counts, then Recent people. Centre: a title row (name, facts, segmented controls) over the canvas, a status row (legend, color key) beneath it, then a 200px list strip. Right panel 360px: record. Signature move: the record and list follow the canvas, so selecting anything updates all three tiles in place with a 150ms seam highlight.
 
-FORM: Moreno sociogram, grounded candidate 1 of 7 (chosen as the pick card), seed:b5b3f77e7f5a6400. Signature move: the red pencil path; when Connect traces two people, their path redraws as a thick red stroke with arrowheads while every other mark drops to light ink. Motion: 200ms ease-out fades on recenter only.
+FORM: Graphite workbench, dealt challenger 2 of 6 in a bolder re-roll (wins on both axes), seed:e393754ee5e74bb2.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

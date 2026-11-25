@@ -3,53 +3,70 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
   <title>Lineage Explorer</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='7' r='5' fill='%23161616'/%3E%3Ccircle cx='8' cy='25' r='5' fill='none' stroke='%23161616' stroke-width='2'/%3E%3Ccircle cx='24' cy='25' r='5' fill='none' stroke='%23c8102e' stroke-width='2.5'/%3E%3Cpath d='M14 11L10 20M18 11L22 20' stroke='%23161616' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2316181d'/%3E%3Ccircle cx='16' cy='9' r='4' fill='%237aa2f7'/%3E%3Ccircle cx='9' cy='23' r='3.5' fill='none' stroke='%23e6e8eb' stroke-width='2'/%3E%3Ccircle cx='23' cy='23' r='3.5' fill='none' stroke='%23e6e8eb' stroke-width='2'/%3E%3Cpath d='M14 12L10.5 19.5M18 12L21.5 19.5' stroke='%23e6e8eb' stroke-width='2'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="vendor/leaflet.css">
   <link rel="stylesheet" href="styles.css">
+  <script type="importmap">{ "imports": { "three": "./vendor/three.module.js" } }</script>
 </head>
 <body>
   <header class="top">
-    <a class="brand" href="#/">Lineage Explorer <span>Sociology</span></a>
+    <a class="brand" href="#/"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="4.5" r="2.6" class="f"/><circle cx="4.5" cy="15" r="2.3"/><circle cx="15.5" cy="15" r="2.3"/><path d="M8.7 6.8L5.6 12.8M11.3 6.8L14.4 12.8"/></svg>Lineage Explorer</a>
     <div class="search" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-owns="search-results">
       <svg class="search-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4.5 4.5"/></svg>
       <input id="search" type="search" placeholder="Search people" autocomplete="off" spellcheck="false" aria-label="Search people" aria-controls="search-results" aria-autocomplete="list">
+      <kbd class="search-key" aria-hidden="true">/</kbd>
       <ul id="search-results" class="results" role="listbox" hidden></ul>
     </div>
-    <nav class="tabs" aria-label="Views">
-      <a href="#/" data-view="lineage">Lineage</a>
-      <a href="#/connect" data-view="connect">Connect</a>
-      <a href="#/co" data-view="co">Co-authors</a>
-      <a href="#/net" data-view="net">Sociogram</a>
-      <a href="#/schools" data-view="schools">Schools</a>
-      <a href="#/institutions" data-view="institutions">Institutions</a>
-      <a href="#/dynasties" data-view="dynasties">Dynasties</a>
-      <a href="#/gaps" data-view="gaps">Data gaps</a>
-    </nav>
+    <span class="field-counts" id="fieldCounts"></span>
+    <button type="button" class="rail-toggle" id="railToggle" aria-controls="rail" aria-expanded="false">Views</button>
   </header>
 
-  <main class="work">
-    <section class="stage" id="stage" aria-live="polite">
-      <div class="toolbar" id="toolbar"></div>
-      <div id="cy" class="cy" aria-label="Lineage diagram"></div>
-      <div id="map" class="map" hidden aria-label="Map of institutions"></div>
-      <div id="net3d" class="net3d" hidden aria-label="3D sociogram of the field"></div>
-      <div id="sheet" class="sheet" hidden></div>
-      <div class="legend" id="legend">
-        <span class="colorkey" id="colorkey" hidden></span>
-        <span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/></svg>Sociology</span>
-        <span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" class="dash"/></svg>Outside the field</span>
-        <span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" class="fill"/></svg>In focus</span>
-        <span class="red"><svg viewBox="0 0 24 16"><path d="M2 8h18"/><path d="M15 3l6 5-6 5" class="head"/></svg>Traced path</span>
-        <span class="arrowkey"><svg viewBox="0 0 24 16"><path d="M2 8h18"/><path d="M15 3l6 5-6 5" class="head"/></svg>Advisor to student</span>
-        <span class="cokey"><svg viewBox="0 0 24 16"><path d="M2 12 Q12 2 22 12" class="co"/></svg>Co-authored</span>
-        <span class="cmkey"><svg viewBox="0 0 24 16"><path d="M2 4 Q12 14 22 4"/></svg>Committee member</span>
-        <span class="txkey"><svg viewBox="0 0 24 16"><path d="M2 10 Q12 3 22 10"/></svg>Named in a dissertation</span>
-        <span class="extkey"><svg viewBox="0 0 24 16"><path d="M2 8h18" stroke-dasharray="1.5 2.5"/></svg>Outside source only</span>
-      </div>
-    </section>
-    <aside class="panel" id="panel" aria-label="Person record"></aside>
-  </main>
+  <div class="shell">
+    <nav class="rail" id="rail" aria-label="Views">
+      <a href="#/" data-view="home" class="rail-home"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 7.5L8 3l5.5 4.5V13h-3.5V9.5h-4V13H2.5z"/></svg>Overview</a>
+      <h6>Person</h6>
+      <a href="#/p" data-view="lineage">Lineage</a>
+      <a href="#/kin" data-view="kin">Relatives</a>
+      <a href="#/connect" data-view="connect">Connect two people</a>
+      <a href="#/co" data-view="co">Co-authors<span class="n" data-count="co"></span></a>
+      <h6>Field</h6>
+      <a href="#/schools" data-view="schools">Schools<span class="n" data-count="schools"></span></a>
+      <a href="#/net" data-view="net">Sociogram<span class="n" data-count="net"></span></a>
+      <a href="#/institutions" data-view="institutions">Institutions<span class="n" data-count="institutions"></span></a>
+      <a href="#/dynasties" data-view="dynasties">Dynasties</a>
+      <h6>Data</h6>
+      <a href="#/gaps" data-view="gaps">Data gaps<span class="n" data-count="gaps"></span></a>
+      <h6 id="recentHead" hidden>Recent</h6>
+      <div class="recent" id="recent"></div>
+    </nav>
+
+    <main class="work">
+      <section class="stage" aria-live="polite">
+        <div class="toolbar" id="toolbar"></div>
+        <div class="canvas" id="stage">
+          <div id="cy" class="cy" aria-label="Lineage diagram"></div>
+          <div id="map" class="map" hidden aria-label="Map of institutions"></div>
+          <div id="net3d" class="net3d" hidden aria-label="3D sociogram of the field"></div>
+          <div id="sheet" class="sheet" hidden></div>
+        </div>
+        <div class="statusbar" id="legend">
+          <span class="colorkey" id="colorkey" hidden></span>
+          <span class="lk"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/></svg>Sociology</span>
+          <span class="lk" data-k="out"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5" class="dash"/></svg>Outside the field</span>
+          <span class="lk"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" class="fill"/></svg>In focus</span>
+          <span class="lk acc" data-k="path"><svg viewBox="0 0 24 16"><path d="M2 8h18"/><path d="M15 3l6 5-6 5" class="head"/></svg>Traced path</span>
+          <span class="lk"><svg viewBox="0 0 24 16"><path d="M2 8h18"/><path d="M15 3l6 5-6 5" class="head"/></svg>Advisor to student</span>
+          <span class="lk" data-k="ext"><svg viewBox="0 0 24 16"><path d="M2 8h18" class="dot"/></svg>Outside source only</span>
+          <span class="lk" data-k="ment"><svg viewBox="0 0 24 16"><path d="M2 8h18" class="ment"/></svg>Mentor, not formal director</span>
+          <span class="tag" id="formalTag" hidden>Formal directors only</span>
+        </div>
+        <section class="strip" id="strip" hidden aria-label="List for the current view"></section>
+      </section>
+      <aside class="panel" id="panel" aria-label="Record"></aside>
+    </main>
+  </div>
 
   <footer class="credit" id="credit"></footer>
 

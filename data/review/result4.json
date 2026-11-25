@@ -1,0 +1,333 @@
+[
+ {
+  "pid": 647386,
+  "name": "Judith L. Forbes",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": null,
+  "phd_year": null,
+  "source_url": null,
+  "evidence": "No public record of her own doctorate or supervisor found; only acknowledgments naming her as a mentor of others.",
+  "confidence": "medium",
+  "notes": "Capella University faculty; searches turned up nothing on her own PhD."
+ },
+ {
+  "pid": 973617953,
+  "name": "Gilbert Durand",
+  "status": "advisor_found",
+  "advisors": [
+   "Gaston Bachelard"
+  ],
+  "phd_institution": "Université de Paris (Sorbonne), Lettres",
+  "phd_year": 1959,
+  "source_url": "https://excerpts.numilog.com/books/9782100737796.pdf",
+  "evidence": "Preface to the 2016 Dunod edition of Les structures anthropologiques de l'imaginaire: Durand set out to 'rédiger une thèse, sous la direction de Gaston Bachelard'.",
+  "confidence": "medium",
+  "notes": "SUDOC lists the thèse de doctorat (Lettres, Paris, 1959) without naming a director. The Bachelard wording comes from a search-engine snippet of the Dunod preface; the PDF itself returned 403 to direct fetch. Other sources call Bachelard his 'maître', and the fr.wikipedia article calls him a 'disciple'. Verify before using."
+ },
+ {
+  "pid": 952206806,
+  "name": "Norbert Alter",
+  "status": "advisor_found",
+  "advisors": [
+   "Renaud Sainsaulieu"
+  ],
+  "phd_institution": "Institut d'études politiques de Paris",
+  "phd_year": 1983,
+  "source_url": "https://www.sudoc.fr/041242211",
+  "evidence": "SUDOC: 'L'effet organisationnel de l'innovation technologique : le cas de la télématique / Norbert Alter ; sous la direction de Renaud Sainsaulieu', Thèse de 3e cycle, Sociologie, IEP Paris, 1983.",
+  "confidence": "high",
+  "notes": "His CV says the doctorate was 1982; the catalogue says 1983. Sainsaulieu is also in this dataset (pid 939963343)."
+ },
+ {
+  "pid": 977783972,
+  "name": "Marc Lazar",
+  "status": "advisor_found",
+  "advisors": [
+   "Jacques Julliard"
+  ],
+  "phd_institution": "EHESS",
+  "phd_year": 1984,
+  "source_url": "https://fr.wikipedia.org/wiki/Marc_Lazar",
+  "evidence": "Sa thèse de 3e cycle, soutenue en 1984 sous la direction de Jacques Julliard (EHESS). The SUDOC record 015578690 also lists Julliard as thesis advisor.",
+  "confidence": "high",
+  "notes": "His maîtrise (Paris 1, 1975) was under Jacques Droz; that was not a doctorate."
+ },
+ {
+  "pid": 939963343,
+  "name": "Renaud Sainsaulieu",
+  "status": "advisor_found",
+  "advisors": [
+   "Michel Crozier"
+  ],
+  "phd_institution": "Université Paris 5",
+  "phd_year": 1975,
+  "source_url": "https://www.sudoc.fr/006790291",
+  "evidence": "SUDOC: 'L'apprentissage culturel dans le travail / présentée par Renaud Sainsaulieu ; sous la direction de Michel Crozier', Thèse d'État, Lettres et Sciences Humaines, Paris 5, 1975.",
+  "confidence": "high",
+  "notes": "Maitron says he first registered the thesis under Raymond Aron, then continued it with Crozier. Maitron gives the defence as 1976."
+ },
+ {
+  "pid": 726470,
+  "name": "Frederick Franklin Stephan",
+  "status": "no_doctoral_advisor",
+  "advisors": [],
+  "phd_institution": null,
+  "phd_year": null,
+  "source_url": "https://en.wikipedia.org/wiki/Frederick_F._Stephan",
+  "evidence": "Wikipedia: B.A. University of Illinois 1924 and M.A. in sociology University of Chicago 1926; no doctorate listed.",
+  "confidence": "medium",
+  "notes": "No source says outright that he had no PhD; it is just absent from every bio found. Was Professor of Social Statistics at Princeton (1947-71), which fits his known student Hermalin."
+ },
+ {
+  "pid": 975497077,
+  "name": "Jacqueline Barus-Michel",
+  "status": "advisor_found",
+  "advisors": [
+   "Jean Duvignaud",
+   "Pierre Ansart"
+  ],
+  "phd_institution": "Université de Tours (3e cycle); Université Paris 7 (thèse d'État)",
+  "phd_year": 1970,
+  "source_url": "https://www.sudoc.fr/155298488",
+  "evidence": "SUDOC: 'Esquisse d'une phénoménologie sociale de la folie / Jacqueline Barus ; sous la direction de Jean Duvignaud', 3e cycle, Tours, 1970. Thèse d'État under Pierre Ansart, Paris 7, 1983.",
+  "confidence": "high",
+  "notes": "These are two separate theses, not co-supervision: Duvignaud supervised the 3e cycle (1970, also on fr.wikipedia) and Ansart the thèse d'État (1983, SUDOC 041417852). Reviewer: decide whether to keep both."
+ },
+ {
+  "pid": 974014262,
+  "name": "Michel Lallement",
+  "status": "advisor_found",
+  "advisors": [
+   "François Michon"
+  ],
+  "phd_institution": "Université Paris 1",
+  "phd_year": 1989,
+  "source_url": "https://theses.fr/1989PA010002",
+  "evidence": "theses.fr: 'Marges du salariat et flexibilité du travail : le cas du travail à domicile dans les pays industrialisés', Paris 1, 1989; director François Michon.",
+  "confidence": "high",
+  "notes": "Confirmed through the same theses.fr person record (03164466X) that lists him as director of Mias, Godechot and others."
+ },
+ {
+  "pid": 714267,
+  "name": "François Raveau",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "Faculté de médecine de Paris",
+  "phd_year": null,
+  "source_url": "https://www.ehess.fr/jcms/43011_JNewsArticle/en/hommage-a-l-anthropologue-francois-raveau",
+  "evidence": "EHESS tribute (via search snippet): after a doctorate at the Faculté de médecine de Paris he became maître de conférences in 1971.",
+  "confidence": "medium",
+  "notes": "Medical doctorate; no director found. He co-wrote with Roger Bastide (1963), but nothing names Bastide as supervisor. The EHESS page refused direct connection."
+ },
+ {
+  "pid": 552460,
+  "name": "Sue A. Kuba",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "California School of Professional Psychology",
+  "phd_year": null,
+  "source_url": "https://www.researchgate.net/profile/Sue-Kuba",
+  "evidence": "ResearchGate profile: PhD in Clinical Psychology, CSPP. No dissertation record or advisor found.",
+  "confidence": "medium",
+  "notes": ""
+ },
+ {
+  "pid": 984480774,
+  "name": "Emmanuel Pedler",
+  "status": "advisor_found",
+  "advisors": [
+   "Jean-William Lapierre"
+  ],
+  "phd_institution": "Université de Nice",
+  "phd_year": 1985,
+  "source_url": "https://www.sudoc.fr/041210476",
+  "evidence": "SUDOC: 'Contribution à une sociologie de la production artistique : socio-sémiotique de l'opéra verdien / Emmanuel Pedler ; sous la direction de Jean-William Lapierre', 3e cycle, Nice, 1985.",
+  "confidence": "high",
+  "notes": "Persée gives the year as 1984. The IdRef authority (03573647X) is the same one that lists him as director of Girel, Ethis, Djakouane and Fernandez, so the identity is confirmed. Passeron was a collaborator, not his supervisor."
+ },
+ {
+  "pid": 957838997,
+  "name": "Roger Establet",
+  "status": "advisor_found",
+  "advisors": [
+   "Michel Verret"
+  ],
+  "phd_institution": "Université de Nantes",
+  "phd_year": 1985,
+  "source_url": "https://fr.wikipedia.org/wiki/Roger_Establet",
+  "evidence": "Il soutiendra finalement sa thèse de doctorat ... sous la direction de Michel Verret à l'université de Nantes (La rentabilité sociale différentielle de la scolarisation).",
+  "confidence": "high",
+  "notes": "Wikipedia says 1984; SUDOC 009559167 says Thèse (d'État), Nantes, 1985, 'sous la dir. de Michel Verret'. He was earlier assistant to Gurvitch, which was not supervision."
+ },
+ {
+  "pid": 234871,
+  "name": "Linda Waite",
+  "status": "advisor_found",
+  "advisors": [
+   "Ronald Freedman"
+  ],
+  "phd_institution": "University of Michigan",
+  "phd_year": 1976,
+  "source_url": "https://higherlogicdownload.s3.amazonaws.com/POPULATIONASSOCIATION/3e04a602-09fe-49d8-93e4-1dd0069a7f14/UploadedImages/Past_President_Interviews/58_Linda_Waite.pdf",
+  "evidence": "PAA past-president interview, Waite: 'Ron Freedman was my chair ... he agreed to chair the dissertation.'",
+  "confidence": "high",
+  "notes": "She also credits economist Malcolm Cohen as very helpful (not as advisor). The Mathematics Genealogy Project (id 259115) lists her advisor as unknown."
+ },
+ {
+  "pid": 974115972,
+  "name": "Pierre Lantz",
+  "status": "advisor_found",
+  "advisors": [
+   "Henri Lefebvre"
+  ],
+  "phd_institution": "Université Paris 10 (Nanterre)",
+  "phd_year": 1975,
+  "source_url": "https://www.sudoc.fr/040972534",
+  "evidence": "SUDOC: 'Aux marges de l'économie politique : valeur et richesse ... / Pierre Lantz ; sous la direction de Henri Lefebvre', Thèse d'État, Sociologie, Paris 10, 1975.",
+  "confidence": "high",
+  "notes": "The thesis sits on IdRef 186064179 (Lantz, Pierre, 1931-, philosophe; agrégé, maître de conférences in sociology 1977). The theses.fr Paris 8 director record is a separate authority (026965186), almost certainly the same man (both are linked to L'Homme et la société; the Hommage covers 1931-2019). Worth a quick check."
+ },
+ {
+  "pid": 542699,
+  "name": "Glen Jennings",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "Oklahoma State University (Ed.D.)",
+  "phd_year": null,
+  "source_url": "https://catalog.twu.edu/graduate/faculty/cornaro-professors/",
+  "evidence": "TWU catalog: Glen H. Jennings, Cornaro Professor of Family Sciences; B.A. Panhandle State, M.S. and Ed.D. Oklahoma State University.",
+  "confidence": "medium",
+  "notes": "Doctorate is an Ed.D.; no dissertation record or chair found."
+ },
+ {
+  "pid": 815846,
+  "name": "Heinz Steinert",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "Universität Wien",
+  "phd_year": 1967,
+  "source_url": "https://de.wikipedia.org/wiki/Heinz_Steinert",
+  "evidence": "Doctorate in psychology, Vienna, 1967, thesis on experimental studies of short-term memory theories; supervisor not named.",
+  "confidence": "medium",
+  "notes": "Habilitation in sociology, Graz 1972. The obituary (Kreissl & Pilgram 2011) and the AGSÖ pages name no Doktorvater. The Wikipedia details come from a search summary."
+ },
+ {
+  "pid": 595597,
+  "name": "Patricia Gurin",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "University of Michigan",
+  "phd_year": 1964,
+  "source_url": "https://lsa.umich.edu/psych/people/emeriti-faculty/pgurin.html",
+  "evidence": "Ph.D. in Social Psychology, University of Michigan, 1964; no advisor named in any source found.",
+  "confidence": "medium",
+  "notes": "approx_phd_year 1959 in the input; sources say 1964."
+ },
+ {
+  "pid": 945761314,
+  "name": "Carmen Bernand",
+  "status": "advisor_found",
+  "advisors": [
+   "Olivier Dollfus"
+  ],
+  "phd_institution": "Université Paris 7",
+  "phd_year": 1981,
+  "source_url": "https://www.sudoc.fr/006204376",
+  "evidence": "SUDOC: 'Les renaissants de Pindilig ... / Carmen Muñoz-Bernand ; sous la direction de Olivier Dollfus', Thèse, Lettres, Paris 7, 1981.",
+  "confidence": "high",
+  "notes": "Her earlier thèse de 3e cycle (EPHE VIe section, 1970, on the Ayoré, from Lucien Sebag's notes) names no director in SUDOC. fr.wikipedia says that thesis was done 'sous l'égide de Claude Lévi-Strauss', which is plausible but not an explicit director statement. Reviewer may want to add Lévi-Strauss as a medium-confidence advisor for the 1970 doctorate."
+ },
+ {
+  "pid": 906537824,
+  "name": "François Vatin",
+  "status": "advisor_found",
+  "advisors": [
+   "Jean-Paul de Gaudemar"
+  ],
+  "phd_institution": "EHESS",
+  "phd_year": 1981,
+  "source_url": "https://www.sudoc.fr/041146158",
+  "evidence": "SUDOC: 'L'économie des flux ... / François Vatin ; sous la dir. de Jean-Paul de Gaudemar', Thèse de 3e cycle, Sciences économiques, EHESS, 1981.",
+  "confidence": "high",
+  "notes": "Also cited in a footnote on his fr.wikipedia article."
+ },
+ {
+  "pid": 940110571,
+  "name": "Jean Cuisenier",
+  "status": "advisor_found",
+  "advisors": [
+   "Raymond Aron"
+  ],
+  "phd_institution": "Université Paris 5 (Sorbonne)",
+  "phd_year": 1971,
+  "source_url": "https://www.sudoc.fr/041385853",
+  "evidence": "SUDOC: 'Économie et parenté ... / Jean Cuisenier ; sous la direction de Raymond Aron', Thèse d'État, Sociologie, Paris 5, 1971.",
+  "confidence": "high",
+  "notes": "fr.wikipedia and a 2007 Cairn biography also say Aron. A 2017 Ethnologie française homage says Lévi-Strauss, probably confusing him with a jury member (the Bérose biography lists Lévi-Strauss and Boudon on the jury)."
+ },
+ {
+  "pid": 538637,
+  "name": "Jerome Karabel",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "Harvard University",
+  "phd_year": 1977,
+  "source_url": "https://en.wikipedia.org/wiki/Jerome_Karabel",
+  "evidence": "Wikipedia and his Berkeley CV: BA 1972 and Ph.D. (Sociology) 1977, Harvard. No advisor named.",
+  "confidence": "medium",
+  "notes": ""
+ },
+ {
+  "pid": 932409588,
+  "name": "Jean-Michel Bessette",
+  "status": "advisor_found",
+  "advisors": [
+   "Louis-Vincent Thomas"
+  ],
+  "phd_institution": "Université Paris 5",
+  "phd_year": 1976,
+  "source_url": "https://www.sudoc.fr/006208193",
+  "evidence": "SUDOC: 'Le crime (sociologie et anthropologie) / Jean-Michel Bessette ; sous la direction de L. V. Thomas', Thèse de 3e cycle, Paris 5, 1976.",
+  "confidence": "high",
+  "notes": "Thomas also supervised his thèse d'État, 'Directions pour une anthropologie du crime', Paris 5, 1984 (SUDOC 006208207)."
+ },
+ {
+  "pid": 214282,
+  "name": "Angela M. O'Rand",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "Temple University",
+  "phd_year": 1974,
+  "source_url": "https://scholars.duke.edu/person/aorand",
+  "evidence": "Duke Scholars: Ph.D., Temple University, 1974. No dissertation or advisor information found.",
+  "confidence": "medium",
+  "notes": "She co-wrote a 1974 Social Forces paper with Robert A. Ellis, which may hint at the supervisor but proves nothing."
+ },
+ {
+  "pid": 171113,
+  "name": "Ivan Szelenyi",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "Hungarian Academy of Sciences (Candidate of Sciences)",
+  "phd_year": 1973,
+  "source_url": "https://en.wikipedia.org/wiki/Iv%C3%A1n_Szel%C3%A9nyi",
+  "evidence": "Wikipedia: 'In 1973, he earned the title Candidate of Sciences (PhD) at the HAS.' No supervisor named.",
+  "confidence": "medium",
+  "notes": "He worked in András Hegedüs's HAS sociology research group; that is not evidence of supervision. A Hungarian candidate degree may have had no formal supervisor."
+ },
+ {
+  "pid": 552525,
+  "name": "Karl L. Alexander",
+  "status": "advisor_found",
+  "advisors": [
+   "Bruce K. Eckland"
+  ],
+  "phd_institution": "University of North Carolina at Chapel Hill",
+  "phd_year": 1972,
+  "source_url": "https://elder.web.unc.edu/mentoring/",
+  "evidence": "Glen Elder's mentoring page: Elder directed Alexander's MA thesis and sat on his dissertation committee; the dissertation was 'directed by the late Bruce Eckland'.",
+  "confidence": "high",
+  "notes": "Elder was the MA thesis director and a committee member, not the PhD advisor."
+ }
+]

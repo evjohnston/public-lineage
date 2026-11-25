@@ -164,22 +164,39 @@ def main() -> None:
                     "year": r.year, "institution": r.institution, "url": r.url,
                     "title": r.title if isinstance(r.title, str) else None,
                     "advisor_match": am, "student_match": sm, "in_aft": (a, s) in aft_edges})
-    # ---- links entered by hand (data/manual_edges.csv, e.g. from the explorer's Data gaps tab).
+    # ---- links entered by hand (data/manual_edges*.csv, e.g. from the explorer's Data gaps tab).
     # A pid, when given, is used as is; otherwise the name is matched like any outside source.
+    # role: director (formally supervised the doctorate; the default), mentor (documented as the
+    # person who trained them, not the formal director), or examiner (jury member / official
+    # opponent: kept as a committee tie, never a lineage link). degree: optional, e.g. "doctorat de 3e cycle".
+    manual_comm = []
     for man in sorted((ROOT / "data").glob("manual_edges*.csv")):
         md = pd.read_csv(man, dtype=str).fillna("")
         for i, r in enumerate(md.itertuples(index=False)):
-            a = int(r.advisor_pid) if r.advisor_pid.strip() else resolve(r.advisor_name, r.institution, "manual")[0]
-            s = int(r.student_pid) if r.student_pid.strip() else resolve(r.student_name, r.institution, "manual")[0]
+            role = (getattr(r, "role", "") or "director").strip().lower()
+            degree = (getattr(r, "degree", "") or "").strip()
+            a_known = r.advisor_pid.strip()
+            a = int(a_known) if a_known else resolve(r.advisor_name, r.institution, "manual", create=role != "examiner")[0]
+            s = int(r.student_pid) if r.student_pid.strip() else resolve(r.student_name, r.institution, "manual", create=role != "examiner")[0]
             if a is None or s is None or a == s:
-                print(f"{man.name} row {i + 2}: could not place {r.advisor_name!r} -> {r.student_name!r}")
+                print(f"{man.name} row {i + 2}: could not place {r.advisor_name!r} -> {r.student_name!r} ({role})")
+                continue
+            yr = int(r.year) if r.year.strip().isdigit() else None
+            if role == "examiner":
+                manual_comm.append({"member_pid": a, "student_pid": s, "source": "manual", "source_id": f"{man.stem}-{i + 2}",
+                                    "year": yr, "url": r.url or None, "match": "manual"})
                 continue
             out.append({"advisor_pid": a, "student_pid": s, "source": "manual", "source_id": f"{man.stem}-{i + 2}",
-                        "year": int(r.year) if r.year.strip().isdigit() else None, "institution": r.institution or None,
-                        "url": r.url or None, "title": r.note or None, "advisor_match": "pid" if r.advisor_pid.strip() else "name",
-                        "student_match": "pid" if r.student_pid.strip() else "name", "in_aft": (a, s) in aft_edges})
+                        "year": yr, "institution": r.institution or None,
+                        "url": r.url or None, "title": r.note or None, "advisor_match": "pid" if a_known else "name",
+                        "student_match": "pid" if r.student_pid.strip() else "name", "in_aft": (a, s) in aft_edges,
+                        "rel": 6 if role == "mentor" else 1, "role": role, "degree": degree or None})
         print(f"{man.name}: {len(md)} rows")
     m = pd.DataFrame(out).drop_duplicates(["advisor_pid", "student_pid", "source"])
+    for c, v in (("rel", 1), ("role", None), ("degree", None)):
+        if c not in m:
+            m[c] = v
+    m["rel"] = m["rel"].fillna(1).astype(int)
     m.to_parquet(EXT / "merged_edges.parquet", index=False)
     pd.DataFrame(new_rows).to_parquet(EXT / "ext_people.parquet", index=False)
 
@@ -203,6 +220,7 @@ def main() -> None:
                     continue
                 comm.append({"member_pid": c, "student_pid": s, "source": r.source, "source_id": str(r.source_id),
                              "year": r.year, "url": r.url, "match": cm})
+    comm += manual_comm
     cm_df = pd.DataFrame(comm).drop_duplicates(["member_pid", "student_pid"]) if comm else pd.DataFrame(
         columns=["member_pid", "student_pid", "source", "source_id", "year", "url", "match"])
     cm_df.to_parquet(EXT / "merged_committees.parquet", index=False)

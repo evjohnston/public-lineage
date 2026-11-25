@@ -1,277 +1,315 @@
 ---
 name: Lineage Explorer
-description: Sociology's advisor-to-student network drawn as an ink sociogram on white paper.
+description: Sociology's advisor-to-student network on a graphite workbench of fixed, seamed panels.
 colors:
-  red: "#c8102e"
-  red-wash: "#fbeaec"
-  blue: "#1f4e9c"
-  blue-wash: "#edf2fa"
-  ink: "#161616"
-  ink-2: "#4a4a48"
-  ink-3: "#6a6a67"
-  ink-faint: "#c9c6be"
-  rule: "#e9e6df"
-  wash: "#f6f4ef"
-  paper: "#ffffff"
+  accent: "#7aa2f7"
+  accent-ink: "#0f1420"
+  accent-wash: "rgba(122, 162, 247, 0.14)"
+  note: "#e0af68"
+  note-wash: "rgba(224, 175, 104, 0.10)"
+  danger: "#f7768e"
+  bg: "#16181d"
+  panel: "#1b1e24"
+  raise: "#23272f"
+  seam: "#2c313a"
+  seam-2: "#3b414c"
+  text: "#e6e8eb"
+  text-2: "#b3bac6"
+  text-3: "#8f97a5"
+  faint: "#4b5263"
+  cat-teal: "#159a80"
+  cat-violet: "#9a78ec"
+  cat-orange: "#d9752a"
+  cat-other: "#3b414c"
+  edge: "#6b7280"
+  cohort-1940: "#3d3424"
+  cohort-1950: "#544629"
+  cohort-1960: "#6d5a2e"
+  cohort-1970: "#876f33"
+  cohort-1980: "#a38639"
+  cohort-1990: "#bf9d40"
+  cohort-2000: "#d9b44c"
+  cohort-2010: "#f0cc66"
 typography:
+  display:
+    fontFamily: "Source Sans 3, system-ui, sans-serif"
+    fontSize: "34px"
+    fontWeight: 700
+    lineHeight: 1.05
+    letterSpacing: "-0.02em"
   headline:
     fontFamily: "Source Sans 3, system-ui, sans-serif"
-    fontSize: "1.625rem"
+    fontSize: "24px"
     fontWeight: 700
     lineHeight: 1.15
+    letterSpacing: "-0.01em"
   title:
     fontFamily: "Source Sans 3, system-ui, sans-serif"
-    fontSize: "1.125rem"
+    fontSize: "18px"
     fontWeight: 700
-    lineHeight: 1.45
-    fontFeature: "tnum"
+    lineHeight: 1.2
   body:
     fontFamily: "Source Sans 3, system-ui, sans-serif"
-    fontSize: "0.9375rem"
+    fontSize: "14.5px"
     fontWeight: 400
     lineHeight: 1.45
     fontFeature: "tnum"
   body-strong:
     fontFamily: "Source Sans 3, system-ui, sans-serif"
-    fontSize: "0.9375rem"
+    fontSize: "14.5px"
     fontWeight: 600
     lineHeight: 1.45
   small:
     fontFamily: "Source Sans 3, system-ui, sans-serif"
-    fontSize: "0.8125rem"
+    fontSize: "13px"
     fontWeight: 400
     lineHeight: 1.45
   label:
     fontFamily: "Source Sans 3, system-ui, sans-serif"
-    fontSize: "0.75rem"
+    fontSize: "11px"
     fontWeight: 700
-    lineHeight: 1.45
-    letterSpacing: "0.06em"
-  graph-label:
-    fontFamily: "Source Sans 3, system-ui, sans-serif"
-    fontSize: "13px"
+    letterSpacing: "0.09em"
+  figure:
+    fontFamily: "Source Code Pro, ui-monospace, Menlo, monospace"
+    fontSize: "14.5px"
     fontWeight: 600
-    lineHeight: 1.2
+    lineHeight: 1.3
+  figure-small:
+    fontFamily: "Source Code Pro, ui-monospace, Menlo, monospace"
+    fontSize: "11px"
+    fontWeight: 500
 rounded:
-  none: "0px"
-  circle: "50%"
+  hair: "3px"
+  base: "5px"
+  pill: "999px"
 spacing:
-  xs: "6px"
-  sm: "8px"
-  md: "12px"
-  lg: "18px"
-  xl: "22px"
+  row: "6px"
+  gap: "8px"
+  inset: "10px"
+  gutter: "16px"
+  panel: "18px"
+  sheet: "24px"
 components:
-  tab:
-    textColor: "{colors.ink-2}"
-    typography: "{typography.body-strong}"
-    height: "56px"
-  tab-active:
-    textColor: "{colors.ink}"
-    typography: "{typography.body-strong}"
-  search-input:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.none}"
-    padding: "0 10px 0 32px"
-    height: "34px"
-  segmented-option:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    typography: "{typography.small}"
-    rounded: "{rounded.none}"
-    padding: "4px 11px"
-  segmented-option-active:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.paper}"
   button:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    typography: "{typography.body-strong}"
-    rounded: "{rounded.none}"
-    padding: "6px 12px"
-  button-hover:
-    backgroundColor: "{colors.wash}"
+    backgroundColor: "{colors.raise}"
+    textColor: "{colors.text}"
+    typography: "{typography.small}"
+    rounded: "{rounded.base}"
+    padding: "5px 11px"
   button-primary:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.paper}"
-    rounded: "{rounded.none}"
-    padding: "6px 12px"
-  chip:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.none}"
-    padding: "5px 12px"
-  data-note:
-    backgroundColor: "{colors.blue-wash}"
-    textColor: "{colors.blue}"
+    backgroundColor: "{colors.accent}"
+    textColor: "{colors.accent-ink}"
+    rounded: "{rounded.base}"
+    padding: "5px 11px"
+  search-input:
+    backgroundColor: "{colors.bg}"
+    textColor: "{colors.text}"
+    rounded: "{rounded.base}"
+    height: "32px"
+    padding: "0 34px 0 32px"
+  seg-button:
+    backgroundColor: "transparent"
+    textColor: "{colors.text-2}"
+    typography: "{typography.small}"
+    rounded: "{rounded.hair}"
+    padding: "3px 10px"
+  seg-button-pressed:
+    backgroundColor: "{colors.raise}"
+    textColor: "{colors.accent}"
+  chip-toggle:
+    backgroundColor: "transparent"
+    textColor: "{colors.text-2}"
+    rounded: "{rounded.pill}"
+    padding: "3px 10px"
+  chip-toggle-checked:
+    backgroundColor: "{colors.accent-wash}"
+    textColor: "{colors.text}"
+  rail-link:
+    backgroundColor: "transparent"
+    textColor: "{colors.text-2}"
+    rounded: "{rounded.base}"
     padding: "6px 10px"
-  verdict:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.red}"
-    padding: "10px 12px"
-  path-step-marker:
-    textColor: "{colors.red}"
-    rounded: "{rounded.circle}"
-    size: "18px"
-  table-row-selected:
-    backgroundColor: "{colors.red-wash}"
-  side-panel:
-    backgroundColor: "{colors.paper}"
-    padding: "22px"
-    width: "360px"
+  rail-link-current:
+    backgroundColor: "{colors.accent-wash}"
+    textColor: "{colors.text}"
+  note:
+    backgroundColor: "{colors.note-wash}"
+    textColor: "{colors.note}"
+    typography: "{typography.small}"
+    rounded: "{rounded.base}"
+    padding: "7px 10px"
+  tag:
+    backgroundColor: "transparent"
+    textColor: "{colors.note}"
+    typography: "{typography.label}"
+    rounded: "{rounded.hair}"
+    padding: "1px 6px"
+  tile:
+    backgroundColor: "{colors.panel}"
+    textColor: "{colors.text}"
+    padding: "14px 16px 16px"
+  gap-tile-pressed:
+    backgroundColor: "{colors.accent-wash}"
+    textColor: "{colors.accent}"
 ---
 
 # Design System: Lineage Explorer
 
 ## Overview
 
-**Creative North Star: "The Moreno Sociogram"**
+**Creative North Star: "The Graphite Workbench"**
 
-The explorer draws sociology's academic genealogy the way Jacob Moreno drew the field's first networks: ink circles, arrows and typed labels on white paper. Everything is ink on paper. Two pencils mark the page: a red one for whatever the researcher is tracing or acting on, and a blue one for notes about the data. The result reads like a working document the researcher can trust and audit, not a dashboard performing for an audience.
+The explorer is a dark-first developer console for a genealogy of scholars. Every job owns a fixed tile: header across the top, view rail on the left, the canvas in the centre with a title row above it and a status row and list strip beneath it, the record on the right. Tiles are divided by 1px seams, never by gaps, cards, or shadows, so the screen reads as one machined surface cut into compartments. Selecting anything updates canvas, record, and list in place; the record and strip acknowledge it with a 150ms seam flash.
 
-Density is high and calm. One sans face in four weights carries every role, numerals are tabular everywhere, and regions are divided by 1.5px ink rules, not by cards or shadows. The diagram, the record panel and the ranked tables share one material: hollow and filled circles, straight arrows, thin warm rules between rows.
-
-The build rejects the dark neon force-graph hairball and the gray-blue SaaS graph explorer. Neither aesthetic belongs here.
+Density is high and calm: small type, tabular figures, hairline rules between rows, one cool accent. Colour carries meaning only. Blue is the user's attention (focus, selection, the traced path); amber is the data's voice (notes, stamped states, cohort); the three category hues and the amber cohort ramp colour nodes on the canvas and nowhere else. The world rejects the floating-toolbar canvas with overlays stacked on the graph, and the white SaaS card dashboard.
 
 **Key Characteristics:**
-- White paper ground, near-black ink, 1.5px strokes for every structural line.
-- Red pencil only for the traced path, focus and the active choice; blue pencil only for data-quality notes, always italic.
-- Circle grammar: hollow = sociology, dashed = outside the field, filled ink = the person in focus.
-- Square corners everywhere except the circles themselves.
-- Flat. No shadows, no rounded panels, no gradients.
+- Graphite ground with two lifted panel tones; depth by tone and seam, not shadow.
+- One accent, rationed to state.
+- Source Sans 3 for words, Source Code Pro for every figure.
+- Panel and section headers in tiny tracked uppercase; person names large and bold.
+- Controls live in the flow above or beside the canvas, never on top of it.
 
 ## Colors
 
-An ink-on-paper palette with two pencils. Neutrals do almost all the work.
+A near-neutral graphite scale with a cool cast, one periwinkle accent, one amber data voice, and a reserved red.
 
 ### Primary
-- **Red Pencil** (`red`): The one thing being traced or acted on. The Connect path's thick stroke and arrowheads, path-node borders, the active tab underline, focus outlines, the sort caret, numbered path-step markers, the verdict box, the selected data-gap category, link hover, and the text caret.
-- **Red Wash** (`red-wash`): The selected table row and text selection. The only red fill larger than a mark.
+- **Workbench Blue** (accent): focus rings, selected rows and rail items, pressed segments, checked chips, the traced path on the canvas, the focus node, link hovers, primary buttons. Text set on it uses **Accent Ink**. **Accent Wash** is its 14% tint for selected backgrounds (rail current, selected table row, pressed gap tile, verdict box).
 
 ### Secondary
-- **Blue Pencil** (`blue`): Data-quality notes only: panel flags, gap-category explanations, Connect's distance note, and notes on empty states. Always set in italic.
-- **Blue Wash** (`blue-wash`): The tinted ground behind a panel data note.
+- **Ledger Amber** (note): data notes, stamped tags, data-health figures, education bars on the career timeline. **Note Wash** backs the note box, with a 28% amber border.
+
+### Tertiary
+- **Signal Red** (danger): declared for errors and destructive actions only. No shipping surface uses it yet.
 
 ### Neutral
-- **Ink** (`ink`): Body text, every 1.5px rule and border, node outlines and edges, the filled focus node, the pressed segmented option and the primary button.
-- **Secondary Ink** (`ink-2`): Institutions, sub-lines, inactive tabs, out-of-field node labels, legend text. 9:1 on paper.
-- **Tertiary Ink** (`ink-3`): Counts, section labels, table headers, the credit line, placeholders. 5.3:1 on paper; the floor for any text.
-- **Faint Ink** (`ink-faint`): Underline color on clickable stat numbers and scrollbar thumbs. Not for text.
-- **Warm Rule** (`rule`): Hairline (1px) dividers between stat rows, list rows, table rows and under the toolbar.
-- **Wash** (`wash`): Hover tint for rows, results, buttons and chips.
-- **Paper** (`paper`): The page, the panel, inputs and buttons. No other surface color exists.
+- **Graphite** (bg): the page, the canvas, input and segmented-control wells, sticky table headers on sheets.
+- **Panel Graphite** (panel): header, rail, toolbar, status row, list strip, record panel, overview tiles, popovers.
+- **Raised Graphite** (raise): buttons, hover and pressed states.
+- **Seam** (seam): every 1px divider between tiles and rows; the gap colour of seamed grids.
+- **Seam Strong** (seam-2): control borders, table header rules, scrollbar thumbs.
+- **Text** (text, 14:1 on bg), **Text Secondary** (text-2, 9:1), **Text Tertiary** (text-3, 6:1): primary copy, secondary copy and figures, labels and counts.
+- **Faint** (faint): dropped marks on the canvas, link underlines, disabled kinship cells. Never body text.
+
+### Canvas palette
+- **Category hues** (cat-teal, cat-violet, cat-orange): the three pinnable slots when nodes are coloured by school, community or institution; everything else takes **Other** (cat-other). Validated for separation on graphite.
+- **Cohort ramp** (cohort-1940 to cohort-2010): one amber hue, dim to bright by PhD decade. Sequential, never a rainbow.
+- **Edge Grey** (edge): advisor edges and co-authorship curves; transcript and committee edges use Text Tertiary, dotted or dashed.
+- Nodes are hollow Graphite discs with a Text ring; labels sit beneath in Source Sans 3 600 on an 85% Graphite text background.
 
 ### Named Rules
-**The Two Pencils Rule.** Red means "the thing you are tracing or acting on"; blue means "a note about the data". Never use either for decoration, branding or category coding.
+**The One Accent Rule.** Blue means "you are here or you chose this": focus, selection, traced path. It is never decoration, never a category, never a heading colour.
 
-**The Drop-to-Light-Ink Rule.** When a path is traced, every mark not on it drops to 32% opacity instead of changing color, so the red path is the only saturated thing on the page.
+**The Amber Voice Rule.** Amber belongs to the data: notes, stamped states, health counts, cohort. A note is amber and upright, never italic.
+
+**The Canvas-Only Hue Rule.** Category hues and the cohort ramp colour nodes and their key swatches only; chrome stays graphite and blue.
 
 ## Typography
 
-**Body Font:** Source Sans 3 (self-hosted variable woff2, 200 to 900, with roman and italic; fallback system-ui, sans-serif)
+**Body Font:** Source Sans 3 (with system-ui), self-hosted variable woff2 in `explorer/fonts`, roman and italic.
+**Mono Font:** Source Code Pro (with ui-monospace, Menlo), self-hosted.
 
-**Character:** One humanist sans in four weights reads like a typed label on a research diagram. Hierarchy comes from weight and a short size ramp, not from a second family.
+**Character:** A humanist sans for names and prose, paired with its sibling mono for counts, years and ranks, so figures line up like a console readout while names stay warm.
 
 ### Hierarchy
-- **Headline** (700, 1.625rem, 1.1 to 1.15): Panel person names, sheet titles, the canvas toolbar title, notice headings, and the big numbers in the data-gap grid.
-- **Title** (700, 1.125rem): The brand wordmark and stat-row values.
-- **Body** (400, 0.9375rem, 1.45): All running text and table cells. Ledes cap at 75ch, notices at 52ch.
-- **Body Strong** (600, 0.9375rem): Person names in lists, results and tables; tabs; buttons; chips.
-- **Small** (400 or 600, 0.8125rem): Counts, sub-lines, legend, segmented options, relation lines under path steps.
-- **Label** (700, 0.75rem, 0.06em, uppercase, Tertiary Ink): Section labels inside the panel that name the list below them (Advisors, Students, Path) and table column headers. A label names its own content; it never sits above a headline.
-- **Graph Label** (600, 13px; focus 700, 15px; out-of-field 400 in Secondary Ink): Node names under circles on a semi-opaque paper backing, with a second line carrying the descendant count.
+- **Display** (700, 34px, 1.05, -0.02em): the overview heading only; 28px under 900px.
+- **Headline** (700, 24px, 1.15, -0.01em): the person's name in the record panel, sheet titles, notice headings.
+- **Title** (700, 18px, 1.2): the toolbar title over the canvas; the title select.
+- **Body** (400, 14.5px, 1.45, tabular numerals): base text. Strong (600) for names in lists and tables. Ledes cap at 75ch, findings at 70ch.
+- **Small** (13px): secondary lines, controls, chips, buttons, key-value rows.
+- **Label** (700, 11px, 0.08 to 0.09em tracking, uppercase, Text Tertiary): rail group headers, panel section headers, tile headers, table headers, segment labels, colour-key heading.
+- **Figure** (Source Code Pro 600, 14.5px) and **Figure Small** (500, 11px): stat values, counts in rail and summaries, table numerics, gap-tile numbers (24px), kinship counts, timeline ticks.
 
 ### Named Rules
-**The Tabular Rule.** `font-variant-numeric: tabular-nums` is set on the body; every number lines up in columns without per-element opt-in.
+**The Figures-in-Mono Rule.** Every count, year, rank and statistic is set in Source Code Pro.
 
-**The Italic Is Blue Rule.** Italic is reserved for blue-pencil data notes (and the dotted "more" stub in the diagram). Do not use italic for emphasis elsewhere.
+**The Names-Never-Mono Rule.** Person and institution names are always Source Sans 3, even inside a stat row (the text variant of a stat value switches back to the sans).
 
 ## Layout
 
-A fixed application frame on a three-row grid: a 56px top bar, a work area that fills the viewport, and a one-line credit footer. The work area splits into a fluid canvas or sheet on the left and a fixed 360px record panel on the right, divided by a 1.5px ink rule.
+A fixed application shell on a CSS grid: a 48px header row, a body row, and a credit footer. The body is a 208px rail plus a work area, which splits into a flexible stage and a 360px record panel (320px under 1180px). The stage stacks a toolbar (min 50px), the canvas (fills the rest), a status row (min 32px, single line, horizontal scroll), and a list strip (max 184px, sticky head). The overview and data sheets render inside the canvas as a scrolling sheet with 24px by 28px padding; the overview caps at 1180px.
 
-- **Top bar:** brand, search (min(360px, 34vw)) and four text tabs in one row, 22px side padding, 28px gaps, ruled below in ink.
-- **Canvas:** the diagram fills the stage; a toolbar overlays its top edge on 95% white with a hairline rule below; the legend sits bottom-left at 18px.
-- **Sheet:** tables and the gap grid scroll inside the stage with 22px by 26px padding.
-- **Panel:** 22px padding; sections separated by 22px above each label.
-- **Rhythm:** 6, 8, 12, 18 and 22px recur. Rows run 5 to 7px vertical padding, so lists stay dense.
-- **Responsive:** at 960px and below, the top bar wraps (search drops to its own full-width row), the work area stacks with the canvas at minmax(440px, 62vh) above the panel, the panel's divider moves to its top edge, and the toolbar becomes static. At 560px and below, the brand subtitle and legend hide and the Connect pickers go full width.
+Rhythm: 16px horizontal gutter on header, toolbar, status row and strip; 18px panel padding; rows at 5 to 7px vertical padding with a seam beneath; control gaps of 6 to 10px.
 
-**The Ruled Regions Rule.** Regions are separated by 1.5px ink lines and rows by 1px warm rules. Never separate regions with background tints, cards or gaps alone.
+Under 900px the shell becomes one column: search wraps to its own line, the rail collapses behind a toggle, the canvas takes a fixed 62vh, the record panel follows below with a top seam, and grids drop to one column.
+
+### Named Rules
+**The Fixed Tile Rule.** Every job has a fixed tile. Controls, legends and lists sit in the flow beside the canvas; nothing floats over the drawing.
 
 ## Elevation & Depth
 
-Completely flat. There are no shadows anywhere in the system. Depth is carried by line weight (1.5px ink for structure, 1px warm rule for rows) and, on the canvas, by opacity: overlays (toolbar, legend, checkboxes) sit on 86 to 95% white so diagram marks read faintly beneath them. The only `box-shadow` declarations in the build are lines, not shadows: the red 3px inset underline on the active tab and a 1px red ring that thickens an input's border on focus.
+Flat and tonal. Depth comes from three ground tones (Graphite below, Panel above, Raised for controls) and 1px seams. Seamed grids (overview tiles, gap tiles, view links) set a 1px gap on a Seam background so the dividers are the grid itself. Shadows are reserved for transient layers detached from the shell.
 
-**The Flat Paper Rule.** Nothing floats. If a surface needs separation, rule it in ink.
+### Shadow Vocabulary
+- **Popover** (`box-shadow: 0 12px 32px rgba(0,0,0,0.45)`): search results and the menu dropdown.
+- **Tooltip** (`box-shadow: 0 8px 20px rgba(0,0,0,0.4)` to `0 10px 24px rgba(0,0,0,0.45)`): map and 3D hover tips.
+- **Seam flash** (`box-shadow: inset 0 0 0 1px` accent fading to transparent over 150ms): the record panel and strip acknowledging a selection.
+
+### Named Rules
+**The Seam-Not-Shadow Rule.** Tiles at rest never cast shadows; they are separated by a 1px seam.
 
 ## Shapes
 
-Square corners on every rectangle: inputs, buttons, chips, segmented controls, the results dropdown, the verdict box and data notes all have a 0px radius. The circle is the system's only curve, and it is semantic: node circles in the diagram, the 12px circle markers in person lists, the legend, and the 18px numbered path-step rings. Stroke style carries meaning: solid = sociology, dashed = outside the field (and postdoc edges), dotted = a collapsed "more" stub.
-
-**The Circle Means a Person Rule.** Circles stand for people or for steps along a lineage. Do not use circles, pills or rounded corners for controls or containers.
+One gentle radius (5px) on inputs, buttons, segmented wells, notes, popovers and seamed grid frames; 3px on small inner parts (segment buttons, tags, pins, kbd); full pills only for chip toggles and starter chips; circles for colour-key swatches, path step counters and nodes. Seams are always 1px. Disclosure carets are drawn as rotated 1.5px border corners; icons are inline 1.5 to 1.6px stroked SVG.
 
 ## Components
 
-### Top Bar Tabs
-- **Style:** text-only links in Body Strong, Secondary Ink, filling the bar's full height.
-- **Hover:** shifts to Ink.
-- **Active:** Ink text with a 3px red underline flush to the bar's bottom rule (`aria-current="page"`), transitioned over 200ms.
+### Buttons
+- **Shape:** gently rounded (5px).
+- **Default:** Raised Graphite with a Seam Strong border, Text, 600 at 13px, 5px by 11px; hover lifts the border to Text Tertiary.
+- **Primary:** Workbench Blue fill with Accent Ink text.
+- **Disabled:** 45% opacity.
+- **Text buttons:** "more" and stat-value buttons are underlined or blue mono, hover to accent.
 
-### Search Combobox
-- **Input:** 34px tall, 1.5px ink border, square, inline 16px stroked magnifier at left.
-- **Focus:** border turns red and thickens with a 1px red ring; the caret is red.
-- **Results:** a square listbox ruled in ink, at least 420px wide; each row shows the name (Body Strong), institution (Small, Tertiary Ink) and a right-aligned count. The highlighted row gets Wash and a red name.
+### Segmented control
+- **Style:** a Graphite well with a Seam Strong border and 2px inset; buttons 600 at 13px in Text Secondary.
+- **Pressed:** Raised Graphite with accent text and an inset Seam Strong ring. Preceded by a Label.
 
-### Segmented Control
-- **Style:** a 1.5px ink frame holding Small 600 options divided by 1px ink lines, with an optional Small label beside it.
-- **Hover:** Wash. **Pressed:** solid Ink with Paper text.
+### Chips
+- **Toggle chip:** a real, focusable checkbox drawn as a pill with a 7px hollow dot; checked turns the border and dot accent over Accent Wash.
+- **Starter chip:** a Raised pill with a mono count; hover sets an accent border.
 
-### Buttons and Chips
-- **Button:** 1.5px ink border, Paper fill, Body Strong, 6px by 12px, optional 14px stroked SVG icon. Hover: Wash.
-- **Primary Button:** solid Ink with Paper text.
-- **Chip:** the same frame at 5px by 12px, used for starting suggestions on empty states, with an optional Small count in Tertiary Ink.
+### Menu dropdown
+- A disclosure whose summary looks like a button, with an accent count badge; open sets an accent border. The popover is Panel Graphite with a Seam Strong border and the Popover shadow, holding toggle chips.
 
-### Ruled Stat Rows
-- A label on the left and a Title-weight number on the right, baseline-aligned, between 1px warm rules. Clickable numbers are underlined in Faint Ink and turn red on hover.
+### Inputs / Fields
+- **Style:** Graphite well (Panel inside the curate box), Seam Strong border, 5px radius, 30 to 32px tall (44px on the overview). Search carries a stroked magnifier and a `/` key hint.
+- **Focus:** accent border plus a 1px accent ring; no outer glow.
 
-### Person Lists
-- Rows ruled in warm hairlines, each with a 12px stroked circle marker (dashed for outside the field), the name in Body Strong (ellipsized), and a Small count at right. Hover turns the name red and underlines it. A "show more" text button in Small, Secondary Ink, ends long lists.
+### Navigation (rail)
+- Labelled groups (Person, Field, Data, Recent) with tracked Label headers. Links are 500 Text Secondary with a 15px stroked icon and a right-aligned mono count; hover is Raised; current is Accent Wash with the count in accent. Recent people are 400 small, truncated.
 
-### Blue-Pencil Data Note
-- Italic Blue Pencil text on Blue Wash, 6px by 10px, square. It flags missing or suspect data and is the only tinted block in the panel.
+### Record panel
+- Name as Headline, institution in Text Tertiary beneath. Stat rows: label in small Text Secondary, value in Figure, seam between rows. Key-value rows on an 8.5rem label column. Collapsible sections use a Label-style summary with a rotating caret and a mono count, seamed above and below.
 
-### Red Verdict Box
-- A 1.5px red frame on Paper around the Connect answer, with the two names in bold Ink and the relation in red.
+### Notes and tags
+- **Note:** amber text on Note Wash with an amber hairline border, 5px radius, small size.
+- **Tag:** amber uppercase 11px label in a 3px hairline amber box, for stamped states.
 
-### Numbered Path Steps
-- An ordered list whose markers are 18px red rings with 11px bold red numerals, each step ruled below, with a Small relation line ("advised the next person") under the name.
+### Tables
+- Full-width, collapsed borders, Label headers that sort (accent caret), seam under every row, numerics right-aligned in mono Text Secondary. Hover is Raised; selected is Accent Wash with the name in accent. Headers are sticky on Graphite (Panel inside the strip).
 
-### Data Tables
-- Header cells in Label style, ruled below in 1.5px ink and sticky; sort buttons span each header, and the sorted column shows a 12px red stroked SVG caret. Rows are ruled in warm hairlines, hover to Wash, and the selected row fills with Red Wash. Numeric columns are right-aligned; rank and institution recede to Tertiary and Secondary Ink.
+### Gap tiles and overview tiles
+- Seamed grids of Panel Graphite tiles. A gap tile pairs a 24px mono figure with a 600 label and a Text Tertiary reason; pressed turns figure and label accent over Accent Wash. Overview tiles carry a Label header with an accent "see all" link, then seamed rows (school bars in accent at 85%, people with mono counts, health rows with amber figures).
 
-### Data-Gap Category Grid
-- An auto-fill grid (min 260px columns) under a 1.5px ink rule. Each cell pairs a right-aligned Headline count with a Body Strong label and an italic Blue Pencil explanation. Hover or pressed turns the label red; pressed turns the count red too.
-
-### Lineage Diagram (signature)
-- Top-to-bottom layered tree (dagre). Nodes are circles sized by descendants (20px plus 6 per log10 step), Paper fill, 1.5px ink border; out-of-field nodes are dashed with lighter labels; the focus node is filled Ink. Edges are straight 1.3px ink lines with triangle arrowheads at 85% opacity, dashed for postdocs. Hover gives a node a 2.5px red border.
-- **Traced path:** path edges become 3.6px red strokes with larger arrowheads drawn above everything; path nodes get 3px red borders, endpoints fill red; all other marks drop to 32% opacity.
-- **Motion:** 200ms ease-out (cubic-bezier(0.16, 1, 0.3, 1)) fades on recenter and on opacity, color and width changes. Disabled under reduced motion.
+### Graph canvas (signature)
+- Hollow nodes ringed in Text, labels beneath, Edge Grey arrows. Out-of-field people are dashed and secondary; dropped context drops to Faint rings. The traced path thickens to 3.6px accent edges with accent rings and filled endpoints. The status row beneath carries the legend glyphs and colour key with mono counts and pin toggles.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** draw every structural line at 1.5px in Ink and every row divider at 1px in Warm Rule.
-- **Do** keep red for the traced path, focus and the active selection, and blue for data notes in italic.
-- **Do** keep the circle grammar: hollow for sociology, dashed for outside the field, filled ink for the person in focus.
-- **Do** use Source Sans 3 for every role, with tabular numerals.
-- **Do** keep text at Tertiary Ink (5.3:1) or darker; Faint Ink is for marks, never text.
-- **Do** use stroked inline SVG for icons, carets and markers, inheriting ink or red.
+- **Do** divide every tile and row with a 1px Seam; build grids as 1px gaps over a Seam ground.
+- **Do** reserve Workbench Blue for focus, selection and the traced path, with Accent Ink for text on it.
+- **Do** set every figure in Source Code Pro and every name in Source Sans 3.
+- **Do** put data notes and stamped states in amber, upright, on Note Wash.
+- **Do** keep canvas controls, legends and lists in the toolbar, status row and strip.
+- **Do** colour nodes only from the three category hues, Other, or the amber cohort ramp.
 
 ### Don't:
-- **Don't** add shadows, rounded panels, cards or gradients.
-- **Don't** use a dark or neon graph canvas, or gray-blue SaaS chrome.
-- **Don't** use red or blue for decoration, category color or branding.
-- **Don't** introduce a second typeface or a display face.
-- **Don't** put uppercase labels above headlines as eyebrows; the label style only names the list or column directly beneath it.
+- **Don't** float toolbars, legends or overlays on the graph canvas.
+- **Don't** give resting tiles shadows or turn the shell into white SaaS cards.
+- **Don't** use the accent as decoration, a category, or a heading colour.
+- **Don't** italicise notes or set names in mono.
+- **Don't** use Faint for readable text.
+- **Don't** introduce a rainbow for the cohort ramp; it stays one amber hue.

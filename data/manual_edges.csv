@@ -1,1 +1,1 @@
-advisor_pid,advisor_name,student_pid,student_name,year,institution,url,note
+advisor_pid,advisor_name,student_pid,student_name,year,institution,url,note,role,degree

@@ -3,22 +3,24 @@
 (() => {
   "use strict";
 
-  const F = { OUTSIDE: 1, ISOLATED: 2, NO_ADVISOR: 4, MULTI_ADVISOR: 8, EDUC: 16, SMALL: 32, PROF_INST: 64, EDU_AREA: 128, DUP: 256, EXTERNAL: 512 };
+  const F = { OUTSIDE: 1, ISOLATED: 2, NO_ADVISOR: 4, MULTI_ADVISOR: 8, EDUC: 16, SMALL: 32, PROF_INST: 64, EDU_AREA: 128, DUP: 256, EXTERNAL: 512, KNOWN_ROOT: 1024 };
   const SRC = { AFT: 1, NSF: 2, WIKIDATA: 4, DISS: 8 };
   const SRC_LABEL = { nsf_ddrig: "NSF dissertation grant", wikidata: "Wikidata", "theses.fr": "theses.fr", manual: "Entered by hand" };
   const srcLabel = (s) => SRC_LABEL[s] || (s.startsWith("oai:") ? `Dissertation repository (${s.slice(4)})` : s);
   const PROFDOC = F.EDUC | F.PROF_INST | F.EDU_AREA;
-  const INK = "#161616", RED = "#c8102e", FAINT = "#c9c6be", PAPER = "#ffffff", INK3 = "#6a6a67";
+  // graphite workbench: INK is the light mark colour, PAPER the graphite ground, RED the one accent
+  // (focus, selection, traced path; it was the red pencil before the redesign, now blue)
+  const INK = "#e6e8eb", RED = "#7aa2f7", FAINT = "#4b5263", PAPER = "#16181d", INK3 = "#8f97a5", INK2 = "#b3bac6", SEAM = "#2c313a";
   const NODE_CAP = 450;
-  // Colored pencils for "color by": validated all-pairs together with the reserved red and blue
-  // pencils (CVD ΔE ≥ 9.1, normal ≥ 19.4). Max three categories; the rest fold into "Other".
-  const CAT = ["#1baf7a", "#9b59b6", "#eda100"];
-  // PhD cohort: one hue, light to dark, by decade (sequential; never a rainbow)
-  const COHORT = [["≤1940", 0, 1949, "#f4ecd6"], ["1950s", 1950, 1959, "#eadbb0"], ["1960s", 1960, 1969, "#dcc387"], ["1970s", 1970, 1979, "#cba762"],
-    ["1980s", 1980, 1989, "#b48942"], ["1990s", 1990, 1999, "#966c2b"], ["2000s", 2000, 2009, "#74511d"], ["2010s+", 2010, 9999, "#523812"]];
+  // "Color by" categories: validated on the graphite surface (dark band, CVD ΔE ≥ 11.5, normal ≥ 24.9).
+  // Max three categories; the rest fold into "Other".
+  const CAT = ["#159a80", "#9a78ec", "#d9752a"];
+  // PhD cohort: one amber hue, dim to bright by decade (sequential on dark; never a rainbow)
+  const COHORT = [["≤1940", 0, 1949, "#3d3424"], ["1950s", 1950, 1959, "#544629"], ["1960s", 1960, 1969, "#6d5a2e"], ["1970s", 1970, 1979, "#876f33"],
+    ["1980s", 1980, 1989, "#a38639"], ["1990s", 1990, 1999, "#bf9d40"], ["2000s", 2000, 2009, "#d9b44c"], ["2010s+", 2010, 9999, "#f0cc66"]];
   const cohortOf = (y) => (y ? COHORT.findIndex(([, lo, hi]) => y >= lo && y <= hi) : -1);
   const YEAR_BASIS = { 1: "recorded", 2: "dissertation or grant record", 3: "from birth year", 4: "from first paper", 5: "estimated from advisors/students" };
-  const OTHER_FILL = "#e9e6df";
+  const OTHER_FILL = "#3b414c", NOTE = "#e0af68";
 
   const $ = (s, el = document) => el.querySelector(s);
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -26,7 +28,7 @@
   const norm = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ").trim();
   const plural = (n, one, many) => `${fmt(n)} ${n === 1 ? one : many || one + "s"}`;
 
-  const els = { stage: $("#stage"), cy: $("#cy"), net: $("#net3d"), map: $("#map"), sheet: $("#sheet"), toolbar: $("#toolbar"), panel: $("#panel"), legend: $("#legend"), colorkey: $("#colorkey"), credit: $("#credit") };
+  const els = { stage: $("#stage"), cy: $("#cy"), net: $("#net3d"), map: $("#map"), sheet: $("#sheet"), toolbar: $("#toolbar"), panel: $("#panel"), legend: $("#legend"), colorkey: $("#colorkey"), credit: $("#credit"), strip: $("#strip"), rail: $("#rail") };
 
   /* ---------------------------------------------------------------- data */
   const P = new Map();       // pid -> person
@@ -112,8 +114,8 @@
   function load(data) {
     META = data.meta;
     for (const r of data.people) {
-      const [id, name, inst, f, ns, nd, na, dep, cs, h, oa, dup, phd, yr, yb] = r;
-      P.set(id, { id, name: name || "(unnamed)", inst: inst || "", f, ns, nd, na, dep, cs, h, oa, phd, yr, yb: yb || 0, dup: dup || [], key: norm(name || "") });
+      const [id, name, inst, f, ns, nd, na, dep, cs, h, oa, dup, phd, yr, yb, ndF] = r;
+      P.set(id, { id, name: name || "(unnamed)", inst: inst || "", f, ns, nd, na, dep, cs, h, oa, phd, yr, yb: yb || 0, dup: dup || [], key: norm(name || ""), ndAll: nd, ndF: ndF ?? nd });
     }
     let dangling = 0;
     EVIDENCE = data.evidence || {};
@@ -130,21 +132,50 @@
     }
     for (const [m, t, rel, src = 1, y0 = null, y1 = null] of data.edges) {
       if (!P.has(m) || !P.has(t)) { dangling++; continue; }
-      if (!kids.has(m)) kids.set(m, []);
-      if (!parents.has(t)) parents.set(t, []);
-      kids.get(m).push(t);
-      parents.get(t).push(m);
+      ALL_EDGES.push([m, t, rel]);
       relOf.set(m + ">" + t, rel);
       srcOf.set(m + ">" + t, src);
       if (y0 || y1) yearsOf.set(m + ">" + t, [y0, y1]);
     }
     META.dangling = dangling;
     if (dangling) console.warn(`${dangling} advisor links point to people missing from the export; skipped.`);
+    let formal = false;
+    try { formal = localStorage.getItem("lineage:formal") === "1"; } catch { /* storage unavailable */ }
+    applyFormal(formal);
+  }
+
+  // Mentor links (relation 6: documented trainer, not the formal thesis director) count in lineages by
+  // default. "Formal directors only" rebuilds the advisor maps without them and switches to the
+  // descendant counts the export computed over formal directors alone.
+  const ALL_EDGES = [];
+  let FORMAL = false;
+  const MENTOR = 6;
+  const isMentor = (m, t) => relOf.get(m + ">" + t) === MENTOR;
+  function applyFormal(on) {
+    FORMAL = !!on;
+    kids.clear(); parents.clear();
+    for (const [m, t, rel] of ALL_EDGES) {
+      if (FORMAL && rel === MENTOR) continue;
+      if (!kids.has(m)) kids.set(m, []);
+      if (!parents.has(t)) parents.set(t, []);
+      kids.get(m).push(t); parents.get(t).push(m);
+    }
+    for (const p of P.values()) { p.nd = FORMAL ? p.ndF : p.ndAll; p.ns = (kids.get(p.id) || []).length; p.na = (parents.get(p.id) || []).length; }
     const byDesc = (a, b) => P.get(b).nd - P.get(a).nd || P.get(b).ns - P.get(a).ns;
     for (const list of kids.values()) list.sort(byDesc);
     for (const list of parents.values()) list.sort(byDesc);
     index = [...P.values()].sort((a, b) => ((a.f & F.OUTSIDE) - (b.f & F.OUTSIDE)) || b.nd - a.nd || b.ns - a.ns);
+    if (typeof memberCache !== "undefined") memberCache.clear();
+    if (typeof kinCache !== "undefined") kinCache.clear();
+    const tag = document.getElementById("formalTag");
+    if (tag) tag.hidden = !FORMAL;
   }
+  function setFormal(on) {
+    try { localStorage.setItem("lineage:formal", on ? "1" : "0"); } catch { /* storage unavailable */ }
+    applyFormal(on); route();
+  }
+  const formalToggle = () => `<label class="check"><input type="checkbox" data-formal ${FORMAL ? "checked" : ""}> Formal directors only</label>`;
+  document.addEventListener("change", (e) => { if (e.target.matches?.("[data-formal]")) setFormal(e.target.checked); });
 
   const isOut = (p) => (p.f & F.OUTSIDE) !== 0;
   const findByName = (name) => index.find((p) => p.key === norm(name));
@@ -163,7 +194,7 @@
     return out;
   }
 
-  function attachSearch(input, list, onPick) {
+  function attachSearch(input, list, onPick, { suggest = null } = {}) {
     let items = [], active = -1;
     const wrap = input.closest("[role=combobox]") || input.parentElement;
     const close = () => { list.hidden = true; wrap.setAttribute("aria-expanded", "false"); active = -1; input.removeAttribute("aria-activedescendant"); };
@@ -173,8 +204,8 @@
     };
     const render = () => {
       const q = input.value;
-      if (!q.trim()) { close(); return; }
-      items = searchPeople(q);
+      if (!q.trim() && !suggest) { close(); return; }
+      items = q.trim() ? searchPeople(q) : suggest();
       list.innerHTML = items.length
         ? items.map((p, i) => `<li role="option" id="${list.id}-o${i}" data-id="${p.id}"><span class="nm">${esc(p.name)}</span><span class="inst">${esc(p.inst || "No institution recorded")}${isOut(p) ? " · outside the field" : ""}</span><span class="ct">${p.nd ? fmt(p.nd) + " desc." : p.na ? "" : "no links"}</span></li>`).join("")
         : `<li class="none" role="option" aria-disabled="true">No one matches “${esc(q)}”. Try a surname only.</li>`;
@@ -182,7 +213,7 @@
       active = items.length ? 0 : -1; paint();
     };
     input.addEventListener("input", render);
-    input.addEventListener("focus", () => input.value.trim() && render());
+    input.addEventListener("focus", () => (input.value.trim() || suggest) && render());
     input.addEventListener("keydown", (e) => {
       if (list.hidden && e.key !== "Enter") return;
       if (e.key === "ArrowDown") { e.preventDefault(); active = Math.min(items.length - 1, active + 1); paint(); }
@@ -216,7 +247,7 @@
   let state = { view: "lineage", focus: null, params: new URLSearchParams() };
 
   function setTab(view) {
-    document.querySelectorAll(".tabs a").forEach((a) => {
+    document.querySelectorAll(".rail a[data-view]").forEach((a) => {
       if (a.dataset.view === view) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
     });
   }
@@ -235,6 +266,7 @@
     if (view === "i") return showInstitutions(+parts[0], params);
     if (view === "dynasties") return showDynasties(params);
     if (view === "gaps") return showGaps(parts[0] || null, params);
+    if (view === "") return showHome();
     return showLineage(null, params);
   }
 
@@ -247,25 +279,30 @@
         { selector: "node", style: {
           shape: "ellipse", width: "data(size)", height: "data(size)",
           "background-color": PAPER, "border-width": 1.5, "border-color": INK,
-          label: "data(label)", "font-family": '"Source Sans 3", system-ui, sans-serif', "font-size": 13, "font-weight": 600,
+          label: "data(label)", "font-family": '"Source Sans 3", system-ui, sans-serif', "font-size": 16, "font-weight": 600,
           color: INK, "text-valign": "bottom", "text-halign": "center", "text-margin-y": 5,
-          "text-wrap": "wrap", "text-max-width": 104, "text-background-color": PAPER, "text-background-opacity": 0.85, "text-background-padding": 1,
+          "text-wrap": "wrap", "text-max-width": 118, "text-background-color": PAPER, "text-background-opacity": 0.85, "text-background-padding": 1,
           "transition-property": "opacity, border-color, border-width", "transition-duration": 200,
         } },
-        { selector: "node.out", style: { "border-style": "dashed", color: "#4a4a48", "font-weight": 400 } },
-        { selector: "node.focus", style: { "background-color": INK, "border-color": INK, "font-size": 15, "font-weight": 700 } },
-        { selector: "node.more", style: { shape: "rectangle", width: 72, height: 22, "border-width": 1, "border-style": "dotted", "border-color": INK3, color: INK3, "font-weight": 400, "font-style": "italic", "font-size": 12, "text-valign": "center", "text-margin-y": 0, "text-background-opacity": 0 } },
+        { selector: "node.out", style: { "border-style": "dashed", "border-color": INK3, color: INK2, "font-weight": 400 } },
+        { selector: "node.focus", style: { "background-color": RED, "border-color": RED, "font-size": 16, "font-weight": 700, color: INK } },
+        { selector: "node.more", style: { shape: "rectangle", width: 72, height: 22, "border-width": 1, "border-style": "dotted", "border-color": INK3, color: INK3, "font-weight": 400, "font-size": 12, "text-valign": "center", "text-margin-y": 0, "text-background-opacity": 0 } },
         { selector: "node.hover", style: { "border-color": RED, "border-width": 2.5 } },
+        { selector: "node.flash", style: { "border-color": RED, "border-width": 6 } },
         { selector: "edge", style: {
-          width: 1.3, "line-color": INK, "target-arrow-color": INK, "target-arrow-shape": "triangle", "arrow-scale": 0.9,
-          "curve-style": "straight", opacity: 0.85,
+          width: 1.3, "line-color": "#6b7280", "target-arrow-color": "#6b7280", "target-arrow-shape": "triangle", "arrow-scale": 0.9,
+          "curve-style": "straight", opacity: 1,
           "transition-property": "opacity, line-color, width", "transition-duration": 200,
         } },
         { selector: "edge.postdoc", style: { "line-style": "dashed" } },
         { selector: "edge.ext", style: { "line-style": "dotted", width: 1.8 } },
+        // a second advisor drawn without steering the layout: bow it away from the rows it crosses
+        { selector: "edge.second", style: { opacity: 0.45, "curve-style": "unbundled-bezier", "control-point-distances": "data(bow)", "control-point-weights": 0.5 } },
+        // mentor, not the formal director: amber (the data-note voice), long dashes
+        { selector: "edge.mentor", style: { "line-color": NOTE, "target-arrow-color": NOTE, "line-style": "dashed", "line-dash-pattern": [7, 4], width: 1.8 } },
         // co-authorship: curved, no arrow, width by shared papers; drawn over the tree, never laid out with it
         { selector: "edge.co", style: { "curve-style": "unbundled-bezier", "control-point-distances": 40, "control-point-weights": 0.5,
-          "line-color": "#8f8b82", "target-arrow-shape": "none", width: "data(w)", opacity: 0.75, "z-index": 1 } },
+          "line-color": "#6b7280", "target-arrow-shape": "none", width: "data(w)", opacity: 0.75, "z-index": 1 } },
         { selector: "edge.co.faint", style: { opacity: 0.25 } },
         { selector: "edge.tx", style: { "curve-style": "unbundled-bezier", "control-point-distances": 28, "control-point-weights": 0.5,
           "line-color": INK3, "line-style": "dotted", "target-arrow-shape": "none", width: 1.4, opacity: 0.7 } },
@@ -286,10 +323,10 @@
         ...COHORT.map(([, , , c], i) => ({ selector: `node.y${i}`, style: { "background-color": c } })),
         { selector: "node.focus.y0, node.focus.y1, node.focus.y2, node.focus.y3, node.focus.y4, node.focus.y5, node.focus.y6, node.focus.y7", style: { "border-width": 4, "border-color": INK, "background-color": "data(fill)" } },
         { selector: "node.tick", style: { shape: "rectangle", width: 1, height: 1, "background-opacity": 0, "border-width": 0, label: "data(label)", color: INK3, "font-size": 12, "font-weight": 600, "text-valign": "center", "text-halign": "left", "text-margin-x": -6, "text-background-opacity": 0, events: "no" } },
-        { selector: "edge.grid", style: { width: 1, "line-color": "#e9e6df", "target-arrow-shape": "none", "curve-style": "straight", opacity: 1, "z-index": 0, events: "no" } },
+        { selector: "edge.grid", style: { width: 1, "line-color": SEAM, "target-arrow-shape": "none", "curve-style": "straight", opacity: 1, "z-index": 0, events: "no" } },
         { selector: "node.focus.c0, node.focus.c1, node.focus.c2, node.focus.cx", style: { "border-width": 4 } },
-        ...CAT.map((c, i) => ({ selector: `node.focus.c${i}`, style: { "background-color": INK, "border-color": c } })),
-        { selector: "node.focus.cx", style: { "background-color": INK, "border-color": INK3 } },
+        ...CAT.map((c, i) => ({ selector: `node.focus.c${i}`, style: { "background-color": RED, "border-color": c } })),
+        { selector: "node.focus.cx", style: { "background-color": RED, "border-color": INK3 } },
         // institution placement network
         { selector: "node.inst", style: { "font-size": 13, "font-weight": 600, "text-max-width": 110 } },
         { selector: "edge.flow", style: { width: "data(w)", "curve-style": "bezier", opacity: 0.45, "arrow-scale": 0.8 } },
@@ -298,6 +335,9 @@
         { selector: "edge.flow.selin", style: { "line-style": "dashed", opacity: 0.9 } },
       ],
     });
+    let ehRaf = 0;
+    for (const ev of ["mousedown", "wheel", "touchstart"]) els.cy.addEventListener(ev, () => { userMoved = true; }, { passive: true });
+    cy.on("viewport", () => { cancelAnimationFrame(ehRaf); ehRaf = requestAnimationFrame(edgeHints); });
     cy.on("mouseover", "node", (e) => { e.target.addClass("hover"); els.cy.style.cursor = "pointer"; });
     cy.on("mouseout", "node", (e) => { e.target.removeClass("hover"); els.cy.style.cursor = ""; });
     cy.on("tap", "node", (e) => {
@@ -309,8 +349,7 @@
       if (state.view === "co") return go(`#/co/${id}`);
       if (state.view === "school") {  // stay in the school; the panel offers the full lineage
         renderPanel(id);
-        panelActions(`<div class="actions"><a class="btn primary" href="${lineageHash(id, new URLSearchParams())}">Open this person's full lineage</a>
-          <button type="button" class="btn" id="backSchool">Back to the school</button></div>`);
+        panelActions(`<div class="actions"><button type="button" class="btn" id="backSchool">Back to the school</button></div>`);
         $("#backSchool").addEventListener("click", () => renderSchoolPanel("curated", +parseHash().parts[0]));
         return;
       }
@@ -329,46 +368,137 @@
   function edgeEl(m, t, cls = "") {
     const rel = relOf.get(m + ">" + t);
     const outside = !((srcOf.get(m + ">" + t) ?? 1) & SRC.AFT);
-    return { group: "edges", data: { id: `e${m}-${t}`, source: String(m), target: String(t) }, classes: [cls, rel === 2 ? "postdoc" : "", outside ? "ext" : ""].filter(Boolean).join(" ") };
+    return { group: "edges", data: { id: `e${m}-${t}`, source: String(m), target: String(t) }, classes: [cls, rel === 2 ? "postdoc" : "", rel === MENTOR ? "mentor" : "", outside && rel !== MENTOR ? "ext" : ""].filter(Boolean).join(" ") };
   }
 
-  function draw(elements, { fitTo, layoutOpts, after, overview = false } = {}) {
+  // First frame: fit what matters (by default the focus, its ancestors and its first generation;
+  // a caller can pass `frame`) at a readable zoom. When that is too wide, keep the readable zoom,
+  // centre the focus horizontally and keep the focus and its students in view vertically.
+  const MIN_READ = 0.76;  // node labels are 16px, so text never renders below about 12px
+  let lastFrame = null, lastDrawAt = 0, userMoved = false;
+  function frameBox(fitTo, overview, frame) {
+    cy.resize();
+    const W = els.cy.clientWidth || cy.width(), H = els.cy.clientHeight || cy.height(), pad = 28;
+    const anchor = fitTo ? cy.$(fitTo) : null;
+    let fr = cy.elements().not(".tick").not(".grid");
+    if (frame) fr = frame(cy);
+    else if (anchor && anchor.length && !overview) fr = anchor.union(anchor.predecessors()).union(anchor.outgoers());
+    return { bb: fr.boundingBox({ includeLabels: true }), W, H, pad };
+  }
+  function fitZooms(fitTo, overview, frame) {
+    const { bb, W, H, pad } = frameBox(fitTo, overview, frame);
+    return { zW: (W - 2 * pad) / Math.max(bb.w, 1), zH: (H - 2 * pad) / Math.max(bb.h, 1) };
+  }
+  function fitZoom(fitTo, overview, frame) { const { zW, zH } = fitZooms(fitTo, overview, frame); return Math.min(zW, zH); }
+  function frameView(fitTo, overview, frame, topFirst = false) {
+    cy.resize();
+    const W = els.cy.clientWidth || cy.width(), H = els.cy.clientHeight || cy.height(), pad = 28;
+    const anchor = fitTo ? cy.$(fitTo) : null;
+    let fr = cy.elements().not(".tick").not(".grid");
+    if (frame) fr = frame(cy);
+    else if (anchor && anchor.length && !overview) {
+      // the focus, its advisors and its students; take further ancestors only while they still fit
+      fr = anchor.union(anchor.predecessors()).union(anchor.outgoers());
+    }
+    const bb = fr.boundingBox({ includeLabels: true });
+    let z = Math.min((W - 2 * pad) / Math.max(bb.w, 1), (H - 2 * pad) / Math.max(bb.h, 1), 1.25);
+    if (z >= MIN_READ || !anchor || !anchor.length || overview) {
+      cy.zoom(Math.max(z, cy.minZoom()));
+      const zz = cy.zoom();
+      // lineages sit on the bottom edge (students against the status row), schools hang from the top
+      const y = !anchor || !anchor.length ? H / 2 - (bb.y1 + bb.h / 2) * zz : topFirst ? pad - bb.y1 * zz : H - pad - bb.y2 * zz;
+      cy.pan({ x: W / 2 - (bb.x1 + bb.w / 2) * zz, y });
+    } else {
+      z = MIN_READ; cy.zoom(z);
+      const p = anchor.position();
+      const x = bb.w * z <= W - 2 * pad ? W / 2 - (bb.x1 + bb.w / 2) * z : W / 2 - p.x * z;
+      // too tall: keep the bottom of the frame (focus and students) in view, ancestors run off the top
+      const y = bb.h * z <= H - 2 * pad ? H / 2 - (bb.y1 + bb.h / 2) * z : topFirst ? pad - bb.y1 * z : H - pad - bb.y2 * z;
+      cy.pan({ x, y });
+    }
+    edgeHints();
+  }
+  // Where the drawing continues out of view, said in the status row (never drawn over the canvas).
+  function edgeHints() {
+    let el = els.legend.querySelector(".more-view");
+    if (!el) { el = document.createElement("span"); el.className = "more-view"; els.legend.appendChild(el); }
+    if (!cy || els.cy.hidden || !cy.nodes().length) { el.textContent = ""; return; }
+    const ext = cy.extent(), bb = cy.nodes().not(".tick").boundingBox({ includeLabels: true }), m = 4 / cy.zoom();
+    const sides = [[bb.y1 < ext.y1 - m, "above"], [bb.y2 > ext.y2 + m, "below"], [bb.x1 < ext.x1 - m, "left"], [bb.x2 > ext.x2 + m, "right"]].filter((x) => x[0]).map((x) => x[1]);
+    el.textContent = sides.length ? `More of the drawing ${sides.length > 1 ? sides.slice(0, -1).join(", ") + " and " + sides.at(-1) : sides[0]} · drag to pan` : "";
+  }
+  // the canvas can settle to its final size just after a draw (fonts, strip, toolbar); re-frame then
+  new ResizeObserver(() => {
+    if (!cy) return;
+    cy.resize();
+    if (lastFrame && !userMoved) lastFrame();
+  }).observe(document.getElementById("stage"));
+  function draw(elements, { fitTo, layoutOpts, after, overview = false, frame = null, topFirst = false, grow = null } = {}) {
     els.cy.classList.add("fading");
     requestAnimationFrame(() => {
-      cy.batch(() => { cy.elements().remove(); cy.add(elements); });
-      const layout = cy.elements().not(".overlay").layout(layoutOpts || { name: "dagre", rankDir: "TB", nodeSep: 18, rankSep: 64, edgeSep: 8, ranker: "network-simplex", nodeDimensionsIncludeLabels: true, animate: false });
-      layout.run();
-      if (after) after();
-      // The usable area starts under the toolbar band (on narrow screens the toolbar sits above the canvas instead).
-      const top = getComputedStyle(els.toolbar).position === "absolute" ? els.toolbar.offsetHeight : 0;
-      const bottom = els.legend.hidden ? 16 : 44;
-      const W = cy.width(), H = cy.height() - top - bottom;
-      const bb = cy.elements().boundingBox();
-      const pad = 36;
-      let z = Math.min((W - 2 * pad) / Math.max(bb.w, 1), (H - 2 * pad) / Math.max(bb.h, 1));
-      z = Math.min(z, 1.25);
-      const anchor = fitTo ? cy.$(fitTo) : null;
-      if (z >= 0.85 || !anchor || !anchor.length || (overview && z >= 0.45)) {
-        // everything fits legibly: centre the whole drawing in the usable area
-        cy.zoom(Math.max(z, cy.minZoom()));
-        cy.pan({ x: W / 2 - (bb.x1 + bb.w / 2) * cy.zoom(), y: top + bottom / 4 + H / 2 - (bb.y1 + bb.h / 2) * cy.zoom() });
-      } else {
-        // hold a readable zoom on the focus; the rest pans
-        // too wide to fit legibly: hold a readable zoom centred on the focus; the sides pan.
-        // Vertically, keep the whole drawing under the toolbar when its height fits.
-        const zr = Math.max(0.75, Math.min(0.85, (H - 2 * pad) / Math.max(bb.h, 1)));
-        cy.zoom(zr);
-        const p = anchor.position();
-        const fitsTall = bb.h * zr <= H - 2 * pad;
-        const y = fitsTall ? top + pad + (H - 2 * pad - bb.h * zr) / 2 - bb.y1 * zr : top + H * 0.42 - p.y * zr;
-        cy.pan({ x: W / 2 - p.x * zr, y });
+      cy.resize();  // the strip and toolbar may have changed the canvas size since the last draw
+      const run = (list) => {
+        cy.batch(() => { cy.elements().remove(); cy.add(list); });
+        cy.elements().not(".overlay").layout(layoutOpts || { name: "dagre", rankDir: "TB", nodeSep: 22, rankSep: 46, edgeSep: 8, ranker: "network-simplex", nodeDimensionsIncludeLabels: true, animate: false }).run();
+        cy.edges(".second").forEach((e) => {
+          const a = e.source().position(), b = e.target().position();
+          // same row: arc up into the gap above the row (sign follows the edge direction); else a gentle bow
+          e.data("bow", Math.abs(a.y - b.y) < 60 ? (b.x > a.x ? -1 : 1) * Math.min(140, 40 + Math.abs(b.x - a.x) * 0.18) : 40);
+        });
+      };
+      const legendFor = () => {
+        const has = { out: cy.$("node.out").length, path: cy.$("edge.path").length, ext: cy.$("edge.ext").length, ment: cy.$("edge.mentor").length };
+        els.legend.querySelectorAll("[data-k]").forEach((el) => { el.hidden = !has[el.dataset.k]; });
+        cy.resize();
+      };
+      run(elements); legendFor();
+      userMoved = false;
+      if (grow) {
+        // the budget is an estimate: while the drawing still fits with room to spare, try one more
+        // column pair and one more generation, and keep the largest version that fits
+        let b = grow.budget, cur = elements, acceptedH = els.cy.clientHeight;
+        // width and height are judged separately: a spare row of height earns another generation
+        // even when the width is already full, and the other way round
+        const tried = { rows: false, cols: false };
+        for (let i = 0; i < 14 && !(tried.rows && tried.cols); i++) {
+          const { zW, zH } = fitZooms(fitTo, overview, frame);
+          const dim = !tried.rows && zH >= MIN_READ * 1.18 ? "rows" : !tried.cols && zW >= MIN_READ * 1.1 ? "cols" : null;
+          if (!dim) break;
+          const nb = { ...b, [dim]: b[dim] + 1 }, next = grow.build(nb);
+          if (next.length <= cur.length) {
+            // a step of budget that draws nothing new may still unlock the next one; allow a couple
+            if ((nb[dim] - grow.budget[dim]) < 4) { b = nb; continue; }
+            tried[dim] = true; grow.build(b); continue;
+          }
+          run(next);
+          const f = fitZooms(fitTo, overview, frame);
+          if (Math.min(f.zW, f.zH) >= MIN_READ) { b = nb; cur = next; acceptedH = els.cy.clientHeight; }
+          else { tried[dim] = true; run(cur); grow.build(b); }
+        }
+        legendFor();
+        // the legend and colour key can change the canvas height once the final drawing is in;
+        // step back until the drawing is readable again
+        for (let i = 0; i < 8 && (overview || els.cy.clientHeight < acceptedH - 4) && fitZoom(fitTo, overview, frame) < (overview ? MIN_READ * 0.88 : MIN_READ); i++) {
+          const { zW, zH } = fitZooms(fitTo, overview, frame);
+          const nb = zH < zW ? { ...b, rows: Math.max(2, b.rows - 1) } : { ...b, cols: Math.max(3, b.cols - 1) };
+          if (nb.rows === b.rows && nb.cols === b.cols) break;
+          b = nb; run(grow.build(b)); legendFor();
+        }
       }
+      if (after) after();
+      lastFrame = () => frameView(fitTo, overview, frame, topFirst);
+      lastDrawAt = performance.now();
+      lastFrame();
+      const anchor = fitTo ? cy.$(fitTo) : null;
+      if (anchor && anchor.length) anchor.flashClass("flash", 150);
       els.cy.classList.remove("fading");
     });
   }
 
   function showCanvas(on, { map = false } = {}) {
-    if (els.net && !els.net.hidden) { els.net.hidden = true; NET.graph?.pauseAnimation(); }
+    if (els.net && !els.net.hidden) { els.net.hidden = true; if (NET.three) cancelAnimationFrame(NET.three.raf); }
+    setStrip(null);
+    els.legend.classList.remove("keyonly");
     els.cy.hidden = !on || map;
     els.map.hidden = !map;
     els.legend.hidden = !on || map;
@@ -386,30 +516,54 @@
   const clearNotice = () => $("#notice")?.remove();
 
   /* ---------------------------------------------------------------- lineage view */
-  function lineageElements(pid, depth, showOut) {
+  // How many people fit across, and how many generations fit down, at a readable zoom. Drawings are
+  // built to this budget, so the first view shows whole rows and folds the rest into "+N" boxes.
+  const COL_W = 142, ROW_H = 140, NODE_H = 80;
+  function canvasBudget(expectStrip) {
+    const W = els.stage.clientWidth || 800;
+    let H = els.stage.clientHeight || 500;
+    if (expectStrip && els.strip.hidden) H -= 184;  // the list strip opens with this view
+    const gw = W / MIN_READ - 56, gh = H / MIN_READ - 56;
+    return { cols: Math.max(3, Math.floor(gw / COL_W)), rows: Math.max(2, Math.floor((gh - NODE_H) / ROW_H) + 1) };
+  }
+
+  function lineageElements(pid, depth, showOut, budget = null) {
     const nodes = new Map(), edges = [];
     const focus = P.get(pid);
     nodes.set(pid, nodeEl(focus, "focus"));
     const keep = (p) => showOut || !isOut(p);
+    const { cols, rows } = budget || canvasBudget(true);
 
-    // ancestors: everyone above, up to 8 generations
+    // ancestors: as many generations as fit above the focus and its students, each row at most
+    // `cols` wide (largest lines first); the rest become one "+N earlier ancestors" box
+    const upGens = Math.max(1, rows - 1 - depth);
     let frontier = [pid];
-    for (let g = 0; g < 8 && frontier.length; g++) {
-      const next = [];
-      for (const t of frontier) for (const m of parents.get(t) || []) {
-        const p = P.get(m);
-        if (!keep(p)) continue;
-        if (!nodes.has(m)) { nodes.set(m, nodeEl(p)); next.push(m); }
-        edges.push(edgeEl(m, t));
-      }
+    for (let g = 0; g < upGens && frontier.length; g++) {
+      const cand = [];
+      for (const t of frontier) for (const m of parents.get(t) || []) if (keep(P.get(m)) && !nodes.has(m) && !cand.includes(m)) cand.push(m);
+      cand.sort((a, b) => P.get(b).nd - P.get(a).nd);
+      const next = cand.slice(0, cols - (g === upGens - 1 ? 1 : 0));
+      for (const m of next) nodes.set(m, nodeEl(P.get(m)));
+      for (const t of frontier) for (const m of parents.get(t) || []) if (nodes.has(m) && m !== t) edges.push(edgeEl(m, t));
       frontier = next;
+    }
+    { const shownUp = new Set([...nodes.keys()].filter((k) => k !== pid)), all = new Set(), st = [pid];
+      while (st.length) for (const m of parents.get(st.pop()) || []) if (!all.has(m) && keep(P.get(m))) { all.add(m); st.push(m); }
+      // earlier generations that don't fit: say so on the top ancestor's own label (no extra row);
+      // clicking that ancestor recentres on them and shows their line
+      if (all.size > shownUp.size) {
+        for (const m of [...shownUp].filter((x) => (parents.get(x) || []).some((y) => !nodes.has(y) && keep(P.get(y))))) {
+          const el = nodes.get(m), n = countAncestors(m);
+          el.data.label += `\n↑ ${fmt(n)} earlier`;
+        }
+      }
     }
 
     // descendants: by generation, capped per parent past the first
     frontier = [pid];
     for (let g = 1; g <= depth && frontier.length; g++) {
       // children are pre-sorted by descendants, so the largest lines always make the cut
-      const perParent = g === 1 ? 8 : depth >= 3 ? 2 : 3;
+      const perParent = g === 1 ? Math.max(2, cols - 1) : depth >= 3 ? 2 : 3;
       const next = [];
       for (const m of frontier) {
         const ch = (kids.get(m) || []).filter((c) => keep(P.get(c)));
@@ -434,20 +588,25 @@
 
   function lineageToolbar(p, depth, showOut) {
     const nAnc = countAncestors(p.id);
+    const P_ = state.params;
+    const layers = [
+      `<label class="check"><input type="checkbox" id="showOut" ${showOut ? "checked" : ""}> People outside the field</label>`,
+      NAMES.size ? `<label class="check"><input type="checkbox" id="showTx" ${P_.get("tx") === "1" ? "checked" : ""}> Named in dissertations</label>` : "",
+      COMMITTEE.size ? `<label class="check"><input type="checkbox" id="showCm" ${P_.get("cm") === "1" ? "checked" : ""}> Committee links</label>` : "",
+      CO.size ? `<label class="check"><input type="checkbox" id="showCo" ${P_.get("co") === "1" ? "checked" : ""}> Co-author links</label>` : "",
+      formalToggle(),
+    ].filter(Boolean);
+    const on = [P_.get("tx") === "1", P_.get("cm") === "1", P_.get("co") === "1", FORMAL].filter(Boolean).length;
+    const cmode = colorMode(P_);
     els.toolbar.innerHTML = `
-      <span class="title">${esc(p.name)}</span>
-      <span class="sub">${esc(p.inst || "No institution recorded")} · ${plural(nAnc, "ancestor")} · ${plural(p.nd, "descendant")}</span>
-      <span class="seg-label">Generations below</span>
-      <span class="seg" role="group" aria-label="Generations below">${[1, 2, 3, 4].map((d) => `<button type="button" data-d="${d}" aria-pressed="${d === depth}">${d}</button>`).join("")}</span>
-      <label class="check"><input type="checkbox" id="showOut" ${showOut ? "checked" : ""}> Show people outside the field</label>
-      <a class="btn" href="#/kin/${p.id}">Relatives</a>
-      <label class="check"><input type="checkbox" id="byYear" ${state.params.get("t") === "1" ? "checked" : ""}> Arrange by year</label>
-      ${NAMES.size ? `<label class="check"><input type="checkbox" id="showTx" ${state.params.get("tx") === "1" ? "checked" : ""}> Named in dissertations</label>` : ""}
-      ${COMMITTEE.size ? `<label class="check"><input type="checkbox" id="showCm" ${state.params.get("cm") === "1" ? "checked" : ""}> Committee links</label>` : ""}
-      ${CO.size ? `<label class="check"><input type="checkbox" id="showCo" ${state.params.get("co") === "1" ? "checked" : ""}> Co-author links</label>` : ""}
-      ${CTX ? `<label class="selectlbl">Color by <select id="colorBy"><option value="">Nothing</option>${Object.entries(CB).map(([k, v]) => `<option value="${k}" ${state.params.get("c") === k ? "selected" : ""}>${v.label}</option>`).join("")}</select></label>` : ""}`;
+      <div class="tb-head"><span class="title">${esc(p.name)}</span>
+      <span class="sub">${esc(p.inst || "No institution recorded")} · ${plural(nAnc, "ancestor")} · ${plural(p.nd, "descendant")}</span></div>
+      <span class="seg" role="group" aria-label="Generations below">${[1, 2, 3, 4].map((d) => `<button type="button" data-d="${d}" aria-pressed="${d === depth}" title="${plural(d, "generation")} below">${d}</button>`).join("")}</span>
+      <label class="check"><input type="checkbox" id="byYear" ${P_.get("t") === "1" ? "checked" : ""}> By year</label>
+      ${CTX ? `<label class="selectlbl"><span class="vh">Color by</span><select id="colorBy" aria-label="Color by"><option value="none" ${cmode ? "" : "selected"}>No color</option>${Object.entries(CB).map(([k, v]) => `<option value="${k}" ${cmode === k ? "selected" : ""}>${v.label}</option>`).join("")}</select></label>` : ""}
+      ${menu("Layers", layers.join(""), on)}`;
     $("#colorBy")?.addEventListener("change", (e) => {
-      const q = new URLSearchParams(state.params); if (e.target.value) q.set("c", e.target.value); else q.delete("c"); go(`#/p/${p.id}${q.toString() ? "?" + q : ""}`);
+      const q = new URLSearchParams(state.params); if (e.target.value === "school") q.delete("c"); else q.set("c", e.target.value); go(`#/p/${p.id}${q.toString() ? "?" + q : ""}`);
     });
     els.toolbar.querySelectorAll("[data-d]").forEach((b) => b.addEventListener("click", () => {
       const q = new URLSearchParams(state.params); q.set("d", b.dataset.d); go(`#/p/${p.id}?${q}`);
@@ -502,22 +661,33 @@
     const showOut = params.get("out") !== "0";
     const p = P.get(pid);
     lineageToolbar(p, depth, showOut);
-    const elements = lineageElements(pid, depth, showOut);
+    const mode = colorMode(params), byYear = params.get("t") === "1";
+    const make = (b) => {
+      const el = lineageElements(pid, depth, showOut, b);
+      if (mode) colorize(el, mode); else setColorKey(null);
+      if (params.get("co") === "1") el.push(...coauthorOverlay(el));
+      if (params.get("cm") === "1") el.push(...committeeOverlay(el));
+      if (params.get("tx") === "1") el.push(...textOverlay(el));
+      if (byYear && !mode) colorizeCohort(el);  // the year layout reads best with cohort colour
+      return el;
+    };
+    const budget0 = canvasBudget(true);
+    const elements = make(budget0);
     if (elements.length === 1) {
       notice(`<h2>${esc(p.name)} has no recorded advisor or students</h2><p class="note">No mentorship links on record. The Academic Family Tree lists this person under sociology, but nobody has connected them yet.</p>`, "lonely");
     }
-    const mode = CTX && CB[params.get("c")] ? params.get("c") : null;
-    if (mode) colorize(elements, mode); else setColorKey(null);
-    if (params.get("co") === "1") elements.push(...coauthorOverlay(elements));
-    if (params.get("cm") === "1") elements.push(...committeeOverlay(elements));
-    if (params.get("tx") === "1") elements.push(...textOverlay(elements));
-    const byYear = params.get("t") === "1";
-    if (byYear && !mode) colorizeCohort(elements);  // the year layout reads best with cohort colour
-    draw(elements, { fitTo: `node[id="${pid}"]`, after: byYear ? () => timelineLayout(pid) : null });
+    draw(elements, { fitTo: `node[id="${pid}"]`, after: byYear ? () => timelineLayout(pid) : null, grow: byYear ? null : { budget: budget0, build: make } });
     renderPanel(pid);
+    pushRecent(pid);
+    const stu = kids.get(pid) || [], adv = parents.get(pid) || [];
+    if (stu.length) personStrip(`Students of ${p.name}`, stu, `${plural(stu.length, "student")} · ${plural(p.nd, "descendant")} in all`);
+    else if (adv.length) personStrip(`Advisors of ${p.name}`, adv, "No students on record");
   }
 
   /* ---------------------------------------------------------------- color by */
+  // lineage and school canvases colour by school unless the URL says otherwise (?c=none for no colour)
+  const colorMode = (params) => { if (!CTX) return null; const c = params.get("c"); return c === "none" ? null : CB[c] ? c : "school"; };
+  let SLOTS = { mode: null, slots: [] };
   // Up to three categories get a colored pencil: pinned ones first (they keep their color as you
   // move around), then the most common in the current drawing. Everything else is "Other".
   function colorize(elements, mode) {
@@ -540,6 +710,7 @@
       e.classes = [e.classes, i >= 0 ? `c${i}` : "cx"].filter(Boolean).join(" ");
     }
     setColorKey({ mode, slots, counts, pinned });
+    SLOTS = { mode, slots };
   }
 
   function colorizeCohort(elements) {
@@ -613,11 +784,19 @@
   }
 
   /* ---------------------------------------------------------------- person panel */
+  const ROOT_REASON = { published_work: "degree awarded for a published work", honorary: "honorary degree only", unfinished: "never completed a doctorate",
+    no_director: "no thesis director in that system", no_doctorate: "no doctorate" };
   function flagNotes(p) {
     const n = [];
     if (p.f & F.ISOLATED) n.push("No advisor or student links on record.");
+    else if (p.f & F.KNOWN_ROOT) {
+      const [reason, , ev] = META.known_roots?.[p.id] || [];
+      n.push(`No supervised doctorate${ROOT_REASON[reason] ? `: ${ROOT_REASON[reason]}` : ""}. Checked against sources, so the lineage genuinely starts here.${ev ? ` ${ev}` : ""}`);
+    }
     else if (p.f & F.NO_ADVISOR) n.push("No advisor recorded. The lineage stops here, either at a founder or at a missing link.");
-    if (p.f & F.MULTI_ADVISOR) n.push(`Co-advised: ${p.na} advisors on record.`);
+    { const ps = parents.get(p.id) || [], dirs = ps.filter((m) => !isMentor(m, p.id)).length, ments = ps.length - dirs;
+      if (dirs > 1) n.push(`Co-advised: ${dirs} thesis directors on record${ments ? `, plus ${plural(ments, "mentor")}` : ""}.`);
+      else if (ments) n.push(`${dirs ? "One thesis director" : "No thesis director"} on record, plus ${plural(ments, "documented mentor")} who trained them.`); }
     if (p.f & F.OUTSIDE) n.push("Outside sociology. Kept because they advised or trained a sociologist.");
     if (p.f & F.EXTERNAL) n.push("Not in the Academic Family Tree. Known only from an outside source; see the evidence below.");
     if (p.f & PROFDOC) {
@@ -651,6 +830,13 @@
     els.panel.innerHTML = `
       <h2>${esc(p.name)}</h2>
       <p class="inst">${esc(p.inst || "No institution recorded")}</p>
+      <div class="actions">
+        ${onLineage ? "" : `<a class="btn primary" href="${lineageHash(pid, state.params)}">Open lineage</a>`}
+        <a class="btn" href="#/connect/${pid}">${inConnect ? "Start a new connection here" : "Connect to someone"}</a>
+        ${state.view !== "net" ? `<a class="btn" href="#/net?p=${pid}">See in sociogram</a>` : ""}
+        ${p.oa ? `<a class="btn" href="https://openalex.org/${esc(p.oa)}" target="_blank" rel="noopener">OpenAlex<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3L5 11"/></svg></a>` : ""}
+        ${pid < 900000000 ? `<a class="btn" href="https://academictree.org/sociology/peopleinfo.php?pid=${pid}" target="_blank" rel="noopener">Academic Tree<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3L5 11"/></svg></a>` : ""}
+      </div>
       ${flagNotes(p)}
       <div class="stats">
         <div class="stat"><span>Students</span>${stu.length ? `<button type="button" data-jump="students">${fmt(p.ns)}</button>` : "<b>0</b>"}</div>
@@ -662,8 +848,10 @@
         ${p.h != null ? `<div class="stat"><span>h-index (Academic Tree)</span><b>${fmt(p.h)}</b></div>` : ""}
       </div>
       ${contextRows(pid)}
-      <h3 id="advisors">Advisors</h3>${personList(adv)}
-      <h3 id="students">Students</h3>${personList(stu)}
+      <h3 id="advisors">Advisors</h3>${personList(adv.filter((m) => !isMentor(m, pid)))}
+      ${adv.some((m) => isMentor(m, pid)) ? `<h3>Mentors <span class="muted">· not the formal director</span></h3>${personList(adv.filter((m) => isMentor(m, pid)))}` : ""}
+      <h3 id="students">Students</h3>${personList(stu.filter((t) => !isMentor(pid, t)))}
+      ${stu.some((t) => isMentor(pid, t)) ? `<h3>Mentored <span class="muted">· not as formal director</span></h3>${personList(stu.filter((t) => isMentor(pid, t)))}` : ""}
       ${careerBlock(pid)}
       ${kinSummary(pid)}
       ${dissertationBlock(pid)}
@@ -671,18 +859,14 @@
       ${textTies(pid)}
       ${coauthorList(pid)}
       ${evidenceList(pid, adv, stu)}
-      <div class="actions">
-        ${onLineage ? "" : `<a class="btn primary" href="${lineageHash(pid, state.params)}">Open lineage</a>`}
-        <a class="btn" href="#/connect/${pid}">${inConnect ? "Start a new connection here" : "Connect to someone"}</a>
-        ${state.view !== "net" ? `<a class="btn" href="#/net?p=${pid}${NET.byId.size && NET.byId.get(pid)?.comp !== 0 ? "&scope=clusters" : ""}">See in sociogram</a>` : ""}
-        ${p.oa ? `<a class="btn" href="https://openalex.org/${esc(p.oa)}" target="_blank" rel="noopener">OpenAlex<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3L5 11"/></svg></a>` : ""}
-        ${pid < 900000000 ? `<a class="btn" href="https://academictree.org/sociology/peopleinfo.php?pid=${pid}" target="_blank" rel="noopener">Academic Tree<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3L5 11"/></svg></a>` : ""}
-      </div>`;
+`;
     els.panel.querySelectorAll("[data-expand]").forEach((b) => b.addEventListener("click", () => {
       b.nextElementSibling.hidden = false; b.remove();
     }));
     els.panel.querySelectorAll("[data-jump]").forEach((b) => b.addEventListener("click", () => {
-      $("#" + b.dataset.jump, els.panel).scrollIntoView({ behavior: "smooth", block: "start" });
+      const t = $("#" + b.dataset.jump, els.panel);
+      if (t?.tagName === "DETAILS") t.open = true;
+      t?.scrollIntoView({ behavior: "smooth", block: "start" });
     }));
     els.panel.scrollTop = 0;
   }
@@ -699,6 +883,8 @@
     }).join("")}</ul>`;
   }
 
+  // An OpenAlex match whose topics are all outside the social sciences is probably a namesake
+  const oaSuspect = (c) => !!(c?.tp?.length && CTX?.topics && c.tp.every((i) => CTX.topics[i] && CTX.topics[i].field !== "Social Sciences"));
   function contextRows(pid) {
     const c = CTX && PC.get(pid);
     if (!c) return "";
@@ -712,8 +898,9 @@
       <div><span>Community</span>${com ? `<a href="#/schools/detected/${c.comm}">${esc(com.label)}</a>` : `<span class="muted">Not in a detected community</span>`}</div>
       ${sfs ? `<div><span>Subfields</span><span>${sfs}</span></div>` : ""}
       ${c.tp?.length && CTX.topics ? `<div><span>Publication topics</span><span>${c.tp.map((i) => `<a href="#/schools/topics/${i}">${esc(CTX.topics[i].name)}</a>`).join(", ")}</span></div>` : ""}
-      ${c.oa ? `<div><span>OpenAlex</span><span>${fmt(c.oa[0])} works · ${fmt(c.oa[1])} citations · h-index ${fmt(c.oa[2])}</span></div>` : ""}
-    </div>`;
+      ${c.oa ? `<div><span>OpenAlex</span><span>${fmt(c.oa[0])} works · ${fmt(c.oa[1])} citations · h-index ${fmt(c.oa[2])}<span class="muted"> · matched by shared publications</span></span></div>` : ""}
+    </div>
+    ${oaSuspect(c) ? `<p class="note">These OpenAlex topics are all outside the social sciences, so the publication profile may belong to someone else with the same name. Check the profile before relying on its counts.</p>` : ""}`;
   }
 
   function renderPanelIntro() {
@@ -854,7 +1041,8 @@
         const down = (kids.get(id) || []).includes(nx);
         const y = yearsOf.get(down ? `${id}>${nx}` : `${nx}>${id}`);
         const span = y ? ` (${[y[0], y[1]].filter(Boolean).join("–")})` : "";
-        rel = (down ? "advised the next person" : "was advised by the next person") + span;
+        const ment = down ? isMentor(id, nx) : isMentor(nx, id);
+        rel = (down ? (ment ? "mentored the next person" : "advised the next person") : (ment ? "was mentored by the next person" : "was advised by the next person")) + span;
       }
       return `<li><a href="${lineageHash(id, state.params)}">${esc(P.get(id).name)}</a><span class="rel">${esc(P.get(id).inst || "")}${rel ? " · " + rel : ""}</span></li>`;
     }).join("") : "";
@@ -863,7 +1051,7 @@
       <h2>Connection</h2>
       <p class="inst">${esc(A.name)} → ${esc(B.name)}</p>
       <p class="verdict">${verdict}</p>
-      ${path ? `<div class="stats"><div class="stat"><span>Steps on the path</span><b>${fmt(path.length - 1)}</b></div>${lca ? `<div class="stat"><span>Nearest shared ancestor</span><b><a href="${lineageHash(lca.id, state.params)}">${esc(P.get(lca.id).name)}</a></b></div>` : ""}</div>
+      ${path ? `<div class="stats"><div class="stat"><span>Steps on the path</span><b>${fmt(path.length - 1)}</b></div>${lca ? `<div class="stat"><span>Nearest shared ancestor</span><b class="txt"><a href="${lineageHash(lca.id, state.params)}">${esc(P.get(lca.id).name)}</a></b></div>` : ""}</div>
       <h3>Path</h3><ol class="steps">${steps}</ol>` : ""}
       <div class="actions"><a class="btn" href="${lineageHash(A.id, state.params)}">Open ${esc(A.name)}</a><a class="btn" href="${lineageHash(B.id, state.params)}">Open ${esc(B.name)}</a></div>`;
   }
@@ -911,7 +1099,7 @@
   }
 
   const GAPS = [
-    { key: "no-advisor", label: "Missing advisors, biggest lines first", why: "Students on record but no advisor. A few are true founders; most are missing links, and each one filled at the top reconnects the most of the tree.", test: (p) => (p.f & F.NO_ADVISOR) && !isOut(p) && p.nd > 0, sort: "nd", curate: true },
+    { key: "no-advisor", label: "Missing advisors, biggest lines first", why: "Students on record but no advisor. A few are true founders; most are missing links, and each one filled at the top reconnects the most of the tree.", test: (p) => (p.f & F.NO_ADVISOR) && !(p.f & F.KNOWN_ROOT) && !isOut(p) && p.nd > 0, sort: "nd", curate: true },
     { key: "isolated", label: "No links at all", why: "Tagged sociology, but no advisor or student on record.", test: (p) => p.f & F.ISOLATED },
     { key: "small", label: "Small fragments", why: "Clusters of three or fewer, cut off from the main tree.", test: (p) => (p.f & F.SMALL) && !isOut(p) },
     { key: "prof-inst", label: "Practitioner-doctorate institution", why: "Capella, Walden, Alliant, La Verne and similar. Likely Ed.D.-style or professional doctorates.", test: (p) => (p.f & F.PROF_INST) && !isOut(p) },
@@ -956,147 +1144,517 @@
     if (at) at.insertAdjacentHTML("afterend", html); else els.panel.insertAdjacentHTML("afterbegin", html);
   }
 
+  /* ---------------------------------------------------------------- workbench shell */
+  // A small dropdown for secondary toggles, so the title row keeps at most four primary controls.
+  const menu = (label, inner, active = 0) => `<details class="menu"><summary class="btn">${esc(label)}${active ? `<span class="badge">${active}</span>` : ""}<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></summary><div class="menu-pop">${inner}</div></details>`;
+  document.addEventListener("click", (e) => { for (const d of document.querySelectorAll("details.menu[open]")) if (!d.contains(e.target)) d.open = false; });
+  // The list strip under the canvas: a plain table of the people behind the current drawing.
+  function setStrip(spec) {
+    if (!els.strip) return;
+    if (!spec) { els.strip.hidden = true; els.strip.innerHTML = ""; return; }
+    const { title, sub = "", rows, cols } = spec;
+    if (!rows.length) { els.strip.hidden = true; els.strip.innerHTML = ""; return; }
+    els.strip.innerHTML = `<div class="strip-head"><h3>${esc(title)}</h3><span class="muted">${esc(sub)}</span></div>
+      <table class="data"><thead><tr>${cols.map((c) => `<th class="${c.num ? "num" : ""}" scope="col"><button type="button" tabindex="-1">${esc(c.label)}</button></th>`).join("")}</tr></thead>
+      <tbody>${rows.map((r) => `<tr data-id="${r.id}" tabindex="0">${cols.map((c) => `<td class="${c.num ? "num" : c.cls || ""}">${c.fmt(r)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+    els.strip.hidden = false;
+    els.strip.classList.remove("flash"); void els.strip.offsetWidth; els.strip.classList.add("flash");
+    els.strip.querySelectorAll("tbody tr").forEach((tr) => {
+      const open = () => go(lineageHash(+tr.dataset.id, new URLSearchParams(state.params)));
+      tr.addEventListener("click", open);
+      tr.addEventListener("keydown", (e) => { if (e.key === "Enter") open(); else if (e.key === "ArrowDown") tr.nextElementSibling?.focus(); else if (e.key === "ArrowUp") tr.previousElementSibling?.focus(); });
+    });
+  }
+  const yearCell = (p) => (p?.yr ? `${p.yb >= 3 ? "≈" : ""}${p.yr}` : "—");
+  const dotFor = (p) => {
+    if (!SLOTS.mode || !CB[SLOTS.mode]?.key) return "";
+    const k = CB[SLOTS.mode].key(p.id);
+    if (k == null) return `<i class="sdot none" title="No ${esc(CB[SLOTS.mode].label.toLowerCase())} recorded"></i>`;
+    const i = SLOTS.slots.indexOf(k);
+    return `<i class="sdot" style="background:${i >= 0 ? CAT[i] : OTHER_FILL}" title="${esc(CB[SLOTS.mode].name(k) || "")}"></i>`;
+  };
+  const nameCell = (p) => `${dotFor(p)}<span class="nm ${isOut(p) ? "out" : ""}">${esc(p.name)}</span>`;
+  function personStrip(title, ids, sub) {
+    setStrip({ title, sub, rows: ids.map((id) => P.get(id)).filter(Boolean), cols: [
+      { label: "Name", fmt: nameCell }, { label: "Institution", cls: "inst", fmt: (p) => esc(p.inst || "") },
+      { label: "PhD", num: true, fmt: yearCell }, { label: "Students", num: true, fmt: (p) => fmt(p.ns) }, { label: "Descendants", num: true, fmt: (p) => fmt(p.nd) },
+    ] });
+  }
+
+  // Record panel sections: every h3 in the panel becomes a collapsible section with a count, so the
+  // record reads as a short summary first. Open/closed state is remembered per section title.
+  const SEC_KEY = "lineage:sec";
+  let secState = {};
+  try { secState = JSON.parse(localStorage.getItem(SEC_KEY) || "{}"); } catch { secState = {}; }
+  let sectioning = false;
+  function sectionize() {
+    const panel = els.panel;
+    const heads = [...panel.children].filter((n) => n.tagName === "H3");
+    if (!heads.length) return;
+    sectioning = true;
+    heads.forEach((h, i) => {
+      const title = h.textContent.trim();
+      const d = document.createElement("details"); d.className = "sec";
+      const open = secState[title] ?? i < 3;
+      if (open) d.open = true;
+      const body = document.createElement("div"); body.className = "body";
+      let n = h.nextSibling;
+      while (n && !(n.nodeType === 1 && (n.tagName === "H3" || n.classList.contains("actions") && !n.closest(".body")))) {
+        const next = n.nextSibling; body.appendChild(n); n = next;
+      }
+      const items = body.querySelectorAll(".plist > li, .steps > li, .kv > div").length;
+      d.innerHTML = `<summary>${esc(title)}${items ? `<span class="n">${fmt(items)}</span>` : ""}</summary>`;
+      if (h.id) d.id = h.id;
+      h.replaceWith(d); d.appendChild(body);
+      d.addEventListener("toggle", () => { secState[title] = d.open; try { localStorage.setItem(SEC_KEY, JSON.stringify(secState)); } catch { /* storage unavailable */ } });
+    });
+    sectioning = false;
+  }
+  new MutationObserver(() => {
+    if (sectioning) return;
+    queueMicrotask(sectionize);
+    els.panel.classList.remove("flash"); void els.panel.offsetWidth; els.panel.classList.add("flash");
+  }).observe(els.panel, { childList: true });
+
+  // Recent people in the rail
+  const RECENT_KEY = "lineage:recent";
+  function pushRecent(pid) {
+    let r = [];
+    try { r = JSON.parse(localStorage.getItem(RECENT_KEY) || "[]"); } catch { r = []; }
+    r = [pid, ...r.filter((x) => x !== pid)].slice(0, 7);
+    try { localStorage.setItem(RECENT_KEY, JSON.stringify(r)); } catch { /* storage unavailable */ }
+    renderRecent(r);
+  }
+  function renderRecent(r) {
+    if (!r) { try { r = JSON.parse(localStorage.getItem(RECENT_KEY) || "[]"); } catch { r = []; } }
+    r = r.filter((x) => P.has(x));
+    $("#recentHead").hidden = !r.length;
+    $("#recent").innerHTML = r.map((x) => `<a href="${lineageHash(x, new URLSearchParams())}" title="${esc(P.get(x).inst || "")}">${esc(P.get(x).name)}</a>`).join("");
+  }
+  const short = (n) => (n >= 10000 ? `${(n / 1000).toFixed(n >= 100000 ? 0 : 1)}k` : fmt(n));
+  function fillRail() {
+    const soc = index.filter((p) => !isOut(p)).length;
+    const set = (k, v) => { const el = $(`[data-count="${k}"]`); if (el) el.textContent = v; };
+    if (CTX) { set("schools", CTX.schools.length); set("institutions", short(INST.size)); }
+    set("net", short(META.people));
+    if (CO.size) set("co", short(CO.size));
+    const gap = GAPS.find((g) => g.key === "no-advisor");
+    if (gap) set("gaps", short(index.reduce((n, p) => n + (gap.test(p) ? 1 : 0), 0)));
+    $("#fieldCounts").innerHTML = `<b>${fmt(soc)}</b> sociologists · <b>${fmt(META.edges)}</b> advisor links`;
+    renderRecent();
+    const t = $("#railToggle");
+    t.addEventListener("click", () => { const o = !els.rail.classList.contains("open"); els.rail.classList.toggle("open", o); t.setAttribute("aria-expanded", String(o)); });
+    window.addEventListener("hashchange", () => { els.rail.classList.remove("open"); t.setAttribute("aria-expanded", "false"); });
+  }
+
+  /* ---------------------------------------------------------------- home */
+  const REPO = "https://github.com/evjohnston/public-lineage";
+  function showHome() {
+    state.view = "home"; setTab("home"); showCanvas(false); clearNotice(); els.toolbar.innerHTML = "";
+    els.legend.hidden = true;
+    const soc = index.filter((p) => !isOut(p));
+    const pa = findByName("Talcott Parsons"), bu = findByName("Michael Burawoy"), wr = findByName("Erik Olin Wright");
+    const gapN = (k) => { const g = GAPS.find((x) => x.key === k); return g ? index.reduce((n, p) => n + (g.test(p) ? 1 : 0), 0) : 0; };
+    const schools = CTX?.schools ? CTX.schools.map((x, i) => ({ i, name: x.name, size: x.size, founders: x.founders })).sort((a, b) => b.size - a.size) : [];
+    const smax = Math.max(1, ...schools.map((x) => x.size));
+    const top = soc.slice().sort((a, b) => b.nd - a.nd).slice(0, 12);
+    const views = [
+      ["Lineage", "#/p", "A person's ancestors and descendants as a tree"],
+      ["Relatives", wr ? `#/kin/${wr.id}` : "#/kin", "Siblings, cousins and “times removed”"],
+      ["Connect two people", pa && bu ? `#/connect/${pa.id}/${bu.id}` : "#/connect", "The chain of advisors between any two"],
+      ["Schools", "#/schools", "Twelve schools traced from their founders"],
+      ["Sociogram", "#/net", "Everyone at once in 3D, with centrality"],
+      ["Institutions", "#/institutions", "Where people trained and where they went"],
+      ["Co-authors", "#/co", "Who published with whom (OpenAlex)"],
+      ["Dynasties", "#/dynasties", "The largest lineages, ranked"],
+      ["Data gaps", "#/gaps", "What's missing, and a form to fill it"],
+    ];
+    const health = [
+      ["Missing advisors", "no-advisor", "People with students but no advisor on record"],
+      ["No links at all", "isolated", "Tagged sociology, nobody connected"],
+      ["Small fragments", "small", "Clusters cut off from the main tree"],
+      ["Possible duplicates", "duplicate", "Same person recorded twice?"],
+    ];
+    els.sheet.innerHTML = `
+      <div class="home">
+        <header class="home-head">
+          <div>
+            <h1>Who trained whom in sociology</h1>
+            <p>Every recorded advisor-to-student tie in the field, from the Academic Family Tree and eight outside sources. Start from a person, a school, or the whole network.</p>
+            <div class="home-search" role="combobox" aria-expanded="false" aria-haspopup="listbox">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4.5 4.5"/></svg>
+              <input id="homeSearch" type="search" placeholder="Search ${fmt(META.people)} people by name" autocomplete="off" spellcheck="false" aria-label="Search people">
+              <ul id="homeRes" class="results" role="listbox" hidden></ul>
+            </div>
+          </div>
+          <div class="ledger" aria-label="The data at a glance">
+            <b>${fmt(soc.length)}</b><span>sociologists</span>
+            <b>${fmt(META.edges)}</b><span>advisor links</span>
+            <b>${fmt(META.largest_cluster)}</b><span>on the main network</span>
+            <b>${fmt(META.people_with_phd_year)}</b><span>with a recorded PhD year</span>
+            <b>${fmt(META.openalex_matched)}</b><span>matched to publications</span>
+          </div>
+        </header>
+        <div class="home-grid">
+          <section class="tile">
+            <div class="tile-head"><h2>What the data shows so far</h2><a href="${REPO}/blob/main/docs/analysis/README.md" target="_blank" rel="noopener">Read the analysis</a></div>
+            <ol class="findings">
+              <li><b>Ten programs trained a third of US sociology faculty</b>, and nine in ten moves between departments go down the prestige ranking.</li>
+              <li><b>Students publish on their advisor's topics</b> far more often than chance, though much of that comes from joint papers.</li>
+              <li><b>Students of the most prolific advisors advise a little more</b>; advisor standing shows no clear effect on where students are hired.</li>
+              <li><b>The rise and fall of schools can't be read off these records yet</b>: within any one source of PhD years, the shares stay flat.</li>
+            </ol>
+          </section>
+          <section class="tile">
+            <div class="tile-head"><h2>Where the record is thin</h2><a href="#/gaps">Data gaps</a></div>
+            ${health.map(([l, k, why]) => `<a class="health-row" href="#/gaps/${k}"><span>${esc(l)}<span class="why">${esc(why)}</span></span><span class="v">${fmt(gapN(k))}</span></a>`).join("")}
+          </section>
+          <section class="tile">
+            <div class="tile-head"><h2>Schools of thought</h2><a href="#/schools">All schools</a></div>
+            ${schools.map((x) => `<a class="school-row" href="#/school/${x.i}"><span class="nm">${esc(x.name)}</span><span class="bar"><i style="width:${(100 * x.size / smax).toFixed(1)}%"></i></span><span class="v">${fmt(x.size)}</span></a>`).join("")}
+          </section>
+          <section class="tile">
+            <div class="tile-head"><h2>Largest lineages</h2><a href="#/dynasties">Dynasties</a></div>
+            <div class="people-list">${top.map((p) => `<a href="${lineageHash(p.id, new URLSearchParams())}" title="${esc(p.inst || "")}"><span class="nm">${esc(p.name)}</span><span class="ct">${fmt(p.nd)} desc.</span></a>`).join("")}</div>
+          </section>
+          <section class="tile wide views-tile" style="padding:0">
+            <div class="views">${views.map(([t, h, why]) => `<a class="view" href="${h}"><b>${esc(t)}</b><span>${esc(why)}</span></a>`).join("")}</div>
+          </section>
+        </div>
+      </div>`;
+    els.sheet.hidden = false;
+    attachSearch($("#homeSearch"), $("#homeRes"), (p) => go(lineageHash(p.id, new URLSearchParams())), { suggest: () => top });
+    let last = null;
+    try { last = +localStorage.getItem("lineage:last"); } catch { /* storage unavailable */ }
+    const lp = last && P.has(last) ? P.get(last) : null;
+    els.panel.innerHTML = `
+      <h2>Start here</h2>
+      <p class="inst">Pick a person to open their lineage, or press <kbd>/</kbd> to search.</p>
+      ${lp ? `<div class="actions"><a class="btn primary" href="${lineageHash(lp.id, new URLSearchParams())}">Back to ${esc(lp.name)}</a></div>` : ""}
+      <div class="starts">${startChips()}</div>
+      <h3>About the data</h3>
+      <p class="muted">Academic Family Tree snapshot of 2022-03-12 (CC-BY-4.0), extended with Wikidata, theses.fr, NSF dissertation grants, six US dissertation repositories, OpenAlex, ORCID and the US faculty hiring census. Ties read from dissertation text are kept separate and marked unverified.</p>
+      <h3>Cite</h3>
+      <p class="muted">${esc(META.citation || "")}</p>
+      <div class="actions"><a class="btn" href="${REPO}" target="_blank" rel="noopener">Code and data on GitHub<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3L5 11"/></svg></a></div>`;
+    els.panel.scrollTop = 0;
+  }
+
   /* ---------------------------------------------------------------- 3D sociogram */
-  // The whole field as a force-directed network in 3D. Centrality comes precomputed from
-  // scripts/export_network.py (data/network.json); the 3D library loads on first use.
-  const NET = { data: null, graph: null, byId: new Map(), scopeKey: null, sel: null };
+  // Everyone in the field at once: one point cloud and one batch of lines (three.js, vendored), so
+  // 45k people stay smooth. Positions and centrality are precomputed by scripts/export_network.py.
+  const NET = { data: null, byId: new Map(), ids: [], sel: null, three: null, nodes: [], size: "pagerank" };
   const NET_SCOPES = {
-    backbone: { label: "Advisors in the main tree", test: (n) => n.comp === 0 && (kids.get(n.id) || []).length > 0 },
-    main: { label: "Whole main tree", test: (n) => n.comp === 0, heavy: true },
-    clusters: { label: "All clusters of 10+", test: (n) => n.size >= 10, heavy: true },
+    all: { label: "Everyone", test: () => true },
+    soc: { label: "Sociologists only", test: (n) => !isOut(P.get(n.id)) },
+    main: { label: "Main tree", test: (n) => n.comp === 0 },
+    advisors: { label: "Advisors only", test: (n) => (kids.get(n.id) || []).length > 0 },
   };
   const NET_SIZE = {
-    pagerank: { label: "Influence (PageRank)", get: (n) => n.pr, why: "Credit flows from students up to advisors, so people whose lines grew large score high." },
-    betweenness: { label: "Brokerage (betweenness)", get: (n) => n.bt, why: "How often someone sits on the shortest path between two others: the people who join lineages together." },
-    degree: { label: "Ties (degree)", get: (n) => n.deg, why: "Advisors plus students." },
-    eigenvector: { label: "Well-tied ties (eigenvector)", get: (n) => n.ev, why: "Tied to people who are themselves well tied." },
-    descendants: { label: "Descendants", get: (n) => P.get(n.id)?.nd || 0, why: "Everyone below them in the tree." },
+    pagerank: { label: "Influence (PageRank)", short: "PageRank", get: (n) => n.pr, why: "Credit flows from students up to advisors, so people whose lines grew large score high." },
+    betweenness: { label: "Brokerage (betweenness)", short: "Brokerage", get: (n) => n.bt, why: "How often someone sits on the shortest path between two others: the people who join lineages together. Main tree only." },
+    degree: { label: "Ties (degree)", short: "Ties", get: (n) => n.deg, why: "Advisors plus students." },
+    eigenvector: { label: "Well-tied ties (eigenvector)", short: "Eigenvector", get: (n) => n.ev, why: "Tied to people who are themselves well tied. Main tree only." },
+    descendants: { label: "Descendants", short: "Descendants", get: (n) => P.get(n.id)?.nd || 0, why: "Everyone below them in the tree." },
   };
   const NET_COLOR = { "": "Ink", school: "School of thought", community: "Detected community", cohort: "PhD cohort", phd: "PhD institution" };
-  const EDGE_INK = "#b9b5ac";
-  const loadScript = (src) => new Promise((ok, fail) => { const t = document.createElement("script"); t.src = src; t.onload = ok; t.onerror = () => fail(new Error("couldn't load " + src)); document.head.appendChild(t); });
+  const EDGE_INK = "#6b7280", OTHER_CAT = "#6b7280";  // edge grey, as documented in DESIGN.md
+  const LABELS = 24;
 
   async function netData() {
     if (NET.data) return NET.data;
     const res = await fetch("data/network.json");
     if (!res.ok) throw new Error("data/network.json: " + res.status);
     const d = await res.json();
-    const sizes = new Map();
-    for (const r of d.nodes) sizes.set(r[1], (sizes.get(r[1]) || 0) + 1);
-    for (const [id, comp, deg, pr, bt, ev, core] of d.nodes) if (P.has(id)) NET.byId.set(id, { id, comp, size: sizes.get(comp), deg, pr, bt: bt || 0, ev: ev || 0, core });
+    for (const [id, comp, deg, pr, bt, ev, core, x, y, z] of d.nodes) {
+      if (P.has(id) && x != null) NET.byId.set(id, { id, comp, deg, pr, bt: bt || 0, ev: ev || 0, core, x, y, z });
+    }
     NET.data = d;
     return d;
+  }
+
+  async function netThree() {
+    if (NET.three) return NET.three;
+    const THREE = await import("./vendor/three.module.js");
+    const { OrbitControls } = await import("./vendor/OrbitControls.js");
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+    renderer.setClearColor(PAPER, 1);
+    els.net.appendChild(renderer.domElement);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, 1, 1, 30000);
+    camera.position.set(0, 0, 2800);
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; controls.dampingFactor = 0.08; controls.zoomSpeed = 1.1;
+    const pointsMat = new THREE.ShaderMaterial({
+      uniforms: { uPx: { value: renderer.getPixelRatio() }, uScale: { value: 900 } },
+      vertexShader: `attribute float size; attribute vec3 color; varying vec3 vColor;
+        uniform float uPx; uniform float uScale;
+        void main() { vColor = color; vec4 mv = modelViewMatrix * vec4(position, 1.0);
+          gl_PointSize = clamp(size * uPx * uScale / -mv.z, 1.6 * uPx, min(size * 1.6, 30.0) * uPx); gl_Position = projectionMatrix * mv; }`,
+      fragmentShader: `varying vec3 vColor;
+        void main() { float r = length(gl_PointCoord - 0.5); if (r > 0.5) discard;
+          float rim = smoothstep(0.34, 0.44, r); gl_FragColor = vec4(mix(vColor, vColor * 0.55, rim), 1.0); }`,
+    });
+    const lineMat = new THREE.LineBasicMaterial({ color: EDGE_INK, transparent: true, opacity: 0.32, depthWrite: false });
+    const egoMat = new THREE.LineBasicMaterial({ color: RED, transparent: true, opacity: 0.95, depthWrite: false });
+    const labels = document.createElement("div"); labels.className = "net-labels"; els.net.appendChild(labels);
+    const tip = document.createElement("div"); tip.className = "net-tip"; tip.hidden = true; els.net.appendChild(tip);
+    const T = { THREE, renderer, scene, camera, controls, pointsMat, lineMat, egoMat, labels, tip, points: null, lines: null, ego: null, raf: 0, fly: null, hover: -1 };
+    NET.three = T;
+
+    const resize = () => {
+      const w = els.net.clientWidth, h = els.net.clientHeight;
+      if (!w || !h) return;
+      renderer.setSize(w, h, false); renderer.domElement.style.width = w + "px"; renderer.domElement.style.height = h + "px";
+      camera.aspect = w / h; camera.updateProjectionMatrix();
+    };
+    T.resize = resize;
+    window.addEventListener("resize", () => !els.net.hidden && resize());
+
+    // hover and click: raycast against the point cloud; a click is a press that didn't drag
+    const ray = new THREE.Raycaster(), mouse = new THREE.Vector2();
+    let down = null, pending = null;
+    const pick = (ev) => {
+      if (!T.points) return -1;
+      const r = renderer.domElement.getBoundingClientRect();
+      mouse.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
+      ray.setFromCamera(mouse, camera);
+      ray.params.Points.threshold = camera.position.distanceTo(controls.target) * 0.008;
+      const hits = ray.intersectObject(T.points);
+      return hits.length ? hits[0].index : -1;
+    };
+    renderer.domElement.addEventListener("pointermove", (ev) => {
+      pending = ev;
+      if (T.hoverRaf) return;
+      T.hoverRaf = requestAnimationFrame(() => {
+        T.hoverRaf = 0;
+        const i = pick(pending);
+        T.hover = i;
+        renderer.domElement.style.cursor = i >= 0 ? "pointer" : "";
+        if (i < 0) { tip.hidden = true; return; }
+        const n = NET.nodes[i], p = P.get(n.id), v = NET_SIZE[NET.size];
+        tip.innerHTML = `<b>${esc(p.name)}</b><span>${esc(p.inst || "No institution recorded")}</span><span>${esc(v.label)}: ${fmtMeasure(v.get(n))}</span>`;
+        const r = els.net.getBoundingClientRect();
+        tip.style.left = Math.min(r.width - 240, pending.clientX - r.left + 14) + "px";
+        tip.style.top = (pending.clientY - r.top + 14) + "px";
+        tip.hidden = false;
+      });
+    });
+    renderer.domElement.addEventListener("pointerleave", () => { tip.hidden = true; });
+    renderer.domElement.addEventListener("pointerdown", (ev) => { down = [ev.clientX, ev.clientY]; });
+    renderer.domElement.addEventListener("pointerup", (ev) => {
+      if (!down || Math.hypot(ev.clientX - down[0], ev.clientY - down[1]) > 5) return;
+      const i = pick(ev);
+      if (i >= 0) netFocus(NET.nodes[i].id); else if (NET.sel != null) netClear();
+    });
+    controls.addEventListener("start", () => { T.fly = null; });
+    return T;
+  }
+
+  function netLoop() {
+    const T = NET.three;
+    cancelAnimationFrame(T.raf);
+    const tick = (now) => {
+      if (els.net.hidden) return;
+      if (T.fly) {
+        const f = T.fly, k = Math.min(1, (now - f.t0) / f.ms), e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+        T.camera.position.lerpVectors(f.fromPos, f.toPos, e); T.controls.target.lerpVectors(f.fromT, f.toT, e);
+        if (k >= 1) T.fly = null;
+      }
+      T.controls.update();
+      T.renderer.render(T.scene, T.camera);
+      placeLabels();
+      T.raf = requestAnimationFrame(tick);
+    };
+    T.raf = requestAnimationFrame(tick);
+  }
+
+  // labels for the most central people in view, plus the selection and its neighbours
+  function placeLabels() {
+    const T = NET.three, W = els.net.clientWidth, H = els.net.clientHeight;
+    const v = new T.THREE.Vector3();
+    const used = [];
+    for (const el of T.labels.children) {
+      const n = el._n;
+      v.set(n.x, n.y, n.z).project(T.camera);
+      const x = (v.x + 1) / 2 * W, y = (1 - v.y) / 2 * H;
+      const off = v.z > 1 || x < 0 || x > W || y < 60 || y > H;
+      // skip a label that would sit on top of one already placed (selection first, then rank)
+      const clash = !off && used.some(([a, b]) => Math.abs(a - x) < 90 && Math.abs(b - y) < 16);
+      el.style.display = off || clash ? "none" : "";
+      if (!off && !clash) { el.style.transform = `translate(${x.toFixed(1)}px, ${(y - 18).toFixed(1)}px) translateX(-50%)`; used.push([x, y]); }
+    }
+  }
+  function setLabels() {
+    const T = NET.three, v = NET_SIZE[NET.size];
+    const top = [...NET.nodes].sort((a, b) => v.get(b) - v.get(a)).slice(0, LABELS);
+    const want = [];
+    if (NET.sel != null) {
+      const s = NET.byId.get(NET.sel);
+      if (s) want.push([s, "sel"]);
+      for (const x of [...(parents.get(NET.sel) || []), ...(kids.get(NET.sel) || [])].slice(0, 14)) { const n = NET.byId.get(x); if (n && NET.inScope.has(x)) want.push([n, "near"]); }
+    }
+    for (const n of top) if (!want.some(([m]) => m === n)) want.push([n, ""]);
+    T.labels.innerHTML = "";
+    for (const [n, cls] of want) {
+      const el = document.createElement("div");
+      el.className = "nl " + cls; el.textContent = P.get(n.id).name; el._n = n;
+      T.labels.appendChild(el);
+    }
+  }
+
+  function netColorFn(color) {
+    let colorOf = (n) => (isOut(P.get(n.id)) ? FAINT : INK), key = "";
+    if (color === "cohort") {
+      colorOf = (n) => { const i = cohortOf(P.get(n.id)?.yr); return i < 0 ? OTHER_FILL : COHORT[i][3]; };
+      key = `<b>PhD cohort</b>` + COHORT.map(([lab, , , c]) => `<span class="ck"><i style="background:${c}"></i>${lab}</span>`).join("") + `<span class="ck"><i style="background:${OTHER_FILL}"></i>No year</span>`;
+    } else if (color) {
+      const cb = CB[color], counts = new Map();
+      for (const n of NET.nodes) { const k = cb.key(n.id); if (k != null) counts.set(k, (counts.get(k) || 0) + 1); }
+      const slots = [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([k]) => k).filter((k) => cb.name(k)).slice(0, CAT.length);
+      colorOf = (n) => { const k = cb.key(n.id); if (k == null) return OTHER_FILL; const i = slots.indexOf(k); return i >= 0 ? CAT[i] : OTHER_CAT; };
+      key = `<b>${esc(cb.label)}</b>` + slots.map((k, i) => `<span class="ck"><i style="background:${CAT[i]}"></i>${esc(cb.name(k))}<span class="muted">${fmt(counts.get(k))}</span></span>`).join("")
+        + `<span class="ck"><i style="background:${OTHER_CAT}"></i>Other</span><span class="ck"><i style="background:${OTHER_FILL}"></i>None recorded</span>`;
+    } else {
+      key = `<b>Ink</b><span class="ck"><i style="background:${INK}"></i>Sociology</span><span class="ck"><i style="background:${FAINT}"></i>Outside the field</span><span class="ck"><i style="background:${RED}"></i>Selected and their ties</span>`;
+    }
+    return { colorOf, key };
   }
 
   async function showNet(params) {
     state.view = "net"; setTab("net");
     showCanvas(false); els.sheet.hidden = true; clearNotice();
     els.net.hidden = false;
-    const scope = NET_SCOPES[params.get("scope")] ? params.get("scope") : "backbone";
+    const scope = NET_SCOPES[params.get("scope")] ? params.get("scope") : "all";
     const size = NET_SIZE[params.get("size")] ? params.get("size") : "pagerank";
-    const color = NET_COLOR[params.get("c")] != null && CTX ? (params.get("c") || "") : "";
+    const color = CTX && NET_COLOR[params.get("c")] != null ? (params.get("c") || "") : "";
+    let T;
     try {
-      if (!window.ForceGraph3D) { notice(`<h2>Loading the 3D view</h2><p>Reading the network measures.</p>`, "loading"); await loadScript("vendor/3d-force-graph.min.js"); }
+      if (!NET.three) notice(`<h2>Loading the sociogram</h2><p>Placing everyone in 3D.</p>`, "loading");
       await netData();
+      T = await netThree();
       clearNotice();
     } catch (err) {
-      notice(`<h2>The sociogram couldn't load</h2><p>Run <b>scripts/export_network.py</b> to build data/network.json, then reload.</p><p class="note">${esc(err.message)}</p>`);
+      notice(`<h2>The sociogram couldn't load</h2><p>Run <b>scripts/export_network.py</b> to build data/network.json, then reload. 3D needs WebGL, which some browsers turn off.</p><p class="note">${esc(err.message)}</p>`);
       return;
     }
     if (state.view !== "net") return;
+    T.resize();
+    const THREE = T.THREE;
     const nodes = [...NET.byId.values()].filter(NET_SCOPES[scope].test);
-    const inScope = new Set(nodes.map((n) => n.id));
+    NET.nodes = nodes; NET.size = size; NET.inScope = new Set(nodes.map((n) => n.id));
+    NET.index = new Map(nodes.map((n, i) => [n.id, i]));
     const setQ = (k, v) => { const q = new URLSearchParams(state.params); if (v == null || v === "") q.delete(k); else q.set(k, v); go(`#/net${q.toString() ? "?" + q : ""}`); };
 
-    // colour: up to three categories in fixed order (most common in view), the rest "Other"
-    let colorOf = (n) => (isOut(P.get(n.id)) ? FAINT : INK), key = "";
-    if (color === "cohort") {
-      colorOf = (n) => { const i = cohortOf(P.get(n.id)?.yr); return i < 0 ? OTHER_FILL : COHORT[i][3]; };
-      key = `<b>PhD cohort</b>` + COHORT.map(([lab, , , c]) => `<span class="ck"><i style="background:${c}"></i>${lab}</span>`).join("");
-    } else if (color) {
-      const cb = CB[color], counts = new Map();
-      for (const n of nodes) { const k = cb.key(n.id); if (k != null) counts.set(k, (counts.get(k) || 0) + 1); }
-      const slots = [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([k]) => k).filter((k) => cb.name(k)).slice(0, CAT.length);
-      colorOf = (n) => { const k = cb.key(n.id); if (k == null) return OTHER_FILL; const i = slots.indexOf(k); return i >= 0 ? CAT[i] : "#8f8b82"; };
-      key = `<b>${esc(cb.label)}</b>` + slots.map((k, i) => `<span class="ck"><i style="background:${CAT[i]}"></i>${esc(cb.name(k))}<span class="muted">${fmt(counts.get(k))}</span></span>`).join("")
-        + `<span class="ck"><i style="background:#8f8b82"></i>Other</span><span class="ck"><i style="background:${OTHER_FILL}"></i>None recorded</span>`;
-    }
-    const get = NET_SIZE[size].get;
-    const vmax = Math.max(1e-9, ...nodes.map(get));
-    const valOf = (n) => 0.6 + 40 * Math.pow(get(n) / vmax, 0.75);
-
     els.toolbar.innerHTML = `
-      <span class="title">Sociogram</span>
-      <span class="sub">${fmt(nodes.length)} people in view${NET_SCOPES[scope].heavy ? " · large view, give it a few seconds" : ""}</span>
-      <label class="selectlbl">Show <select id="netScope">${Object.entries(NET_SCOPES).map(([k, v]) => `<option value="${k}" ${k === scope ? "selected" : ""}>${v.label}</option>`).join("")}</select></label>
-      <label class="selectlbl">Size by <select id="netSize">${Object.entries(NET_SIZE).map(([k, v]) => `<option value="${k}" ${k === size ? "selected" : ""}>${v.label}</option>`).join("")}</select></label>
-      ${CTX ? `<label class="selectlbl">Color by <select id="netColor">${Object.entries(NET_COLOR).map(([k, v]) => `<option value="${k}" ${k === color ? "selected" : ""}>${v}</option>`).join("")}</select></label>` : ""}
-      <div class="picker" role="combobox" aria-expanded="false" aria-haspopup="listbox"><input id="netFind" type="search" placeholder="Find someone in view" aria-label="Find someone in the sociogram" autocomplete="off"><ul id="netRes" class="results" role="listbox" hidden></ul></div>
-      <button type="button" class="btn" id="netReset">Reset view</button>`;
-    $("#netScope").addEventListener("change", (e) => setQ("scope", e.target.value === "backbone" ? null : e.target.value));
+      <div class="tb-head"><span class="title">Sociogram</span>
+      <span class="sub">${fmt(nodes.length)} people</span></div>
+      <label class="selectlbl"><span class="vh">Show</span><select id="netScope" aria-label="Show">${Object.entries(NET_SCOPES).map(([k, v]) => `<option value="${k}" ${k === scope ? "selected" : ""}>Show: ${v.label}</option>`).join("")}</select></label>
+      <label class="selectlbl"><span class="vh">Size by</span><select id="netSize" aria-label="Size by">${Object.entries(NET_SIZE).map(([k, v]) => `<option value="${k}" ${k === size ? "selected" : ""}>Size: ${v.short}</option>`).join("")}</select></label>
+      ${CTX ? `<label class="selectlbl"><span class="vh">Color by</span><select id="netColor" aria-label="Color by">${Object.entries(NET_COLOR).map(([k, v]) => `<option value="${k}" ${k === color ? "selected" : ""}>Color: ${k ? v : "none"}</option>`).join("")}</select></label>` : ""}
+      <div class="picker compact" role="combobox" aria-expanded="false" aria-haspopup="listbox"><input id="netFind" type="search" placeholder="Find someone" aria-label="Find someone in the sociogram" autocomplete="off"><ul id="netRes" class="results" role="listbox" hidden></ul></div>
+      ${menu("View", `<label class="check"><input type="checkbox" id="netSpin" ${T.controls.autoRotate ? "checked" : ""}> Slow spin</label>
+        <button type="button" class="btn" id="netReset">Reset the view</button>`)}`;
+    $("#netScope").addEventListener("change", (e) => setQ("scope", e.target.value === "all" ? null : e.target.value));
     $("#netSize").addEventListener("change", (e) => setQ("size", e.target.value === "pagerank" ? null : e.target.value));
     $("#netColor")?.addEventListener("change", (e) => setQ("c", e.target.value));
+    $("#netSpin").addEventListener("change", (e) => { T.controls.autoRotate = e.target.checked; T.controls.autoRotateSpeed = 0.35; });
     attachSearch($("#netFind"), $("#netRes"), (p, input) => {
       input.value = "";
-      if (inScope.has(p.id)) netFocus(p.id);
-      else notice(`<p class="note">${esc(p.name)} isn't in this view. Try "Whole main tree" or "All clusters of 10+", or open their lineage.</p>`, "lonely");
+      if (NET.inScope.has(p.id)) netFocus(p.id);
+      else notice(`<p class="note">${esc(p.name)} isn't in this view. Switch "Show" to Everyone.</p>`, "lonely");
     });
-    $("#netReset").addEventListener("click", () => { netClear(); NET.graph.zoomToFit(600, 40); });
-    if (key) { els.colorkey.innerHTML = key; els.colorkey.hidden = false; }
+    $("#netReset").addEventListener("click", () => { netClear(); netFit(); });
 
-    // build or reuse the graph
-    const W = els.net.clientWidth, H = els.net.clientHeight;
-    if (!NET.graph) {
-      NET.graph = ForceGraph3D({ controlType: "trackball" })(els.net)
-        .backgroundColor(PAPER).showNavInfo(true).enableNodeDrag(false)
-        .nodeId("id").nodeResolution(8).nodeOpacity(0.95).linkOpacity(0.5)
-        .cooldownTime(15000).d3AlphaDecay(0.025)
-        .onNodeClick((n) => netFocus(n.id))
-        .onBackgroundClick(() => { if (NET.sel != null) netClear(); });
-      window.addEventListener("resize", () => { if (!els.net.hidden) NET.graph.width(els.net.clientWidth).height(els.net.clientHeight); });
+    // geometry for this scope
+    const n = nodes.length;
+    const pos = new Float32Array(n * 3);
+    nodes.forEach((m, i) => { pos[3 * i] = m.x; pos[3 * i + 1] = m.y; pos[3 * i + 2] = m.z; });
+    const { colorOf, key } = netColorFn(color);
+    NET.colorOf = colorOf;
+    els.colorkey.innerHTML = key; els.colorkey.hidden = false;
+    els.legend.hidden = false; els.legend.classList.add("keyonly");
+    const get = NET_SIZE[size].get, vmax = Math.max(1e-9, ...nodes.map(get));
+    NET.baseSize = new Float32Array(n);
+    nodes.forEach((m, i) => { NET.baseSize[i] = 3 + 34 * Math.sqrt(get(m) / vmax); });
+    if (T.points) { T.scene.remove(T.points); T.points.geometry.dispose(); }
+    if (T.lines) { T.scene.remove(T.lines); T.lines.geometry.dispose(); }
+    const pg = new THREE.BufferGeometry();
+    pg.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    pg.setAttribute("color", new THREE.BufferAttribute(new Float32Array(n * 3), 3));
+    pg.setAttribute("size", new THREE.BufferAttribute(NET.baseSize.slice(), 1));
+    T.points = new THREE.Points(pg, T.pointsMat);
+    const seg = [];
+    for (const m of nodes) for (const c of kids.get(m.id) || []) {
+      const j = NET.index.get(c);
+      if (j != null) { const t = nodes[j]; seg.push(m.x, m.y, m.z, t.x, t.y, t.z); }
     }
-    const g = NET.graph.width(W).height(H);
-    g.nodeVal(valOf)
-      .nodeLabel((n) => { const p = P.get(n.id); return `<div class="nt"><b>${esc(p.name)}</b><span>${esc(p.inst || "No institution recorded")}</span><span>${esc(NET_SIZE[size].label)}: ${fmtMeasure(get(n))}</span></div>`; });
-    NET.colorOf = colorOf; NET.nodes = nodes; NET.size = size;
-    const sk = scope;
-    if (NET.scopeKey !== sk) {
-      const links = [];
-      for (const n of nodes) for (const c of kids.get(n.id) || []) if (inScope.has(c)) links.push({ source: n.id, target: c });
-      NET.sel = null;
-      g.graphData({ nodes: nodes.map((n) => ({ ...n })), links });
-      NET.scopeKey = sk;
-      setTimeout(() => g.zoomToFit(800, 40), 2500);
-    }
-    refreshNet();
-    g.resumeAnimation();
+    const lg = new THREE.BufferGeometry();
+    lg.setAttribute("position", new THREE.BufferAttribute(new Float32Array(seg), 3));
+    T.lines = new THREE.LineSegments(lg, T.lineMat);
+    T.scene.add(T.lines); T.scene.add(T.points);
+
     const want = +params.get("p");
-    if (want && inScope.has(want)) { NET.sel = want; refreshNet(); netFocus(want, { fly: false }); setTimeout(() => state.view === "net" && NET.sel === want && netFocus(want), 3500); }
-    else if (NET.sel != null && inScope.has(NET.sel)) netFocus(NET.sel, { fly: false });
-    else renderNetPanel(nodes, size);
+    if (want && NET.inScope.has(want)) { netFocus(want, { fly: false }); netFit(want); }
+    else {
+      if (NET.sel != null && !NET.inScope.has(NET.sel)) NET.sel = null;
+      refreshNet();
+      if (NET.sel != null) netFocus(NET.sel, { fly: false }); else renderNetPanel();
+      if (!T.placed) netFit();
+    }
+    T.placed = true;
+    netLoop();
   }
+
+  function netFit(focusId) {
+    const T = NET.three, THREE = T.THREE;
+    let c = new THREE.Vector3(), R;
+    if (focusId != null) { const m = NET.byId.get(focusId); c.set(m.x, m.y, m.z); R = 320; }
+    else {
+      for (const m of NET.nodes) c.add(new THREE.Vector3(m.x, m.y, m.z));
+      c.divideScalar(Math.max(1, NET.nodes.length));
+      const d = NET.nodes.map((m) => Math.hypot(m.x - c.x, m.y - c.y, m.z - c.z)).sort((a, b) => a - b);
+      R = d[Math.floor(d.length * 0.97)] || 1000;  // ignore the far few
+    }
+    const dist = R / Math.sin((T.camera.fov * Math.PI / 180) / 2) * 0.85;
+    const dir = new THREE.Vector3().subVectors(T.camera.position, T.controls.target).normalize();
+    if (!isFinite(dir.x) || dir.length() === 0) dir.set(0, 0, 1);
+    T.fly = { t0: performance.now(), ms: 900, fromPos: T.camera.position.clone(), fromT: T.controls.target.clone(), toT: c.clone(), toPos: c.clone().addScaledVector(dir, dist) };
+  }
+
   const fmtMeasure = (v) => (v >= 100 ? fmt(Math.round(v)) : v >= 1 ? v.toFixed(1) : v.toFixed(3));
   function refreshNet() {
-    const g = NET.graph, sel = NET.sel;
+    const T = NET.three, THREE = T.THREE, sel = NET.sel;
+    if (!T.points) return;
     const near = new Set();
     if (sel != null) { near.add(sel); for (const x of [...(kids.get(sel) || []), ...(parents.get(sel) || [])]) near.add(x); }
-    const lid = (x) => (typeof x === "object" ? x.id : x);
-    g.nodeColor((n) => (n.id === sel ? RED : sel != null && !near.has(n.id) ? OTHER_FILL : NET.colorOf(n)))
-      .linkColor((l) => (sel != null && (lid(l.source) === sel || lid(l.target) === sel) ? RED : EDGE_INK))
-      .linkWidth((l) => (sel != null && (lid(l.source) === sel || lid(l.target) === sel) ? 1.2 : 0));
+    const col = T.points.geometry.getAttribute("color"), sz = T.points.geometry.getAttribute("size");
+    const c = new THREE.Color(), cache = new Map();
+    const rgb = (hex) => { if (!cache.has(hex)) cache.set(hex, c.set(hex).clone()); return cache.get(hex); };
+    NET.nodes.forEach((m, i) => {
+      const hex = m.id === sel ? RED : sel != null && !near.has(m.id) ? OTHER_FILL : NET.colorOf(m);
+      const k = rgb(hex); col.setXYZ(i, k.r, k.g, k.b);
+      sz.setX(i, m.id === sel ? Math.max(18, NET.baseSize[i] * 1.4) : near.has(m.id) ? Math.max(8, NET.baseSize[i]) : sel != null ? NET.baseSize[i] * 0.6 : NET.baseSize[i]);
+    });
+    col.needsUpdate = true; sz.needsUpdate = true;
+    T.lineMat.opacity = sel != null ? 0.12 : 0.32;
+    if (T.ego) { T.scene.remove(T.ego); T.ego.geometry.dispose(); T.ego = null; }
+    if (sel != null) {
+      const s = NET.byId.get(sel), seg = [];
+      for (const x of near) { if (x === sel || !NET.inScope.has(x)) continue; const t = NET.byId.get(x); seg.push(s.x, s.y, s.z, t.x, t.y, t.z); }
+      const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(seg), 3));
+      T.ego = new THREE.LineSegments(g, T.egoMat); T.scene.add(T.ego);
+    }
+    setLabels();
   }
   function netFocus(id, { fly = true } = {}) {
     NET.sel = id; refreshNet();
     { const q = new URLSearchParams(state.params); q.set("p", id); history.replaceState(null, "", `#/net?${q}`); state.params = q; }
-    const n = NET.graph.graphData().nodes.find((x) => x.id === id);
-    if (fly && n && n.x != null) {
-      const d = 360, r = Math.hypot(n.x, n.y, n.z) || 1;
-      NET.graph.cameraPosition({ x: n.x * (1 + d / r), y: n.y * (1 + d / r), z: n.z * (1 + d / r) }, n, 1200);
-    }
+    if (fly) netFit(id);
     renderPanel(id);
     const m = NET.byId.get(id), ranks = netRanks(id);
-    panelActions(`<div class="actions"><a class="btn primary" href="${lineageHash(id, new URLSearchParams())}">Open this person's lineage</a>
-      <button type="button" class="btn" id="netBack">Back to the rankings</button></div>`);
+    panelActions(`<div class="actions"><button type="button" class="btn" id="netBack">Back to the rankings</button></div>`);
     const anchor = els.panel.querySelector(".stats");
     const html = `<h3>Position in the field</h3><div class="stats">${Object.entries(NET_SIZE).map(([k, v]) => `<div class="stat"><span>${esc(v.label)}</span><b>${ranks[k] ? `#${fmt(ranks[k])}` : "—"}</b></div>`).join("")}</div>
       <p class="muted">Rank among the ${fmt(NET.nodes.length)} people in this view.${m && m.comp !== 0 ? " Outside the main tree, so brokerage and eigenvector aren't measured." : ""}</p>`;
@@ -1104,12 +1662,11 @@
     $("#netBack").addEventListener("click", netClear);
   }
   function netClear() {
-    NET.sel = null; refreshNet(); renderNetPanel(NET.nodes, NET.size);
+    NET.sel = null; refreshNet(); renderNetPanel();
     const q = new URLSearchParams(state.params); q.delete("p"); history.replaceState(null, "", `#/net${q.toString() ? "?" + q : ""}`); state.params = q;
   }
   function netRanks(id) {
-    const out = {};
-    const me = NET.byId.get(id);
+    const out = {}, me = NET.byId.get(id);
     if (!me) return out;
     for (const [k, v] of Object.entries(NET_SIZE)) {
       const mine = v.get(me);
@@ -1117,11 +1674,11 @@
     }
     return out;
   }
-  function renderNetPanel(nodes, size) {
-    const m = NET.data.meta, v = NET_SIZE[size];
-    const top = [...nodes].sort((a, b) => v.get(b) - v.get(a)).slice(0, 25);
+  function renderNetPanel() {
+    const m = NET.data.meta, v = NET_SIZE[NET.size];
+    const top = [...NET.nodes].sort((a, b) => v.get(b) - v.get(a)).slice(0, 25);
     els.panel.innerHTML = `
-      <h2>The field as a network</h2><p class="inst">Advisor links, treated as ties. Drag to rotate, scroll to zoom, click a person.</p>
+      <h2>The field as a network</h2><p class="inst">Every person, with advisor links as ties. Click anyone to see their place in it.</p>
       <div class="stats">
         <div class="stat"><span>People</span><b>${fmt(m.people)}</b></div>
         <div class="stat"><span>Advisor links</span><b>${fmt(m.links)}</b></div>
@@ -1131,7 +1688,7 @@
         <div class="stat"><span>Longest path, at least</span><b>${fmt(m.diameter_lower_bound)}</b></div>
         <div class="stat"><span>Degree assortativity</span><b>${m.assortativity.toFixed(2)}</b></div>
       </div>
-      <p class="note">Negative assortativity: prolific advisors mostly tie to people with few ties (their students), as in a tree. The deepest k-core is ${m.max_core}, so the network has almost no dense clusters.</p>
+      <p class="note">The dense core is the main tree; the outer cloud is thousands of small fragments with no recorded link to it. Negative assortativity: prolific advisors tie mostly to people with few ties (their students), as in a tree. The deepest k-core is ${m.max_core}, so there are almost no dense clusters.</p>
       <h3>Top 25 by ${esc(v.label.toLowerCase())}</h3>
       <p class="muted">${esc(v.why)}</p>
       <ol class="plist ranked">${top.map((n, i) => `<li><button type="button" class="linklike" data-id="${n.id}"><span class="rk">${i + 1}</span><span class="nm">${esc(P.get(n.id).name)}</span></button><span class="ct">${fmtMeasure(v.get(n))}</span></li>`).join("")}</ol>`;
@@ -1143,7 +1700,7 @@
   // Advisor links typed here stay in this browser (a per-viewer draft) until downloaded as a CSV.
   // Saved in data/ as manual_edges*.csv, merge_external.py picks them up as source "manual".
   const MANUAL_KEY = "lineage:manual";
-  const MANUAL_COLS = ["advisor_pid", "advisor_name", "student_pid", "student_name", "year", "institution", "url", "note"];
+  const MANUAL_COLS = ["advisor_pid", "advisor_name", "student_pid", "student_name", "year", "institution", "url", "note", "role", "degree"];
   const manualRows = () => { try { return JSON.parse(localStorage.getItem(MANUAL_KEY) || "[]"); } catch { return []; } };
   const saveManual = (rows) => { try { localStorage.setItem(MANUAL_KEY, JSON.stringify(rows)); return true; } catch { return false; } };
   const csvCell = (v) => { const x = v == null ? "" : String(v); return /[",\n]/.test(x) ? `"${x.replace(/"/g, '""')}"` : x; };
@@ -1182,6 +1739,10 @@
           <label>Institution<input id="advInst" value="${esc(p.inst || "")}"></label>
         </div>
         <label>Source<input id="advUrl" type="url" placeholder="Link to where you found it"></label>
+        <div class="row2">
+          <label>Role<select id="advRole"><option value="director">Thesis director</option><option value="mentor">Mentor, not formal director</option><option value="examiner">Examiner or jury member</option></select></label>
+          <label>Degree<input id="advDegree" placeholder="Optional, e.g. doctorat de 3e cycle"></label>
+        </div>
         <label>Note<input id="advNote" placeholder="Optional, e.g. “dissertation acknowledgments, p. iii”"></label>
         <div class="actions"><button type="submit" class="btn primary">Add link</button></div>
         <p class="note" id="curateMsg" role="status" aria-live="polite"></p>
@@ -1205,7 +1766,7 @@
       if (url && !/^https?:\/\//.test(url)) { msg.textContent = "The source should be a web link starting with http, or blank."; $("#advUrl").focus(); return; }
       const rows = manualRows();
       rows.push({ advisor_pid: chosen && chosen.name === name ? chosen.id : "", advisor_name: name, student_pid: pid, student_name: p.name,
-        year: yr, institution: $("#advInst").value.trim(), url, note: $("#advNote").value.trim() });
+        year: yr, institution: $("#advInst").value.trim(), url, note: $("#advNote").value.trim(), role: $("#advRole").value, degree: $("#advDegree").value.trim() });
       if (!saveManual(rows)) { msg.textContent = "This browser won't store data here (private window?). Copy the details somewhere safe."; return; }
       renderPanel(pid); curateBlock(pid);
       $("#curateMsg").textContent = `Added ${name} → ${p.name}. ${plural(rows.length, "link")} saved in this browser.`;
@@ -1301,7 +1862,7 @@
   }
 
   function showKin(pid, params) {
-    state.view = "kin"; setTab("lineage"); showCanvas(false); clearNotice(); els.toolbar.innerHTML = "";
+    state.view = "kin"; setTab("kin"); showCanvas(false); clearNotice(); els.toolbar.innerHTML = "";
     if (pid == null || !P.has(pid)) { go("#/"); return; }
     const p = P.get(pid), rel = relativesOf(pid);
     const grid = Array.from({ length: KIN_UP + 1 }, () => Array.from({ length: KIN_DOWN + 1 }, () => []));
@@ -1615,8 +2176,25 @@
     for (const p of mem) if (ok(p) && below.get(p) >= min) shown.add(p);
     return { shown, ok, founders, below, mem };
   }
-  function schoolElements(id, min, showOut) {
-    const { shown, ok, founders, below } = schoolShown(id, min, showOut);
+  let SCHOOL_VISIBLE = new Set();
+  function schoolElements(id, min, showOut, budget = null) {
+    const { shown: eligible, ok, founders, below } = schoolShown(id, min, showOut);
+    // row by row from the founders: the lines with the most descendants in the school, as many as
+    // fit across (each parent with hidden members also needs a "+N more" box in the next row)
+    const { cols, rows } = budget || canvasBudget(true);
+    const shown = new Set(founders);
+    let frontier = [...founders];
+    for (let r = 1; r < rows && frontier.length; r++) {
+      const cand = [];
+      for (const m of frontier) for (const c of kids.get(m) || []) if (eligible.has(c) && !shown.has(c) && !cand.includes(c)) cand.push(c);
+      cand.sort((a, b) => (below.get(b) || 0) - (below.get(a) || 0));
+      const k = Math.min(cand.length, cols);
+      const pick = cand.slice(0, k);
+      for (const c of pick) shown.add(c);
+      frontier = pick;
+    }
+    SCHOOL_VISIBLE = shown;
+    const lastRow = new Set(frontier);  // nothing is drawn below these, so no box row under them
     const nodes = [], edges = [];
     for (const p of shown) {
       const q = P.get(p), n = below.get(p);
@@ -1625,14 +2203,13 @@
       nodes.push(el);
       let hidden = 0;
       for (const c of kids.get(p) || []) {
-        if (shown.has(c)) edges.push(edgeEl(p, c));
-        else if (ok(c)) hidden++;
+        if (shown.has(c)) {
+          const ps = (parents.get(c) || []).filter((x) => shown.has(x));
+          const primary = ps.sort((a, b) => (below.get(b) || 0) - (below.get(a) || 0))[0];
+          edges.push(edgeEl(p, c, p === primary ? "" : "overlay second"));
+        } else if (ok(c)) hidden++;
       }
-      if (hidden) {
-        const mid = `more-${p}`;
-        nodes.push({ group: "nodes", data: { id: mid, label: `+${fmt(hidden)} more`, more: p, size: 22 }, classes: "more" });
-        edges.push({ group: "edges", data: { id: `e${p}-${mid}`, source: String(p), target: mid }, classes: "faint" });
-      }
+      if (hidden) el.data.label += `\n↓ ${fmt(hidden)} more`;
     }
     return [...nodes, ...edges];
   }
@@ -1646,32 +2223,44 @@
     const showOut = params.get("out") !== "0";
     let min = params.has("min") ? +params.get("min") : null;
     if (!SCHOOL_MIN.includes(min)) {  // default: the most detail that stays readable
-      min = SCHOOL_MIN.find((m) => schoolShown(id, m, showOut).shown.size <= 70) ?? SCHOOL_MIN.at(-1);
+      min = 0;
     }
     const { shown, mem, founders } = schoolShown(id, min, showOut);
     const setQ = (k, v) => { const q = new URLSearchParams(state.params); if (v == null) q.delete(k); else q.set(k, v); go(`#/school/${id}${q.toString() ? "?" + q : ""}`); };
+    const cmode = colorMode(params);
     els.toolbar.innerHTML = `
-      <a class="btn" href="#/schools/curated/${id}">All schools</a>
-      <label class="selectlbl">School <select id="schoolPick">${CTX.schools.map((x, i) => `<option value="${i}" ${i === id ? "selected" : ""}>${esc(x.name)}</option>`).join("")}</select></label>
-      <span class="sub">${plural(mem.size, "member")} · founders ${esc(founders.map((f) => P.get(f).name).join(", "))} · showing ${fmt(shown.size)}</span>
-      <span class="seg-label">Lines with descendants</span>
-      <span class="seg" role="group" aria-label="Show lines with at least this many descendants in the school">${SCHOOL_MIN.map((m) => `<button type="button" data-min="${m}" aria-pressed="${m === min}">${m ? fmt(m) + "+" : "All"}</button>`).join("")}</span>
-      <label class="check"><input type="checkbox" id="showOut" ${showOut ? "checked" : ""}> Show people outside the field</label>
-      <label class="check"><input type="checkbox" id="byYear" ${params.get("t") === "1" ? "checked" : ""}> Arrange by year</label>
-      <label class="selectlbl">Color by <select id="colorBy"><option value="">Nothing</option>${Object.entries(CB).map(([k, v]) => `<option value="${k}" ${params.get("c") === k ? "selected" : ""}>${v.label}</option>`).join("")}</select></label>
-      <button type="button" class="btn" id="fitAll">Fit whole school</button>`;
+      <div class="tb-head"><label class="selectlbl title-select"><span class="vh">School</span><select id="schoolPick" aria-label="School">${CTX.schools.map((x, i) => `<option value="${i}" ${i === id ? "selected" : ""}>${esc(x.name)}</option>`).join("")}</select></label>
+      <span class="sub">${plural(mem.size, "member")} · founded by ${esc(founders.map((f) => P.get(f).name).join(", "))} · ${fmt(shown.size)} shown</span></div>
+      <span class="seg" role="group" aria-label="Show lines with at least this many descendants in the school" title="Lines with at least this many descendants">${SCHOOL_MIN.map((m) => `<button type="button" data-min="${m}" aria-pressed="${m === min}">${m ? fmt(m) + "+" : "All"}</button>`).join("")}</span>
+      <label class="selectlbl"><span class="vh">Color by</span><select id="colorBy" aria-label="Color by"><option value="none" ${cmode ? "" : "selected"}>No color</option>${Object.entries(CB).map(([k, v]) => `<option value="${k}" ${cmode === k ? "selected" : ""}>${v.label}</option>`).join("")}</select></label>
+      ${menu("View", `<label class="check"><input type="checkbox" id="showOut" ${showOut ? "checked" : ""}> People outside the field</label>
+        <label class="check"><input type="checkbox" id="byYear" ${params.get("t") === "1" ? "checked" : ""}> Arrange by year</label>
+        ${formalToggle()}
+        <button type="button" class="btn" id="fitAll">Fit the whole school</button>`, FORMAL ? 1 : 0)}`;
     $("#fitAll").addEventListener("click", () => cy.animate({ fit: { eles: cy.elements(), padding: 30 } }, { duration: 250 }));
     $("#schoolPick").addEventListener("change", (e) => go(`#/school/${e.target.value}`));
     els.toolbar.querySelectorAll("[data-min]").forEach((b) => b.addEventListener("click", () => setQ("min", b.dataset.min)));
     $("#showOut").addEventListener("change", (e) => setQ("out", e.target.checked ? null : "0"));
     $("#byYear").addEventListener("change", (e) => setQ("t", e.target.checked ? "1" : null));
-    $("#colorBy").addEventListener("change", (e) => setQ("c", e.target.value || null));
-    const elements = schoolElements(id, min, showOut);
-    const mode = CB[params.get("c")] ? params.get("c") : null;
-    if (mode) colorize(elements, mode); else setColorKey(null);
-    const byYear = params.get("t") === "1";
-    if (byYear && !mode) colorizeCohort(elements);
-    draw(elements, { fitTo: `node[id="${founders[0]}"]`, overview: true, after: byYear ? () => timelineLayout(founders[0]) : null });
+    $("#colorBy").addEventListener("change", (e) => setQ("c", e.target.value === "school" ? null : e.target.value));
+    const mode = cmode, byYear = params.get("t") === "1";
+    const { below } = schoolTree(id);
+    const make = (b) => {
+      const el = schoolElements(id, min, showOut, b);
+      if (mode) colorize(el, mode); else setColorKey(null);
+      if (byYear && !mode) colorizeCohort(el);
+      const sub = els.toolbar.querySelector(".sub");
+      if (sub) sub.textContent = `${plural(mem.size, "member")} · founded by ${founders.map((f) => P.get(f).name).join(", ")} · ${fmt(SCHOOL_VISIBLE.size)} drawn`;
+      setStrip({ title: `${s.name}: lines in view`, sub: `${fmt(SCHOOL_VISIBLE.size)} drawn of ${fmt(mem.size)} members, most descendants in the school first`,
+        rows: [...SCHOOL_VISIBLE].map((x) => P.get(x)).filter(Boolean).sort((a, b) => (below.get(b.id) || 0) - (below.get(a.id) || 0)).slice(0, 200),
+        cols: [{ label: "Name", fmt: nameCell }, { label: "Institution", cls: "inst", fmt: (p) => esc(p.inst || "") }, { label: "PhD", num: true, fmt: yearCell },
+          { label: "In school below", num: true, fmt: (p) => fmt(below.get(p.id) || 0) }] });
+      return el;
+    };
+    const budget0 = canvasBudget(true);
+    const elements = make(budget0);
+    draw(elements, { fitTo: `node[id="${founders[0]}"]`, topFirst: true, overview: true, after: byYear ? () => timelineLayout(founders[0]) : null,
+      grow: byYear ? null : { budget: budget0, build: make } });
     renderSchoolPanel("curated", id);
     if (founders.length < s.founders.length) notice(`<p class="note">${s.founders.length - founders.length} founder(s) in data/schools.json are not in this export.</p>`);
   }
@@ -1810,12 +2399,12 @@
       lmap = L.map(els.map, { zoomSnap: 0.5, minZoom: 2, maxZoom: 9, attributionControl: true }).setView([38, -40], 3);
       lmap.attributionControl.setPrefix(false).addAttribution("Land: Natural Earth");
       fetch("data/land-110m.geojson").then((r) => r.json()).then((g) => {
-        L.geoJSON(g, { interactive: false, style: { color: INK, weight: 0.8, opacity: 0.55, fillColor: "#f6f4ef", fillOpacity: 1 } }).addTo(lmap).bringToBack();
+        L.geoJSON(g, { interactive: false, style: { color: "#3b414c", weight: 0.8, opacity: 1, fillColor: "#1f232a", fillOpacity: 1 } }).addTo(lmap).bringToBack();
       }).catch(() => {});
       llines = L.layerGroup().addTo(lmap); lmarkers = L.layerGroup().addTo(lmap);
     }
     // the map starts under the toolbar band (on narrow screens the toolbar is in flow already)
-    els.map.style.top = getComputedStyle(els.toolbar).position === "absolute" ? els.toolbar.offsetHeight + "px" : "";
+    els.map.style.top = "";
     requestAnimationFrame(() => lmap.invalidateSize());
     lmarkers.clearLayers(); llines.clearLayers();
     const A = sel != null ? INST.get(sel) : null;
@@ -1954,6 +2543,7 @@
     $("#search").placeholder = `Search ${fmt(META.people)} people`;
     attachSearch($("#search"), $("#search-results"), (p, input) => { input.value = ""; go(lineageHash(p.id, state.params)); input.blur(); });
     els.credit.innerHTML = `<span>Data: Academic Family Tree, snapshot 2022-03-12 (CC-BY-4.0). <span title="${esc(META.citation)}">Cite Liénard et al., Nature Communications 9:4840 (2018).</span></span><span class="counts">${fmt(META.people)} people · ${fmt(META.edges)} advisor links · ${fmt(META.openalex_matched)} matched to OpenAlex</span>`;
+    fillRail();
     window.addEventListener("hashchange", route);
     window.addEventListener("resize", () => cy && cy.resize());
     document.addEventListener("keydown", (e) => { if (e.key === "/" && document.activeElement.tagName !== "INPUT") { e.preventDefault(); $("#search").focus(); } });

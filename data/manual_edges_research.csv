@@ -1,0 +1,12 @@
+advisor_pid,advisor_name,student_pid,student_name,year,institution,url,note,role,degree
+777839,Raymond Aron,977635945,Alain Touraine,1964,Université de Paris,https://fr.wikipedia.org/wiki/Alain_Touraine,"Formal director of the main thesis (Sociologie de l'action); Aron says Touraine asked him once the thesis was already written (Aron, Mémoires)",director,doctorat d'État (thèse principale)
+,Georges Friedmann,977635945,Alain Touraine,1950,CNRS,https://fr.wikipedia.org/wiki/Alain_Touraine,"Trained him in the sociology of work at the CNRS from 1950; prefaced his 1955 Renault monograph",mentor,
+,Georges Friedmann,977635945,Alain Touraine,1964,Université de Paris,,"Jury of the main thesis (2024 in memoriam article)",examiner,doctorat d'État
+989035581,Jean Stoetzel,977635945,Alain Touraine,1964,Université de Paris,,"Jury of the main thesis (2024 in memoriam article)",examiner,doctorat d'État
+786347,Ernest Labrousse,977635945,Alain Touraine,1964,Université de Paris,,"Examined the secondary thesis on working-class consciousness (2024 in memoriam article)",examiner,thèse complémentaire
+820041,Georges Gurvitch,977635945,Alain Touraine,1964,Université de Paris,,"Examined the secondary thesis on working-class consciousness (2024 in memoriam article)",examiner,thèse complémentaire
+989035581,Jean Stoetzel,908266107,Alain Girard,1943,Fondation Carrel / INED,,"Introduced him to sociology and polling, brought him to the Fondation Carrel and INED, and was his superior there; no source names a thesis director (F. Gresle, obituary in Revue française de sociologie, Persée)",mentor,
+,A. I. Chuprov,841044,M.I. Tugan-Baranovsky,1898,Moscow University,,"Official opponent at the defense of The Russian Factory in the Past and Present (Russian Wikipedia)",examiner,doctorate in political economy
+952868548,Christian de Montlibert,900100635,Patrick Watier,1981,,,"L'imaginaire de la réussite, under the direction of Christian de Montlibert (Persée authority record); probably a Strasbourg third-cycle doctorate",director,doctorat de 3e cycle
+907858172,Michel Maffesoli,900100635,Patrick Watier,1991,Université Paris 5,,"La sociologie et les représentations du lien social, under the direction of Michel Maffesoli (theses.fr)",director,doctorat
+900100635,Patrick Watier,970415658,Elizabeth Teissier,2001,Université Paris 5 (Sorbonne),,"Member of the jury, absent from the defense (French Wikipedia)",examiner,doctorat

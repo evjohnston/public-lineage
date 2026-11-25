@@ -1,0 +1,3 @@
+accept,suggest,action,advisor_pid,advisor_name,student_pid,student_name,reason,url
+,accept,reverse,930691258,Claudine Sagaert,964336554,David Le Breton,"Reversed: Le Breton directed Sagaert's 2011 Strasbourg thesis (theses.fr and Wikidata), so the 49 descendants are not hers",https://theses.fr/
+,check,remove,726473,Karen Oppenheim,726468,William M. Mason,"Probably spurious: Karen Oppenheim Mason's PhD was about 1970 and William M. Mason was her then-husband, not her student",

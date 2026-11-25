@@ -1,0 +1,318 @@
+[
+ {
+  "pid": 932367249,
+  "name": "Jean-Claude Passeron",
+  "status": "advisor_found",
+  "advisors": [
+   "Michel Verret"
+  ],
+  "phd_institution": "Université de Nantes",
+  "phd_year": 1980,
+  "source_url": "https://www.persee.fr/authority/66613",
+  "evidence": "SUDOC record: 'Les mots de la sociologie / texte original soumis au jury pour la soutenance du doctorat d'Etat par Jean-Claude Passeron ; sous la direction de Michel Verret', 1980.",
+  "confidence": "high",
+  "notes": "Thèse d'État, Nantes sociology dept, March 1980 (fr.wikipedia confirms 1980 thèse d'État 'Les mots de la sociologie'). Record found on Verret's Persée authority page (SUDOC-derived). Agrégé de philosophie 1958; long-time Bourdieu collaborator, but Bourdieu was not his thesis director."
+ },
+ {
+  "pid": 625524,
+  "name": "Howard Schuman",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "Harvard University",
+  "phd_year": 1961,
+  "source_url": "https://en.wikipedia.org/wiki/Howard_Schuman",
+  "evidence": "Wikipedia: PhD sociology, Harvard 1961, dissertation 'Social structure and personality constriction in a total institution'; no advisor named.",
+  "confidence": "medium",
+  "notes": "Wikidata has no P184. A biographical entry mentions work at Harvard with Gordon Allport and later project with Alex Inkeles (1962-64); neither stated as dissertation advisor. ProQuest record would settle it."
+ },
+ {
+  "pid": 815338,
+  "name": "Herbert H. Hyman",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "Columbia University",
+  "phd_year": 1942,
+  "source_url": "https://en.wikipedia.org/wiki/Herbert_Hyman",
+  "evidence": "Wikipedia: Columbia PhD 1942, thesis 'The psychology of status'; no advisor named.",
+  "confidence": "medium",
+  "notes": "PhD in social psychology (Columbia finding aid). Sheatsley POQ memoriam (1986) paywalled; not checked. Do not infer Murphy/Klineberg without a source."
+ },
+ {
+  "pid": 786349,
+  "name": "François Alphonse Aulard",
+  "status": "no_doctoral_advisor",
+  "advisors": [],
+  "phd_institution": "Faculté des lettres de Paris",
+  "phd_year": 1877,
+  "source_url": "https://eslettres.bis-sorbonne.fr/notice/Doctorant/5075",
+  "evidence": "Doctorat ès lettres, Paris 1877; theses on Leopardi and Asinius Pollio defended 22 June 1877; record names only a report by Mézières, no director.",
+  "confidence": "medium",
+  "notes": "19th-century doctorat ès lettres had no formal thesis director; Alfred Mézières wrote the soutenance report (rapporteur/jury role, not supervisor). Reviewer may prefer not_found if strictness required."
+ },
+ {
+  "pid": 957164251,
+  "name": "Jean-Daniel Reynaud",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": null,
+  "phd_year": null,
+  "source_url": "https://fr.wikipedia.org/wiki/Jean-Daniel_Reynaud",
+  "evidence": "Normalien, agrégé de philosophie 1946, CNRS 1950 at Friedmann's Centre d'études sociologiques; no doctorate or thesis director mentioned.",
+  "confidence": "medium",
+  "notes": "Unclear whether he ever defended a doctorate (Persée/IdRef list only theses he directed). Georges Friedmann was his patron and Cnam predecessor, not documented as thesis director. Could be no_doctoral_advisor if a source confirms no doctorate."
+ },
+ {
+  "pid": 968688136,
+  "name": "Michel Offerlé",
+  "status": "advisor_found",
+  "advisors": [
+   "Marcel David"
+  ],
+  "phd_institution": "Université Paris 1 Panthéon-Sorbonne",
+  "phd_year": 1979,
+  "source_url": "https://www.persee.fr/authority/281963",
+  "evidence": "SUDOC record: 'Les socialistes et Paris : 1881-1900 : des Communards aux conseillers municipaux / par Michel Offerlé ; sous la direction de Marcel David', 1979.",
+  "confidence": "high",
+  "notes": "Doctorat d'État en science politique, Paris 1, 1979 (fr.wikipedia). A HAL article also describes Marcel David (historian of law/labour, 1920-2011) as his thesis director."
+ },
+ {
+  "pid": 799029,
+  "name": "Albert Aftalion",
+  "status": "no_doctoral_advisor",
+  "advisors": [],
+  "phd_institution": "Faculté de droit de Paris",
+  "phd_year": 1899,
+  "source_url": "https://expo-victimes-vichy-faculte-droit-paris.bibliothequecujas.fr/albert-aftalion/",
+  "evidence": "Two doctoral theses before the Paris law faculty: legal sciences (May 1898) and economics, 'L'œuvre économique de Simonde de Sismondi' (June 1899); no supervisor named.",
+  "confidence": "medium",
+  "notes": "Paris law-faculty doctorates of the 1890s had a jury president rather than a supervisor; none named in sources found. Reviewer may downgrade to not_found."
+ },
+ {
+  "pid": 902875808,
+  "name": "Jean Duvignaud",
+  "status": "advisor_found",
+  "advisors": [
+   "Georges Gurvitch"
+  ],
+  "phd_institution": "Sorbonne (Université de Paris)",
+  "phd_year": 1965,
+  "source_url": "https://revues.mshparisnord.fr/ethnographie/index.php?id=924",
+  "evidence": "'devient assistant de Georges Gurvitch à la Sorbonne, sous la direction duquel il soutient en 1965 sa thèse d'état sur le théâtre'",
+  "confidence": "high",
+  "notes": "Thèse d'État published as 'Sociologie du théâtre' (PUF 1965), complementary thesis 'L'acteur'. Single source names the director."
+ },
+ {
+  "pid": 975165517,
+  "name": "François Chazel",
+  "status": "advisor_found",
+  "advisors": [
+   "Jean Stoetzel"
+  ],
+  "phd_institution": "Université de Paris (Sorbonne)",
+  "phd_year": 1972,
+  "source_url": "https://www.universalis.fr/encyclopedie/francois-chazel-1937-2022/",
+  "evidence": "Universalis: long stay at Harvard with Parsons 'qui déboucha sur une thèse d'État sous la direction de Stoetzel'.",
+  "confidence": "high",
+  "notes": "Thesis published 1974 as 'La théorie analytique de la société dans l'œuvre de Talcott Parsons'; Livres Hebdo gives defense 1972. Parsons was a host at Harvard, not the director. Institution inferred (Stoetzel at Sorbonne); single source for director."
+ },
+ {
+  "pid": 705586,
+  "name": "Dominique Martin",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": null,
+  "phd_year": null,
+  "source_url": "https://www.persee.fr/authority/222085",
+  "evidence": "Persée/theses.fr list theses he directed (Vrancken 1993, Monchatre 1996, Berthelot 2005, Lecaplain 2012) but not his own thesis.",
+  "confidence": "medium",
+  "notes": "Identity confirmed: sociologist of work, MCF at IEP Paris, later Rennes 2, Grenoble 2, Lyon 2; students match known_students. Own doctorate not located."
+ },
+ {
+  "pid": 982950750,
+  "name": "Émile Sicard",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "Université de Clermont-Ferrand",
+  "phd_year": 1942,
+  "source_url": "https://www.persee.fr/authority/205187",
+  "evidence": "IdRef note: 'Auteur d'une thèse en sociologie à Clermont-Ferrand en 1942' (La Zadruga sud-slave..., publ. 1943); no director named.",
+  "confidence": "medium",
+  "notes": "Doctorat ès lettres (thèse d'État era) at Clermont-Ferrand (Strasbourg faculty in exile during WWII). Possibly no named director; no source states one."
+ },
+ {
+  "pid": 903520733,
+  "name": "Henri Desroche",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": null,
+  "phd_year": 1970,
+  "source_url": "https://solecov1.socioeco.org/wiki/fr/Henri_Desroche",
+  "evidence": "Thèse d'État, soutenue en 1970, 'Messianismes, utopies et sociologie des religions'; no director named.",
+  "confidence": "medium",
+  "notes": "Close to Gabriel Le Bras (Groupe de sociologie des religions founded under Le Bras's aegis), but no source names Le Bras as thesis director. Do not infer."
+ },
+ {
+  "pid": 914511737,
+  "name": "Robert Castel",
+  "status": "advisor_found",
+  "advisors": [
+   "Raymond Aron"
+  ],
+  "phd_institution": null,
+  "phd_year": 1980,
+  "source_url": "https://fr.wikipedia.org/wiki/Robert_Castel_(sociologue)",
+  "evidence": "'Ces recherches aboutiront à une thèse d'État ès lettres et sciences humaines, sous la direction d'Aron, soutenue en 1980.'",
+  "confidence": "high",
+  "notes": "Wikipedia FR; institution not stated. Universalis loosely links the thesis to L'Ordre psychiatrique (1976); defense year per Wikipedia 1980."
+ },
+ {
+  "pid": 922401443,
+  "name": "Jean Séguy",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "Sorbonne (Université de Paris)",
+  "phd_year": 1970,
+  "source_url": "https://fr.wikipedia.org/wiki/Jean_S%C3%A9guy_(sociologue)",
+  "evidence": "Thèse d'État 'Les assemblées anabaptistes-mennonites de France', 1970; no director named.",
+  "confidence": "medium",
+  "notes": "Reviews call it a doctorat ès lettres at the Sorbonne, June 1970. Hervieu-Léger's 2008 ASSR memoriam not accessed; may name director."
+ },
+ {
+  "pid": 982241091,
+  "name": "Angus Campbell",
+  "status": "advisor_found",
+  "advisors": [
+   "Ernest Hilgard"
+  ],
+  "phd_institution": "Stanford University",
+  "phd_year": 1936,
+  "source_url": "https://en.wikipedia.org/wiki/Angus_Campbell_(psychologist)",
+  "evidence": "Wikipedia infobox: doctoral advisor Ernest Hilgard; thesis 'An Experimental Analysis of Ease of Conditioning in Man' (1936); doctoral student Philip Converse.",
+  "confidence": "high",
+  "notes": "Search summaries indicate American National Biography and Encyclopedia.com also name Hilgard (not directly verified). Converse matches known_students."
+ },
+ {
+  "pid": 915815412,
+  "name": "Jean-Claude Chamboredon",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": null,
+  "phd_year": null,
+  "source_url": "https://archives.humatheque-condorcet.fr/archive/fonds/FRCC_669453/",
+  "evidence": "Archive fonds lists a 'Projet de thèse de doctorat d'État, « Socialisation primaire et socialisation secondaire »'; no defense or director recorded.",
+  "confidence": "medium",
+  "notes": "Normalien 1959, agrégé de lettres classiques 1962; possibly never defended a doctorate (career at ENS/EHESS). No source confirms either way; not to be attributed to Bourdieu."
+ },
+ {
+  "pid": 965555055,
+  "name": "George Eaton Simpson",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "University of Pennsylvania",
+  "phd_year": 1934,
+  "source_url": "https://catalog.hathitrust.org/Record/010119077",
+  "evidence": "'The Negro in the Philadelphia Press: A Dissertation in Sociology Presented to the Faculty of the Graduate School of the University of Pennsylvania' (publ. 1936); no advisor named.",
+  "confidence": "medium",
+  "notes": "Identity: anthropologist/sociologist, Temple, Penn State, Oberlin. Book front matter might name adviser; not accessible."
+ },
+ {
+  "pid": 927228792,
+  "name": "Henri Mendras",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "Université de Paris (Faculté des lettres)",
+  "phd_year": 1967,
+  "source_url": "https://fr.wikipedia.org/wiki/Henri_Mendras",
+  "evidence": "Doctorat d'État; thèse principale 'Les transformations du métier d'agriculteur dans la France contemporaine' (1967); no director named.",
+  "confidence": "medium",
+  "notes": "Wikipedia FR: inspired by Gurvitch and Friedmann; studied at Chicago. Neither stated as director."
+ },
+ {
+  "pid": 815728,
+  "name": "Gresham Sykes",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "Northwestern University",
+  "phd_year": 1954,
+  "source_url": "https://www.britannica.com/biography/Gresham-M-Sykes",
+  "evidence": "Britannica: studied sociology at Northwestern University (Ph.D., 1954); no advisor named.",
+  "confidence": "medium",
+  "notes": "PhD year conflicts (1952 ASA obit, 1953 Prabook, 1954 Britannica/Heiner tribute). Society of Captives acknowledges Cressey, Grosser, Hartung, McCleery, Ohlin - not an advisor statement."
+ },
+ {
+  "pid": 841434,
+  "name": "Torgny T. Segerstedt",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "Lund University",
+  "phd_year": 1934,
+  "source_url": "https://sok.riksarkivet.se/sbl/Presentation.aspx?id=6431",
+  "evidence": "SBL: doctor and docent in practical philosophy at Lund 1934; dissertation 'Value and reality in Bradley's philosophy', largely finished in London; no supervisor named.",
+  "confidence": "medium",
+  "notes": "Teachers mentioned: Efraim Liljeqvist (professor), Gunnar Aspelin; neither described as supervisor. Swedish disputations of the era rarely name a formal handledare."
+ },
+ {
+  "pid": 942753757,
+  "name": "Michel Simon",
+  "status": "advisor_found",
+  "advisors": [
+   "Raymond Aron"
+  ],
+  "phd_institution": null,
+  "phd_year": null,
+  "source_url": "https://maitron.fr/simon-michel/",
+  "evidence": "Maitron: he was working on a thèse de doctorat d'État under the direction of Raymond Aron, on the sociology of socialist militants and their class membership.",
+  "confidence": "medium",
+  "notes": "Maitron describes thesis in preparation under Aron; Babelio says 'Docteur ès lettres et sciences humaines'. Defense year/title not verified (one search summary claimed 1977 'Contributions à une sociologie du comportement politique' - unconfirmed). Maitron page blocked to direct fetch; quote taken from search snippet. Identity: Lille 1 Institut de sociologie, Clersé founder."
+ },
+ {
+  "pid": 214311,
+  "name": "William G. Tierney",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "Stanford University",
+  "phd_year": 1984,
+  "source_url": "https://en.wikipedia.org/wiki/William_G._Tierney",
+  "evidence": "Ph.D. from Stanford in administration and policy analysis (CV: 1984, with M.A. anthropology); no advisor named.",
+  "confidence": "medium",
+  "notes": "USC CV PDFs blocked (401). Dissertation record via ProQuest/Stanford SearchWorks would settle it."
+ },
+ {
+  "pid": 927641942,
+  "name": "Michel Crozier",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "Université de Paris",
+  "phd_year": 1964,
+  "source_url": "https://www.sciencespo.fr/cso/fr/le-cso/l-histoire-du-cso/anciens-chercheurs/michel-crozier/",
+  "evidence": "CSO: 'Docteur en droit' and 'Docteur d'Etat ès Lettres'; Le Phénomène bureaucratique written 'sous forme de thèse d'État'; no director named.",
+  "confidence": "medium",
+  "notes": "Two doctorates: law doctorate (1949, thesis on American unionism) and thèse d'État (Sorbonne, 1964). Aron and Friedmann reportedly sat on/commented at the 1964 defense, but neither named as director."
+ },
+ {
+  "pid": 921850930,
+  "name": "Yves Goussault",
+  "status": "advisor_found",
+  "advisors": [
+   "Pierre George"
+  ],
+  "phd_institution": "Université Paris 1 Panthéon-Sorbonne",
+  "phd_year": 1972,
+  "source_url": "https://www.persee.fr/authority/8652",
+  "evidence": "SUDOC: 'Crise et réforme des structures agraires : le cas chilien et ses applications méthodologiques / Yves Goussault ; sous la direction de Pierre George', 1972.",
+  "confidence": "high",
+  "notes": "Thèse d'État; Paris 1 catalogue files it under Géographie, dated 20/12/1972 (Maitron says 1973). Pierre George was a geographer."
+ },
+ {
+  "pid": 214257,
+  "name": "Peter Conrad",
+  "status": "not_found",
+  "advisors": [],
+  "phd_institution": "Boston University",
+  "phd_year": 1976,
+  "source_url": "https://en.wikipedia.org/wiki/Peter_Conrad_(sociologist)",
+  "evidence": "Ph.D. in sociology from Boston University in 1976; dissertation became 'Identifying Hyperactive Children'; no advisor named.",
+  "confidence": "medium",
+  "notes": "Brandeis CV and memorial PDF blocked (403). Irving Zola was a collaborator; no evidence he was the advisor - do not infer."
+ }
+]

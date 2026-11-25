@@ -38,6 +38,7 @@ FLAG_PROF_INST = 64    # doctorate from a professional / practitioner-focused in
 FLAG_EDU_AREA = 128    # research area is an education subject (leadership, curriculum, ...)
 FLAG_DUPLICATE = 256   # another record looks like the same person
 FLAG_EXTERNAL = 512    # person known only from an outside source (NSF, Wikidata, a repository)
+FLAG_KNOWN_ROOT = 1024  # confirmed to have no doctoral advisor (data/known_roots.csv, reviewed)
 
 EXT = ROOT / "data" / "external"
 # edge source bits: 1 = Academic Family Tree, 2 = NSF dissertation grant, 4 = Wikidata, 8 = dissertation repository, 16 = manual
@@ -162,15 +163,40 @@ def main() -> None:
                     continue
                 G.add_edge(m, t)
                 edge_src[key] = 0
-                edge_rel[key] = 1
+                rel = getattr(r, "rel", 1)
+                edge_rel[key] = 1 if pd.isna(rel) else int(rel)  # 6 = mentor (not the formal director)
                 c["added"] += 1
             elif edge_src[key] & SRC_AFT:
                 c["confirmed"] += 1
             edge_src[key] |= src_bit(r.source)
             yr = None if pd.isna(r.year) else int(r.year)
             clean_s = lambda v: v if isinstance(v, str) else None  # pandas NaN -> null
-            evidence[f"{m}>{t}"].append([r.source, yr, clean_s(r.url), clean_s(r.institution), clean_s(getattr(r, "title", None))])
+            role, degree = clean_s(getattr(r, "role", None)), clean_s(getattr(r, "degree", None))
+            label = " · ".join(x for x in ({"mentor": "mentor", "director": "thesis director"}.get(role), degree, clean_s(getattr(r, "title", None))) if x)
+            evidence[f"{m}>{t}"].append([r.source, yr, clean_s(r.url), clean_s(r.institution), label or None])
         edges = [(m, t, edge_rel[(m, t)]) for m, t in G.edges]
+    # reviewed corrections to individual links (data/edge_corrections.csv, written by apply_reviews.py):
+    # action "remove" drops advisor -> student; "reverse" turns it into student -> advisor.
+    ec = ROOT / "data" / "edge_corrections.csv"
+    if ec.exists():
+        import pandas as pd
+        fixed = 0
+        for r in pd.read_csv(ec, dtype=str).fillna("").itertuples(index=False):
+            m, t = R(int(r.advisor_pid)), R(int(r.student_pid))
+            if not G.has_edge(m, t):
+                print(f"edge_corrections.csv: no link {m} -> {t} to {r.action}; skipped")
+                continue
+            G.remove_edge(m, t)
+            rel, src = edge_rel.pop((m, t), 1), edge_src.pop((m, t), SRC_AFT)
+            if r.action == "reverse" and not G.has_edge(t, m):
+                G.add_edge(t, m); edge_rel[(t, m)] = rel; edge_src[(t, m)] = src | SRC_MANUAL
+                if f"{m}>{t}" in evidence:
+                    evidence[f"{t}>{m}"] = evidence.pop(f"{m}>{t}")
+            else:
+                evidence.pop(f"{m}>{t}", None)
+            fixed += 1
+        edges = [(m, t, edge_rel[(m, t)]) for m, t in G.edges]
+        print(f"edge corrections applied: {fixed}")
     comp_size = {}
     for comp in nx.weakly_connected_components(G):
         for n in comp:
@@ -191,6 +217,18 @@ def main() -> None:
         n_desc[n] = len(s)
         # free memory for leaves' children once all parents are processed is complex; graph is small
     del desc_sets
+    # the same count over formal thesis directors only (mentor links, relation 6, left out), for the
+    # explorer's "Formal directors only" toggle
+    n_desc_formal, fsets = {}, {}
+    for n in reversed(list(nx.topological_sort(G))):
+        st = set()
+        for c in G.successors(n):
+            if edge_rel.get((n, c), 1) == 6:
+                continue
+            st.add(c); st |= fsets[c]
+        fsets[n] = st
+        n_desc_formal[n] = len(st)
+    del fsets
 
     dup = find_duplicates([(r[0], r[7], r[8], r[1]) for r in people], G)
 
@@ -280,17 +318,41 @@ def main() -> None:
         pass
     propagate()
 
-    # advisors added from Wikidata in any field (wdanc) count as sociology only if Wikidata says so
+    # People known only from Wikidata count as sociology only if Wikidata says so (occupation
+    # sociologist or field sociology). Otherwise a sociologist's Wikidata advisor in mathematics or
+    # education, say, would be counted as a sociologist. Anyone also found in a sociology thesis
+    # record or an NSF sociology grant stays in the field.
     outside_ext = set()
-    ancp = EXT / "wdanc_people.parquet"
-    if ancp.exists() and merged.exists():
+    if merged.exists():
         import pandas as pd
-        nonsoc = set(pd.read_parquet(ancp).query("not is_sociologist").qid)
+        soc_q = set()
+        wpf = EXT / "wikidata_people.parquet"
+        if wpf.exists():
+            wpd = pd.read_parquet(wpf)
+            soc_q |= set(wpd[wpd.sociologist_basis.apply(lambda b: any(x in ("P106:Q2306091", "P101:Q21201") for x in (b if b is not None else [])))].qid)
+        ancp = EXT / "wdanc_people.parquet"
+        if ancp.exists():
+            soc_q |= set(pd.read_parquet(ancp).query("is_sociologist").qid)
+        wd_q, other_src = {}, set()
         for r in pd.read_parquet(merged).itertuples(index=False):
+            ends = ((R(int(r.advisor_pid)), 0), (R(int(r.student_pid)), 1))
             if r.source == "wikidata" and "-" in str(r.source_id):
-                p = R(int(r.advisor_pid))
-                if str(r.source_id).split("-", 1)[0] in nonsoc and p >= 900_000_000:
-                    outside_ext.add(p)
+                qs = str(r.source_id).split("-", 1)
+                for p, i in ends:
+                    wd_q.setdefault(p, set()).add(qs[i])
+            else:
+                other_src |= {p for p, _ in ends}
+        outside_ext = {p for p, qs in wd_q.items() if p >= 900_000_000 and p not in other_src and not (qs & soc_q)}
+        print(f"outside-source people flagged outside the field (not sociologists on Wikidata): {len(outside_ext):,}")
+
+    # confirmed founders: data/known_roots*.csv (pid, name, url, evidence, reason), reviewed by hand
+    known_roots, root_info = set(), {}
+    import pandas as pd
+    for kr in sorted((ROOT / "data").glob("known_roots*.csv")):
+        for r in pd.read_csv(kr, dtype=str).fillna("").itertuples(index=False):
+            if r.pid.strip().isdigit():
+                pid = R(int(r.pid)); known_roots.add(pid)
+                root_info[pid] = [getattr(r, "reason", "") or "", r.url or None, r.evidence or None]
 
     rows = []
     for pid, name, loc, in_soc, major, hindex, area, _first, _last in people:
@@ -303,6 +365,8 @@ def main() -> None:
             f |= FLAG_ISOLATED
         if in_g and G.in_degree(pid) == 0:
             f |= FLAG_NO_ADVISOR
+        if pid in known_roots:
+            f |= FLAG_KNOWN_ROOT
         if in_g and G.in_degree(pid) > 1:
             f |= FLAG_MULTI_ADVISOR
         if "educ" in tags:
@@ -324,10 +388,13 @@ def main() -> None:
             comp_size.get(pid, 1), hindex, oa.get(pid),
             sorted(dup[pid]) if pid in dup else None,
             phd_year.get(pid), year.get(pid), basis.get(pid, 0),
+            n_desc_formal.get(pid, 0),
         ])
 
     sizes = sorted({len(c) for c in nx.weakly_connected_components(G)}, reverse=True)
     meta = {
+        "known_roots": {str(k): v for k, v in root_info.items()},
+        "mentor_links": sum(1 for v in edge_rel.values() if v == 6),
         "outside_sources": {k: dict(v) for k, v in ext_counts.items()},
         "people": len(rows),
         "edges": len(edges),

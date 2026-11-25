@@ -11,18 +11,58 @@ Reads explorer/data/lineage.json (advisor links after merges) and writes explore
                     from 500 sampled sources (seeded). Scaled x 1e6; null outside the largest component.
     eigenvector     largest component only; connected to well-connected people. Scaled x 1e4.
     core            k-core number: the deepest shell of mutually connected people they belong to.
-Usage: python -I scripts/export_network.py
+    x, y, z         3D position (DrL force-directed layout, igraph), scaled to roughly +-1000.
+The layout of all ~45k people takes about 10 minutes, so positions are cached in
+data/external/network_layout.json and reused; people new since the cache are placed beside their
+neighbours. --relayout recomputes everything.
+Usage: python -I scripts/export_network.py [--relayout]
 """
 
 import json
 import random
+import sys
+import time
 from pathlib import Path
 
 import networkx as nx
+import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "explorer" / "data"
 K_SAMPLE = 500
+LAYOUT = ROOT / "data" / "external" / "network_layout.json"
+SCALE = 60.0
+
+
+def layout(G, U):
+    """3D positions for every node: cached DrL layout, with new nodes placed next to neighbours."""
+    cache = {} if "--relayout" in sys.argv or not LAYOUT.exists() else {int(k): v for k, v in json.loads(LAYOUT.read_text()).items()}
+    nodes = list(G.nodes)
+    if not cache:
+        import igraph as ig
+        ix = {n: i for i, n in enumerate(nodes)}
+        g = ig.Graph(n=len(nodes), edges=[(ix[a], ix[b]) for a, b in U.edges])
+        print(f"3D layout of {len(nodes):,} people (about 10 minutes)", flush=True)
+        t = time.time()
+        xyz = np.array(g.layout_drl(dim=3).coords) * SCALE
+        print(f"  done in {time.time() - t:.0f}s", flush=True)
+        cache = {n: [round(float(v), 1) for v in xyz[i]] for i, n in enumerate(nodes)}
+    else:
+        rng = np.random.default_rng(7)
+        missing = [n for n in nodes if n not in cache]
+        new = len(missing)
+        for _ in range(3):  # a few passes, so chains of new people settle near placed ones
+            for n in list(missing):
+                near = [cache[m] for m in U.neighbors(n) if m in cache]
+                if near:
+                    cache[n] = [round(float(v), 1) for v in np.mean(near, axis=0) + rng.normal(0, 12, 3)]
+                    missing.remove(n)
+        for n in missing:  # unconnected newcomers: a random point in the outer shell
+            v = rng.normal(0, 1, 3); v = v / np.linalg.norm(v) * rng.uniform(900, 1050)
+            cache[n] = [round(float(x), 1) for x in v]
+        print(f"layout: reused cached positions; placed {new:,} new people ({len(missing):,} with no placed neighbour)", flush=True)
+    LAYOUT.write_text(json.dumps({str(n): cache[n] for n in nodes}, separators=(",", ":")))
+    return cache
 
 
 def diameter_estimate(U, start, sweeps=4):
@@ -35,6 +75,27 @@ def diameter_estimate(U, start, sweeps=4):
             break
         best, node = dist, far
     return best
+
+
+def arrange(cache, comps):
+    """Main tree at the centre; every other cluster keeps its own shape but moves out to a shell
+    around it (bigger clusters nearer), so the picture separates the connected field from fragments."""
+    rng = np.random.default_rng(11)
+    main = np.array([cache[n] for n in comps[0]])
+    c0 = main.mean(axis=0)
+    R = float(np.percentile(np.linalg.norm(main - c0, axis=1), 95))
+    out = {n: [round(float(v), 1) for v in np.array(cache[n]) - c0] for n in comps[0]}
+    big = max(len(c) for c in comps[1:]) if len(comps) > 1 else 1
+    for comp in comps[1:]:
+        pts = np.array([cache[n] for n in comp])
+        local = pts - pts.mean(axis=0)
+        span = float(np.abs(local).max()) or 1.0
+        local = local * min(1.0, (8 + 6 * np.log1p(len(comp))) / span)  # keep fragments compact
+        d = rng.normal(0, 1, 3); d /= np.linalg.norm(d)
+        r = R * (1.25 + 0.55 * (1 - np.log1p(len(comp)) / np.log1p(big)) + rng.uniform(0, 0.12))
+        for n, v in zip(comp, local + d * r):
+            out[n] = [round(float(x), 1) for x in v]
+    return out
 
 
 def main():
@@ -56,9 +117,10 @@ def main():
     ev = nx.eigenvector_centrality_numpy(big)
     core = nx.core_number(U)
 
+    pos = arrange(layout(G, U), comps)
     deg = dict(U.degree())
     nodes = [[n, comp[n], deg[n], round(pr[n] * 1e6, 2), round(bt[n] * 1e6, 1) if n in bt else None,
-              round(abs(ev[n]) * 1e4, 2) if n in ev else None, core[n]] for n in G.nodes]
+              round(abs(ev[n]) * 1e4, 2) if n in ev else None, core[n], *pos[n]] for n in G.nodes]
 
     random.seed(7)
     sample = random.sample(list(big.nodes), 60)
