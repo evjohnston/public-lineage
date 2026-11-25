@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lineage Explorer</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='7' r='5' fill='%23161616'/%3E%3Ccircle cx='8' cy='25' r='5' fill='none' stroke='%23161616' stroke-width='2'/%3E%3Ccircle cx='24' cy='25' r='5' fill='none' stroke='%23c8102e' stroke-width='2.5'/%3E%3Cpath d='M14 11L10 20M18 11L22 20' stroke='%23161616' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="vendor/leaflet.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="#/">Lineage Explorer <span>Sociology</span></a>
+    <div class="search" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-owns="search-results">
+      <svg class="search-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4.5 4.5"/></svg>
+      <input id="search" type="search" placeholder="Search 27,254 people" autocomplete="off" spellcheck="false" aria-label="Search people" aria-controls="search-results" aria-autocomplete="list">
+      <ul id="search-results" class="results" role="listbox" hidden></ul>
+    </div>
+    <nav class="tabs" aria-label="Views">
+      <a href="#/" data-view="lineage">Lineage</a>
+      <a href="#/connect" data-view="connect">Connect</a>
+      <a href="#/co" data-view="co">Co-authors</a>
+      <a href="#/schools" data-view="schools">Schools</a>
+      <a href="#/institutions" data-view="institutions">Institutions</a>
+      <a href="#/dynasties" data-view="dynasties">Dynasties</a>
+      <a href="#/gaps" data-view="gaps">Data gaps</a>
+    </nav>
+  </header>
+
+  <main class="work">
+    <section class="stage" id="stage" aria-live="polite">
+      <div class="toolbar" id="toolbar"></div>
+      <div id="cy" class="cy" aria-label="Lineage diagram"></div>
+      <div id="map" class="map" hidden aria-label="Map of institutions"></div>
+      <div id="sheet" class="sheet" hidden></div>
+      <div class="legend" id="legend">
+        <span class="colorkey" id="colorkey" hidden></span>
+        <span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/></svg>Sociology</span>
+        <span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" class="dash"/></svg>Outside the field</span>
+        <span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" class="fill"/></svg>In focus</span>
+        <span class="red"><svg viewBox="0 0 24 16"><path d="M2 8h18"/><path d="M15 3l6 5-6 5" class="head"/></svg>Traced path</span>
+        <span class="arrowkey"><svg viewBox="0 0 24 16"><path d="M2 8h18"/><path d="M15 3l6 5-6 5" class="head"/></svg>Advisor to student</span>
+        <span class="cokey"><svg viewBox="0 0 24 16"><path d="M2 12 Q12 2 22 12" class="co"/></svg>Co-authored</span>
+        <span class="cmkey"><svg viewBox="0 0 24 16"><path d="M2 4 Q12 14 22 4"/></svg>Committee member</span>
+        <span class="txkey"><svg viewBox="0 0 24 16"><path d="M2 10 Q12 3 22 10"/></svg>Named in a dissertation</span>
+        <span class="extkey"><svg viewBox="0 0 24 16"><path d="M2 8h18" stroke-dasharray="1.5 2.5"/></svg>Outside source only</span>
+      </div>
+    </section>
+    <aside class="panel" id="panel" aria-label="Person record"></aside>
+  </main>
+
+  <footer class="credit" id="credit"></footer>
+
+  <script src="vendor/cytoscape.min.js"></script>
+  <script src="vendor/dagre.min.js"></script>
+  <script src="vendor/cytoscape-dagre.js"></script>
+  <script src="vendor/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

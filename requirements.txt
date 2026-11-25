@@ -1,0 +1,9 @@
+pandas
+pyarrow
+duckdb
+networkx
+python-dotenv
+httpx
+defusedxml
+matplotlib
+scipy

@@ -1,0 +1,17 @@
+{
+  "_note": "Seed list of schools of thought, defined by founders. Members are the founders plus all their recorded academic descendants. These attributions are conventional textbook groupings, not settled facts: edit, add or remove freely, then run scripts/export_context.py. Person ids are Academic Family Tree pids (see the explorer URL #/p/<pid>).",
+  "schools": [
+    {"id": "chicago", "name": "Chicago School", "founders": [769362, 778786, 740702], "note": "Park, Burgess, W. I. Thomas: urban ecology and fieldwork."},
+    {"id": "interactionism", "name": "Symbolic interactionism", "founders": [790665, 777459, 778785, 777443, 82757], "note": "Blumer, Hughes, Strauss, Becker, Goffman."},
+    {"id": "functionalism", "name": "Structural functionalism", "founders": [54532], "note": "Parsons and the Harvard Department of Social Relations."},
+    {"id": "columbia", "name": "Columbia empirical school", "founders": [455600, 717406], "note": "Merton and Lazarsfeld: middle-range theory and the Bureau of Applied Social Research."},
+    {"id": "status-attainment", "name": "Status attainment", "founders": [257801, 213654, 257851], "note": "Sewell, Hauser, Duncan: Wisconsin and Michigan stratification research."},
+    {"id": "comparative-historical", "name": "Comparative-historical", "founders": [38102, 38100, 38103, 843247], "note": "Barrington Moore, Tilly, Skocpol, Bendix."},
+    {"id": "networks", "name": "Harvard network analysis", "founders": [183268], "note": "Harrison White and students."},
+    {"id": "ethnomethodology", "name": "Ethnomethodology", "founders": [296670], "note": "Garfinkel."},
+    {"id": "world-systems", "name": "World-systems analysis", "founders": [226142], "note": "Wallerstein."},
+    {"id": "rational-choice", "name": "Rational choice", "founders": [677014], "note": "James S. Coleman."},
+    {"id": "french", "name": "French sociology", "founders": [778298, 676744], "note": "Durkheim, Bourdieu."},
+    {"id": "sorokin", "name": "Sorokin line", "founders": [794392], "note": "Pitirim Sorokin's Harvard students."}
+  ]
+}

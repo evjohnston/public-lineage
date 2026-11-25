@@ -1,0 +1,405 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-25T05:43:21+00:00",
+  "title": "Design System: Lineage Explorer",
+  "extensions": {
+    "colorMeta": {
+      "red": {
+        "role": "primary",
+        "displayName": "Red Pencil",
+        "canonical": "#c8102e",
+        "tonalRamp": [
+          "#32040c",
+          "#640817",
+          "#960c22",
+          "#c8102e",
+          "#d8586d",
+          "#e693a1",
+          "#f3cad1",
+          "#fbeef0"
+        ]
+      },
+      "red-wash": {
+        "role": "primary",
+        "displayName": "Red Wash",
+        "canonical": "#fbeaec",
+        "tonalRamp": [
+          "#3f3a3b",
+          "#7e7576",
+          "#bcb0b1",
+          "#fbeaec",
+          "#fcf0f2",
+          "#fdf6f6",
+          "#fefafb",
+          "#fffefe"
+        ]
+      },
+      "blue": {
+        "role": "secondary",
+        "displayName": "Blue Pencil",
+        "canonical": "#1f4e9c",
+        "tonalRamp": [
+          "#081427",
+          "#10274e",
+          "#173a75",
+          "#1f4e9c",
+          "#6283ba",
+          "#9aafd2",
+          "#ced8e9",
+          "#eff3f8"
+        ]
+      },
+      "blue-wash": {
+        "role": "secondary",
+        "displayName": "Blue Wash",
+        "canonical": "#edf2fa",
+        "tonalRamp": [
+          "#3b3c3e",
+          "#76797d",
+          "#b2b6bc",
+          "#edf2fa",
+          "#f2f6fc",
+          "#f7f9fd",
+          "#fbfcfe",
+          "#fefeff"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#161616",
+        "tonalRamp": [
+          "#060606",
+          "#0b0b0b",
+          "#101010",
+          "#161616",
+          "#5c5c5c",
+          "#969696",
+          "#cccccc",
+          "#efefef"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Secondary Ink",
+        "canonical": "#4a4a48",
+        "tonalRamp": [
+          "#121212",
+          "#252524",
+          "#383836",
+          "#4a4a48",
+          "#80807f",
+          "#aeaead",
+          "#d7d7d7",
+          "#f2f2f2"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Tertiary Ink",
+        "canonical": "#6a6a67",
+        "tonalRamp": [
+          "#1a1a1a",
+          "#353534",
+          "#50504d",
+          "#6a6a67",
+          "#979795",
+          "#bcbcbb",
+          "#dedede",
+          "#f5f5f4"
+        ]
+      },
+      "ink-faint": {
+        "role": "neutral",
+        "displayName": "Faint Ink",
+        "canonical": "#c9c6be",
+        "tonalRamp": [
+          "#323230",
+          "#64635f",
+          "#97948e",
+          "#c9c6be",
+          "#d9d7d2",
+          "#e7e5e2",
+          "#f3f2f1",
+          "#fbfbfa"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Warm Rule",
+        "canonical": "#e9e6df",
+        "tonalRamp": [
+          "#3a3a38",
+          "#747370",
+          "#afaca7",
+          "#e9e6df",
+          "#f0eee9",
+          "#f5f4f1",
+          "#fafaf8",
+          "#fdfdfd"
+        ]
+      },
+      "wash": {
+        "role": "neutral",
+        "displayName": "Wash",
+        "canonical": "#f6f4ef",
+        "tonalRamp": [
+          "#3e3d3c",
+          "#7b7a78",
+          "#b8b7b3",
+          "#f6f4ef",
+          "#f9f7f4",
+          "#fbfaf8",
+          "#fdfdfb",
+          "#fefefe"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#404040",
+          "#808080",
+          "#bfbfbf",
+          "#e6e6e6",
+          "#f2f2f2",
+          "#f8f8f8",
+          "#fcfcfc",
+          "#ffffff"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Panel names, sheet and toolbar titles, notice headings, data-gap counts."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Brand wordmark and stat-row values."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text and table cells; ledes cap at 75ch."
+      },
+      "body-strong": {
+        "displayName": "Body Strong",
+        "purpose": "Person names, tabs, buttons, chips."
+      },
+      "small": {
+        "displayName": "Small",
+        "purpose": "Counts, sub-lines, legend, segmented options."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase panel section labels and table headers that name the content directly beneath."
+      },
+      "graph-label": {
+        "displayName": "Graph Label",
+        "purpose": "Node names in the lineage diagram; focus at 15px 700."
+      }
+    },
+    "shadows": [],
+    "strokes": [
+      {
+        "name": "structure",
+        "value": "1.5px solid #161616",
+        "purpose": "Region dividers, borders of inputs, buttons, chips, segmented controls, verdict and table header rule."
+      },
+      {
+        "name": "row",
+        "value": "1px solid #e9e6df",
+        "purpose": "Hairlines between stat rows, list rows, table rows and under the toolbar."
+      },
+      {
+        "name": "active-tab",
+        "value": "inset 0 -3px 0 #c8102e",
+        "purpose": "Red underline on the active tab (drawn as an inset box-shadow line)."
+      },
+      {
+        "name": "focus",
+        "value": "2px solid #c8102e, offset 2px",
+        "purpose": "Global :focus-visible outline; inputs instead turn the border red plus a 1px red ring."
+      }
+    ],
+    "graph": {
+      "node": "ellipse, size 20px + 6 per log10(1+descendants), paper fill, 1.5px ink border, 13px 600 label below on 85% paper backing",
+      "node-out": "dashed border, label 400 in #4a4a48",
+      "node-focus": "ink fill, label 15px 700",
+      "node-hover": "2.5px red border",
+      "node-more": "72x22 dotted rectangle, 1px #6a6a67, italic 12px",
+      "edge": "1.3px straight ink line, triangle arrowhead 0.9, opacity 0.85",
+      "edge-postdoc": "dashed",
+      "faint": "opacity 0.32 for marks off the traced path",
+      "path-edge": "3.6px red, arrowhead 1.1, opacity 1, z-index 10",
+      "path-node": "3px red border; endpoints red fill"
+    },
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Ease-out for all transitions."
+      },
+      {
+        "name": "duration-fade",
+        "value": "200ms",
+        "purpose": "Canvas fade on recenter, tab underline, graph opacity/color/width transitions. Disabled under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "narrow",
+        "value": "960px"
+      },
+      {
+        "name": "phone",
+        "value": "560px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Top Bar Tabs",
+      "kind": "nav",
+      "refersTo": "tab",
+      "description": "Text tabs in the 56px top bar; the active tab carries a 3px red underline.",
+      "html": "<nav class=\"ds-tabs\"><a href=\"#\">Lineage</a><a href=\"#\" aria-current=\"page\">Connect</a><a href=\"#\">Dynasties</a><a href=\"#\">Data gaps</a></nav>",
+      "css": ".ds-tabs { display: flex; gap: 22px; height: 56px; padding: 0 22px; border-bottom: 1.5px solid var(--ink, #161616); background: var(--paper, #fff); font-family: var(--font, \"Source Sans 3\", system-ui, sans-serif); font-size: 0.9375rem; } .ds-tabs a { display: flex; align-items: center; font-weight: 600; text-decoration: none; color: var(--ink-2, #4a4a48); box-shadow: inset 0 0 0 transparent; transition: box-shadow 200ms cubic-bezier(0.16,1,0.3,1), color 200ms cubic-bezier(0.16,1,0.3,1); } .ds-tabs a:hover { color: var(--ink, #161616); } .ds-tabs a[aria-current=page] { color: var(--ink, #161616); box-shadow: inset 0 -3px 0 var(--red, #c8102e); } .ds-tabs a:focus-visible { outline: 2px solid var(--red, #c8102e); outline-offset: 2px; }"
+    },
+    {
+      "name": "Search Combobox",
+      "kind": "input",
+      "refersTo": "search-input",
+      "description": "Square ink-framed search with a stroked magnifier; focus turns the frame red.",
+      "html": "<label class=\"ds-search\"><svg viewBox=\"0 0 20 20\" aria-hidden=\"true\"><circle cx=\"8.5\" cy=\"8.5\" r=\"5.5\"/><path d=\"M13 13l4.5 4.5\"/></svg><input type=\"search\" placeholder=\"Search 27,254 people\"></label>",
+      "css": ".ds-search { position: relative; display: flex; align-items: center; width: 360px; } .ds-search svg { position: absolute; left: 10px; width: 16px; height: 16px; fill: none; stroke: var(--ink, #161616); stroke-width: 1.6; pointer-events: none; } .ds-search input { width: 100%; height: 34px; padding: 0 10px 0 32px; font-family: var(--font, \"Source Sans 3\", system-ui, sans-serif); font-size: 0.9375rem; color: var(--ink, #161616); background: var(--paper, #fff); border: 1.5px solid var(--ink, #161616); border-radius: 0; outline: none; caret-color: var(--red, #c8102e); } .ds-search input::placeholder { color: var(--ink-3, #6a6a67); } .ds-search input:focus-visible { border-color: var(--red, #c8102e); box-shadow: 0 0 0 1px var(--red, #c8102e); }"
+    },
+    {
+      "name": "Segmented Control",
+      "kind": "custom",
+      "refersTo": "segmented-option",
+      "description": "Ink-framed option group; the pressed option is solid ink.",
+      "html": "<div class=\"ds-seg\"><button aria-pressed=\"true\">Both</button><button aria-pressed=\"false\">Ancestors</button><button aria-pressed=\"false\">Descendants</button></div>",
+      "css": ".ds-seg { display: inline-flex; border: 1.5px solid var(--ink, #161616); background: var(--paper, #fff); } .ds-seg button { border: 0; background: none; padding: 4px 11px; font-family: var(--font, \"Source Sans 3\", system-ui, sans-serif); font-weight: 600; font-size: 0.8125rem; color: var(--ink, #161616); cursor: pointer; } .ds-seg button + button { border-left: 1px solid var(--ink, #161616); } .ds-seg button:hover { background: var(--wash, #f6f4ef); } .ds-seg button[aria-pressed=true] { background: var(--ink, #161616); color: var(--paper, #fff); } .ds-seg button:focus-visible { outline: 2px solid var(--red, #c8102e); outline-offset: 2px; }"
+    },
+    {
+      "name": "Button",
+      "kind": "button",
+      "refersTo": "button",
+      "description": "Square ink-framed button; hover tints to wash.",
+      "html": "<button class=\"ds-btn\">Open Talcott Parsons</button>",
+      "css": ".ds-btn { border: 1.5px solid var(--ink, #161616); background: var(--paper, #fff); color: var(--ink, #161616); padding: 6px 12px; font-family: var(--font, \"Source Sans 3\", system-ui, sans-serif); font-size: 0.9375rem; font-weight: 600; cursor: pointer; border-radius: 0; } .ds-btn:hover { background: var(--wash, #f6f4ef); } .ds-btn:focus-visible { outline: 2px solid var(--red, #c8102e); outline-offset: 2px; }"
+    },
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Solid ink button for the main action in a panel.",
+      "html": "<button class=\"ds-btn-primary\">Trace connection</button>",
+      "css": ".ds-btn-primary { border: 1.5px solid var(--ink, #161616); background: var(--ink, #161616); color: var(--paper, #fff); padding: 6px 12px; font-family: var(--font, \"Source Sans 3\", system-ui, sans-serif); font-size: 0.9375rem; font-weight: 600; cursor: pointer; border-radius: 0; } .ds-btn-primary:hover { background: #000; } .ds-btn-primary:focus-visible { outline: 2px solid var(--red, #c8102e); outline-offset: 2px; }"
+    },
+    {
+      "name": "Ruled Stat Rows",
+      "kind": "custom",
+      "refersTo": "side-panel",
+      "description": "Label and tabular number between warm hairlines; clickable values turn red on hover.",
+      "html": "<div class=\"ds-stats\"><div class=\"ds-stat\"><span>Students</span><button>47</button></div><div class=\"ds-stat\"><span>Advisors</span><b>0</b></div></div>",
+      "css": ".ds-stats { width: 316px; font-family: var(--font, \"Source Sans 3\", system-ui, sans-serif); font-size: 0.9375rem; color: var(--ink, #161616); font-variant-numeric: tabular-nums; } .ds-stat { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--rule, #e9e6df); } .ds-stat:first-child { border-top: 1px solid var(--rule, #e9e6df); } .ds-stat b, .ds-stat button { font-size: 1.125rem; font-weight: 700; } .ds-stat button { all: unset; cursor: pointer; font-size: 1.125rem; font-weight: 700; text-decoration: underline; text-decoration-color: var(--ink-faint, #c9c6be); text-underline-offset: 3px; } .ds-stat button:hover { color: var(--red, #c8102e); text-decoration-color: var(--red, #c8102e); } .ds-stat button:focus-visible { outline: 2px solid var(--red, #c8102e); outline-offset: 2px; }"
+    },
+    {
+      "name": "Person List",
+      "kind": "custom",
+      "description": "Ruled rows with a stroked circle marker (dashed outside the field), name and count.",
+      "html": "<ul class=\"ds-plist\"><li><a href=\"#\"><svg viewBox=\"0 0 12 12\"><circle cx=\"6\" cy=\"6\" r=\"5\"/></svg>Robert K. Merton</a><span>685</span></li><li><a href=\"#\"><svg viewBox=\"0 0 12 12\" class=\"dash\"><circle cx=\"6\" cy=\"6\" r=\"5\"/></svg>Karl Mannheim</a><span>1,354</span></li></ul>",
+      "css": ".ds-plist { list-style: none; margin: 0; padding: 0; width: 316px; font-family: var(--font, \"Source Sans 3\", system-ui, sans-serif); font-size: 0.9375rem; color: var(--ink, #161616); } .ds-plist li { display: flex; justify-content: space-between; gap: 10px; padding: 5px 0; border-bottom: 1px solid var(--rule, #e9e6df); } .ds-plist a { font-weight: 600; color: inherit; text-decoration: none; display: flex; align-items: center; gap: 8px; } .ds-plist svg { width: 12px; height: 12px; fill: none; stroke: var(--ink, #161616); stroke-width: 1.4; } .ds-plist svg.dash { stroke-dasharray: 2 1.6; } .ds-plist a:hover { color: var(--red, #c8102e); text-decoration: underline; text-underline-offset: 3px; } .ds-plist span { color: var(--ink-3, #6a6a67); font-size: 0.8125rem; }"
+    },
+    {
+      "name": "Blue-Pencil Data Note",
+      "kind": "custom",
+      "refersTo": "data-note",
+      "description": "Italic blue note on blue wash flagging missing or suspect data.",
+      "html": "<p class=\"ds-note\">No advisor recorded. The lineage stops here, either at a founder or at a missing link.</p>",
+      "css": ".ds-note { max-width: 316px; color: var(--blue, #1f4e9c); font-style: italic; margin: 6px 0; padding: 6px 10px; background: var(--blue-wash, #edf2fa); font-family: var(--font, \"Source Sans 3\", system-ui, sans-serif); font-size: 0.9375rem; line-height: 1.45; }"
+    },
+    {
+      "name": "Verdict and Path Steps",
+      "kind": "custom",
+      "refersTo": "verdict",
+      "description": "Red-framed Connect answer above numbered red-ring path steps.",
+      "html": "<div class=\"ds-conn\"><div class=\"ds-verdict\"><b>Talcott Parsons</b> is an academic ancestor of <b>Erik Olin Wright</b>, 4 generations up.</div><ol class=\"ds-steps\"><li><a href=\"#\">Talcott Parsons</a><span>Harvard University · advised the next person</span></li><li><a href=\"#\">Robert K. Merton</a><span>Columbia University · advised the next person</span></li></ol></div>",
+      "css": ".ds-conn { width: 316px; font-family: var(--font, \"Source Sans 3\", system-ui, sans-serif); font-size: 0.9375rem; color: var(--ink, #161616); } .ds-verdict { border: 1.5px solid var(--red, #c8102e); color: var(--red, #c8102e); padding: 10px 12px; margin: 4px 0 12px; } .ds-verdict b { color: var(--ink, #161616); } .ds-steps { list-style: none; margin: 0; padding: 0; counter-reset: s; } .ds-steps li { position: relative; padding: 6px 0 6px 26px; border-bottom: 1px solid var(--rule, #e9e6df); } .ds-steps li::before { counter-increment: s; content: counter(s); position: absolute; left: 0; top: 7px; width: 18px; height: 18px; border: 1.5px solid var(--red, #c8102e); border-radius: 50%; font-size: 11px; font-weight: 700; color: var(--red, #c8102e); display: grid; place-content: center; box-sizing: border-box; } .ds-steps a { color: inherit; text-underline-offset: 3px; } .ds-steps a:hover { color: var(--red, #c8102e); } .ds-steps span { display: block; color: var(--ink-3, #6a6a67); font-size: 0.8125rem; }"
+    },
+    {
+      "name": "Data Table",
+      "kind": "custom",
+      "refersTo": "table-row-selected",
+      "description": "Label-style sortable headers ruled in ink with a red SVG caret; selected row in red wash.",
+      "html": "<table class=\"ds-table\"><thead><tr><th>Name</th><th class=\"num\" aria-sort=\"descending\">Students<svg viewBox=\"0 0 12 12\"><path d=\"M3 4.5l3 3 3-3\"/></svg></th></tr></thead><tbody><tr aria-selected=\"true\"><td><b>Gary Rhoades</b></td><td class=\"num\">47</td></tr><tr><td><b>Judith L. Forbes</b></td><td class=\"num\">45</td></tr></tbody></table>",
+      "css": ".ds-table { width: 480px; border-collapse: collapse; font-family: var(--font, \"Source Sans 3\", system-ui, sans-serif); font-size: 0.9375rem; color: var(--ink, #161616); font-variant-numeric: tabular-nums; } .ds-table th { text-align: left; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3, #6a6a67); border-bottom: 1.5px solid var(--ink, #161616); padding: 8px 10px; } .ds-table th[aria-sort] { color: var(--ink, #161616); } .ds-table th svg { width: 12px; height: 12px; margin-left: 4px; vertical-align: -1px; fill: none; stroke: var(--red, #c8102e); stroke-width: 1.6; } .ds-table .num { text-align: right; } .ds-table td { padding: 7px 10px; border-bottom: 1px solid var(--rule, #e9e6df); } .ds-table td b { font-weight: 600; } .ds-table tbody tr { cursor: pointer; } .ds-table tbody tr:hover { background: var(--wash, #f6f4ef); } .ds-table tbody tr[aria-selected=true] { background: var(--red-wash, #fbeaec); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Moreno Sociogram",
+    "overview": "**Creative North Star: \"The Moreno Sociogram\"**\n\nThe explorer draws sociology's academic genealogy the way Jacob Moreno drew the field's first networks: ink circles, arrows and typed labels on white paper. Everything is ink on paper. Two pencils mark the page: a red one for whatever the researcher is tracing or acting on, and a blue one for notes about the data. The result reads like a working document the researcher can trust and audit, not a dashboard performing for an audience.\n\nDensity is high and calm. One sans face in four weights carries every role, numerals are tabular everywhere, and regions are divided by 1.5px ink rules, not by cards or shadows. The diagram, the record panel and the ranked tables share one material: hollow and filled circles, straight arrows, thin warm rules between rows.\n\nThe build rejects the dark neon force-graph hairball and the gray-blue SaaS graph explorer. Neither aesthetic belongs here.",
+    "keyCharacteristics": [
+      "White paper ground, near-black ink, 1.5px strokes for every structural line.",
+      "Red pencil only for the traced path, focus and the active choice; blue pencil only for data-quality notes, always italic.",
+      "Circle grammar: hollow = sociology, dashed = outside the field, filled ink = the person in focus.",
+      "Square corners everywhere except the circles themselves.",
+      "Flat. No shadows, no rounded panels, no gradients."
+    ],
+    "rules": [
+      {
+        "name": "The Two Pencils Rule",
+        "body": "Red means \"the thing you are tracing or acting on\"; blue means \"a note about the data\". Never use either for decoration, branding or category coding.",
+        "section": "colors"
+      },
+      {
+        "name": "The Drop-to-Light-Ink Rule",
+        "body": "When a path is traced, every mark not on it drops to 32% opacity instead of changing color, so the red path is the only saturated thing on the page.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "`font-variant-numeric: tabular-nums` is set on the body; every number lines up in columns without per-element opt-in.",
+        "section": "typography"
+      },
+      {
+        "name": "The Italic Is Blue Rule",
+        "body": "Italic is reserved for blue-pencil data notes (and the dotted \"more\" stub in the diagram). Do not use italic for emphasis elsewhere.",
+        "section": "typography"
+      },
+      {
+        "name": "The Ruled Regions Rule",
+        "body": "Regions are separated by 1.5px ink lines and rows by 1px warm rules. Never separate regions with background tints, cards or gaps alone.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat Paper Rule",
+        "body": "Nothing floats. If a surface needs separation, rule it in ink.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Circle Means a Person Rule",
+        "body": "Circles stand for people or for steps along a lineage. Do not use circles, pills or rounded corners for controls or containers.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do draw every structural line at 1.5px in Ink and every row divider at 1px in Warm Rule.",
+      "Do keep red for the traced path, focus and the active selection, and blue for data notes in italic.",
+      "Do keep the circle grammar: hollow for sociology, dashed for outside the field, filled ink for the person in focus.",
+      "Do use Source Sans 3 for every role, with tabular numerals.",
+      "Do keep text at Tertiary Ink (5.3:1) or darker; Faint Ink is for marks, never text.",
+      "Do use stroked inline SVG for icons, carets and markers, inheriting ink or red."
+    ],
+    "donts": [
+      "Don't add shadows, rounded panels, cards or gradients.",
+      "Don't use a dark or neon graph canvas, or gray-blue SaaS chrome.",
+      "Don't use red or blue for decoration, category color or branding.",
+      "Don't introduce a second typeface or a display face.",
+      "Don't put uppercase labels above headlines as eyebrows; the label style only names the list or column directly beneath it."
+    ]
+  }
+}

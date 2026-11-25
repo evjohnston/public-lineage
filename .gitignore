@@ -1,0 +1,16 @@
+.venv/
+.env
+data/raw/
+data/*.duckdb
+data/*.duckdb.wal
+__pycache__/
+.DS_Store
+
+# third-party downloads and regenerable intermediates
+*.zip
+data/external/*.parquet
+data/external/*.json
+# private, unsent
+docs/drafts/
+.impeccable/hook.cache.json
+.claude/settings.local.json
