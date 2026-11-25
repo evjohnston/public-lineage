@@ -8,6 +8,9 @@ census, writes figures to docs/analysis/figs/ and numbers to docs/analysis/resul
   A3  Subfield inheritance: do students share their advisor's subfield beyond cohort chance?
   A3b Topic inheritance: the same test on OpenAlex publication topics (no ProQuest circularity)
   A4  Schools over time: what share of each decade's documented PhDs descend from each curated school?
+      A4b repeats it within each source of years, to separate history from source mix.
+  A5  Advisor standing and placement: within the same PhD program and decade, do students of more
+      prolific or more cited advisors get faculty jobs at higher-ranked sociology departments?
 
 Usage: python -I scripts/analysis/run_analyses.py
 """
@@ -50,7 +53,7 @@ plt.rcParams.update({
 def load():
     lin = json.loads((ROOT / "explorer" / "data" / "lineage.json").read_text())
     ctx = json.loads((ROOT / "explorer" / "data" / "context.json").read_text())
-    people = {r[0]: {"name": r[1], "f": r[3], "ns": r[4], "nd": r[5], "phd": r[12] if len(r) > 12 else None,
+    people = {r[0]: {"name": r[1], "f": r[3], "ns": r[4], "nd": r[5], "h": r[9] if len(r) > 9 else None, "phd": r[12] if len(r) > 12 else None,
                      "year": r[13] if len(r) > 13 else None, "basis": r[14] if len(r) > 14 else None}
               for r in lin["people"]}
     phd_edges = [(m, t) for m, t, rel, *_ in lin["edges"] if rel == 1 and m in people and t in people]
@@ -326,6 +329,42 @@ def a4(res, ctx, people, all_edges):
                  "share_by_school": {sid: v for sid, v in share.items()},
                  "excluded_estimated": sum(1 for v in people.values() if v["basis"] in (4, 5) and not v["f"] & F_OUTSIDE)}
 
+    # A4b: the same shares within each source of years. If a trend appears inside every source it is
+    # not an artifact of the source mix changing by decade.
+    MIN_B = 80
+    focus = ["any"] + [sid for sid, _ in sorted(((sid, max(v.values() or [0])) for sid, v in share.items()), key=lambda x: -x[1])[:5]]
+    by_src = {}
+    for b in DOCUMENTED:
+        pb = {p: d for p, (d, bb) in soc.items() if bb == b}
+        nb = Counter(pb.values())
+        ds = [d for d in decades if nb[d] >= MIN_B]
+        by_src[b] = {"n": {d: nb[d] for d in ds}}
+        for sid in focus:
+            m = anyschool if sid == "any" else members[sid]
+            by_src[b][sid] = {d: sum(1 for p in m if pb.get(p) == d) / nb[d] for d in ds}
+    res["A4"]["by_source"] = {DOCUMENTED[b]: v for b, v in by_src.items()}
+    sname = {s_["id"]: s_["name"] for s_ in ctx["schools"]} | {"any": "Any curated school"}
+    fig, axes = plt.subplots(2, 3, figsize=(9, 5.4), sharex=True)
+    styles = {1: ("-", INK), 2: ("-", INK3), 3: ((0, (3, 2)), "#9a968d")}
+    for ax, sid in zip(axes.flat, focus):
+        for b in DOCUMENTED:
+            v = by_src[b][sid]
+            if v:
+                ax.plot(list(v), list(v.values()), ls=styles[b][0], color=styles[b][1], lw=2, marker="o", ms=3.5, label=DOCUMENTED[b])
+        ax.set_title(sname[sid], fontsize=10, pad=4)
+        ax.set_ylim(bottom=0)
+        ax.yaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(1, decimals=0))
+        ax.tick_params(labelsize=8.5)
+    for ax in axes[-1]:
+        ax.set_xticks(decades[4::2], [f"{d}s" for d in decades[4::2]])
+    h, l = axes.flat[0].get_legend_handles_labels()
+    fig.legend(h, l, loc="lower left", bbox_to_anchor=(0.01, 0.0), ncol=3, frameon=False, fontsize=9)
+    fig.suptitle("School shares computed separately for each source of PhD years", x=0.01, ha="left", fontweight=700, fontsize=12)
+    fig.text(0.01, -0.02, f"Each line uses only PhDs dated by one source; decades with at least {MIN_B} such PhDs. Panels have their own y scale.",
+             color=INK3, fontsize=8.5)
+    fig.tight_layout(rect=(0, 0.06, 1, 1))
+    fig.savefig(FIGS / "a4b_by_source.png"); plt.close(fig)
+
     # coverage: documented PhDs per decade, by where the year comes from
     fig, ax = plt.subplots(figsize=(7.2, 3.8))
     shades = {1: INK, 2: INK3, 3: "#b9b5ac"}
@@ -368,10 +407,148 @@ def a4(res, ctx, people, all_edges):
     fig.savefig(FIGS / "a4_schools.png"); plt.close(fig)
 
 
+# ------------------------------------------------------------------ A5 advisor standing and placement
+def census_matcher():
+    """ORCID organisation name -> hiring-census institution id. Exact names only (after dropping
+    'the', 'at', 'of', 'campus'), plus a flagship-campus suffix; never a partial match, which mapped
+    George Washington to WashU and NYU Abu Dhabi to NYU."""
+    import sys
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from match_hiring_institutions import expand, toks
+    inst = pd.read_parquet(ROOT / "data" / "external" / "faculty_hiring_sociology_institutions.parquet")
+    mp = pd.read_parquet(ROOT / "data" / "external" / "faculty_hiring_inst_map.parquet")
+    mp = mp[mp.hiring_id.isin(inst.institution_id)]
+    drop = {"the", "at", "main", "campus", "of"}
+    flag = {"columbia", "manoa", "madison", "amherst", "ann", "arbor", "chapel", "hill", "twin", "cities", "urbana",
+            "champaign", "bloomington", "austin", "berkeley", "columbus", "new", "brunswick", "seattle", "college", "park", "university"}
+    norm = lambda x: tuple(t for t in toks(x) if t not in drop)
+    names = {}
+    for _, r in inst.iterrows():
+        names.setdefault(norm(expand(r.institution_name)), r.institution_id)
+    for _, r in mp.dropna(subset=["aft_name"]).iterrows():
+        names.setdefault(norm(r.aft_name), r.hiring_id)
+
+    def match(org):
+        t = norm(org or "")
+        if t in names:
+            return names[t]
+        for k in range(len(t) - 1, 1, -1):
+            if t[:k] in names and set(t[k:]) <= flag:
+                return names[t[:k]]
+        return None
+    n_ranked = int(inst.ordinal_prestige_rank.max()) + 1
+    pct = {i: 1 - r / (n_ranked - 1) for i, r in zip(inst.institution_id, inst.ordinal_prestige_rank)}  # 1 = top
+    mq = mp.dropna(subset=["locid"])
+    loc2h = dict(zip(mq.locid.astype(int), mq.hiring_id))
+    return match, pct, loc2h
+
+
+def a5(res, ctx, people, phd_edges):
+    match, pct, loc2h = census_matcher()
+    careers = json.loads((ROOT / "explorer" / "data" / "careers.json").read_text())
+    FAC = ("professor", "lecturer")
+
+    def first_job(pid, y):
+        c = careers.get(str(pid))
+        if not c:
+            return None
+        jobs = sorted((e for e in c[2] if e[0] == "employment" and e[4] and y - 1 <= e[4] <= y + 6 and e[3]
+                       and any(f in e[3].lower() for f in FAC) and not any(x in e[3].lower() for x in ("emerit", "visiting"))),
+                      key=lambda e: e[4])
+        return jobs[0] if jobs else None
+
+    rows = []
+    for a, s in phd_edges:
+        S, A = people[s], people[a]
+        if S["f"] & F_OUTSIDE or not S["year"] or S["basis"] not in DOCUMENTED:
+            continue
+        prog = loc2h.get(int((ctx["person"].get(str(s)) or [None])[0] or -1))
+        if prog is None:
+            continue
+        j = first_job(s, S["year"])
+        ji = match(j[1]) if j else None
+        fl = (ctx["person"].get(str(s)) or [None, None])[1]
+        fi = loc2h.get(int(fl)) if fl is not None else None
+        rows.append({"s": s, "prog": prog, "decade": S["year"] // 10 * 10, "adv_students": A["ns"] - 1,
+                     "adv_h": A["h"], "first_job": j is not None, "first_pct": pct.get(ji) if ji is not None else None,
+                     "fac_pct": pct.get(fi) if fi is not None else None})
+    df = pd.DataFrame(rows).drop_duplicates("s")  # a student with two advisors keeps the first listed
+    df["stratum"] = df.prog.astype(str) + "-" + df.decade.astype(str)
+
+    def test(d, x, y):
+        d = d.dropna(subset=[x, y])
+        d = d[d.groupby("stratum")[y].transform("size") >= 2]
+        # advisor measure as rank within the student's own program and decade (0 = lowest, 1 = highest)
+        d = d.assign(xr=d.groupby("stratum")[x].rank(pct=True, method="average"))
+        d = d[d.groupby("stratum")[x].transform("nunique") >= 2].reset_index(drop=True)
+        groups = [g.index.values for _, g in d.groupby("stratum")]
+        xv, yv = d.xr.values, d[y].values.astype(float)
+
+        def stat(v):  # pooled within-stratum covariance-free Spearman: correlate deviations from stratum means
+            dev = v.copy()
+            for idx in groups:
+                dev[idx] = v[idx] - v[idx].mean()
+            xd = xv.copy()
+            for idx in groups:
+                xd[idx] = xv[idx] - xv[idx].mean()
+            return float(np.corrcoef(xd, dev)[0, 1])
+        obs = stat(yv)
+        null = []
+        for _ in range(1000):
+            vv = yv.copy()
+            for idx in groups:
+                vv[idx] = RNG.permutation(vv[idx])
+            null.append(stat(vv))
+        p = float((np.sum(np.abs(null) >= abs(obs)) + 1) / (len(null) + 1))
+        d = d.assign(rel=yv - d.groupby("stratum")[y].transform("mean").values,
+                     tert=pd.cut(d.xr, [0, 1 / 3, 2 / 3, 1.0001], labels=["Bottom third", "Middle third", "Top third"], include_lowest=True))
+        bins = []
+        for lab, g in d.groupby("tert", observed=True):
+            boots = [RNG.choice(g.rel.values, len(g)).mean() for _ in range(1000)]
+            bins.append({"bin": lab, "n": int(len(g)), "mean": float(g.rel.mean()),
+                         "lo": float(np.percentile(boots, 2.5)), "hi": float(np.percentile(boots, 97.5))})
+        return {"n": int(len(d)), "strata": len(groups), "r": obs, "perm_p": p, "bins": bins}
+
+    out = {}
+    specs = [("first", "first_pct", "Rank of first faculty job (ORCID)"), ("fac", "fac_pct", "Rank of later faculty institution (lineage data)")]
+    for key, y, _ in specs:
+        for x in ("adv_students", "adv_h"):
+            out[f"{key}:{x}"] = test(df, x, y)
+    has_job = df.dropna(subset=["adv_students"])
+    out["got_ranked_first_job"] = test(df[df.first_job].assign(ranked=lambda d: d.first_pct.notna().astype(float)), "adv_students", "ranked")
+    res["A5"] = {"students": int(len(df)), "with_orcid_faculty_job": int(df.first_job.sum()),
+                 "first_job_ranked": int(df.first_pct.notna().sum()), "fac_ranked": int(df.fac_pct.notna().sum()), "tests": out}
+
+    fig, axes = plt.subplots(2, 2, figsize=(8.4, 6.2), sharey="row")
+    xl = {"adv_students": "advisor's other PhD students", "adv_h": "advisor's h-index"}
+    for i, (key, y, lab) in enumerate(specs):
+        for j, x in enumerate(("adv_students", "adv_h")):
+            ax, t = axes[i, j], out[f"{key}:{x}"]
+            b = t["bins"]
+            xs = np.arange(len(b))
+            ax.errorbar(xs, [v["mean"] for v in b], yerr=[[v["mean"] - v["lo"] for v in b], [v["hi"] - v["mean"] for v in b]],
+                        fmt="o", color=INK, ms=7, lw=1.4, capsize=0)
+            ax.axhline(0, color=INK3, lw=1)
+            ax.set_xticks(xs, [v["bin"] for v in b], fontsize=9)
+            ax.set_xlim(-0.5, len(b) - 0.5)
+            ax.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda v, _: f"{v * 100:+.0f}"))
+            ax.set_title(f"{lab}\nby {xl[x]}", fontsize=10, pad=4)
+            ax.text(0.98, 0.04, f"n = {t['n']:,} · r = {t['r']:.2f} · p = {t['perm_p']:.2f}", transform=ax.transAxes,
+                    ha="right", color=INK3, fontsize=8.5)
+            ax.grid(axis="x", visible=False)
+        axes[i, 0].set_ylabel("Percentile points vs\nclassmates' average")
+    fig.suptitle("No clear advisor effect on placement, relative to classmates from the same program and decade", x=0.01, ha="left", fontweight=700, fontsize=12)
+    fig.text(0.01, -0.05, "Advisor measure ranked within the student's PhD program and decade. Placement = prestige percentile of the hiring department "
+             "(Wapman et al. 2022 ranks; 100 = top).\nOnly students whose placement is a ranked US sociology department. 95% bootstrap CIs; p from 1,000 within-stratum permutations.",
+             color=INK3, fontsize=8.5)
+    fig.tight_layout()
+    fig.savefig(FIGS / "a5_placement.png"); plt.close(fig)
+
+
 def main():
     lin, ctx, people, phd_edges, all_edges = load()
     res = {"data": {"people": len(people), "phd_links": len(phd_edges), "sources": lin["meta"].get("outside_sources", {})}}
-    a1(res); a2(res, people, phd_edges); a3(res, ctx, people, phd_edges); a3b(res, ctx, people, phd_edges); a4(res, ctx, people, all_edges)
+    a1(res); a2(res, people, phd_edges); a3(res, ctx, people, phd_edges); a3b(res, ctx, people, phd_edges); a4(res, ctx, people, all_edges); a5(res, ctx, people, phd_edges)
     (OUT / "results.json").write_text(json.dumps(res, indent=2))
     print(json.dumps({k: v for k, v in res["A1"].items() if k != "top10"}, indent=1))
     print({k: res["A2"][k] for k in ("pairs", "spearman_rho", "null_overall_rho_mean", "within_decade_rho", "within_perm_p")}, res["A2"]["rho_by_decade"])
@@ -381,6 +558,11 @@ def main():
           [(r["topic"], r["pairs"], round(r["observed"], 2), round(r["expected"], 3)) for r in res["A3b"]["topics"][:8]])
     print(res["A4"]["documented_by_decade"], {d: round(v, 3) for d, v in res["A4"]["share_any_school"].items()})
     print({k: {d: round(x, 3) for d, x in v.items()} for k, v in res["A4"]["share_by_school"].items()})
+    for b, v in res["A4"]["by_source"].items():
+        print(b, v["n"]); [print("   ", k, {d: round(x, 3) for d, x in vv.items()}) for k, vv in v.items() if k != "n"]
+    print({k: v for k, v in res["A5"].items() if k != "tests"})
+    for k, t in res["A5"]["tests"].items():
+        print(k, t["n"], t["strata"], round(t["r"], 3), t["perm_p"], [(b["bin"], b["n"], round(b["mean"], 3)) for b in t["bins"]])
 
 
 if __name__ == "__main__":

@@ -62,7 +62,7 @@ These are exploratory results. Each section names the main threat to validity; n
 - **Coverage:** only matched people with enough papers have topics, which tilts the sample toward research-active, recent cohorts.
 - The 3-topic cutoff makes "shared" coarse. Topic-vector similarity would be a better measure.
 
-## A4. Classic schools: a mid-century peak, then a steady small share
+## A4. School shares over time can't yet be separated from where the years come from
 
 ![Coverage of documented PhD years](figs/a4_coverage.png)
 
@@ -75,15 +75,56 @@ These are exploratory results. Each section names the main threat to validity; n
 
 The 10,382 years estimated from relatives or first papers are excluded. Only people with dated relatives can get an estimate from relatives, and those people are linked by definition, so including them would inflate the shares. A person "descends" from a school if a chain of advisor links reaches back to one of its founders in `data/schools.json`.
 
-- **Coverage before 2000 is now usable but thin:** 6,065 documented PhDs, against 395 in the previous build. Every decade from the 1920s on has 100 or more. Before 1970 most come from Wikidata birth years. In the 1980s–90s most come from dissertation records, mainly theses.fr. Since 2000 most are AFT-MAG recorded years.
-- **The share descending from any curated school** peaks at **10% in the 1940s–50s**, falls to **5% by the 1980s** and stays there through the 2000s, then rises to 8% in the 2010s.
-- **Chicago is the earliest and declines longest:** 5–6% of PhDs in the 1920s–40s, about 1% by the 1990s. **Structural functionalism** rises from nothing in the 1920s to a **6% peak in the 1950s**. **Columbia** peaks at 4% in the 1950s. Both then slide to about 3% and 2%.
-- The newer lines (comparative-historical, Harvard networks, status attainment) start near zero and grow to 1–2%.
+- **Coverage before 2000 is usable but thin:** 6,065 documented PhDs, against 395 in the previous build. Every decade from the 1920s on has 100 or more.
+- **Pooled across sources,** the share descending from any curated school peaks at 10% in the 1940s–50s, falls to 5% by the 1980s, and rises to 8% in the 2010s. Chicago appears to decline from 5–6% (1920s–40s) to about 1% (1990s), and structural functionalism and Columbia appear to peak in the 1950s.
+
+### A4b. Within each source, that pattern disappears
+
+![School shares by source of years](figs/a4b_by_source.png)
+
+Here the shares are computed separately for each source of years, counting only decades with at least 80 PhDs from that source.
+
+- **Wikidata birth years (1930s–2010s):** the share descending from any school is flat at 1.4–3.8% in every decade. Chicago stays below 1% throughout. Nothing peaks mid-century.
+- **Dissertation, grant and ORCID records (1970s on):** flat at 2–4% until the 2010s, when it jumps to 8.5%.
+- **Recorded training years (AFT-MAG):** 37–50% of the few hundred pre-2000 PhDs descend from a curated school, against 5–8% after 2000. Pre-2000 recorded years cover mostly the well-curated, famous lineages.
+
+So the pooled curve is mainly the source mix. Each decade's share depends on which source dominates that decade: Wikidata before 1970, French theses in the 1980s–90s, AFT-MAG after 2000. No single source shows Chicago's decline or the mid-century functionalist peak. **The A4 charts should not be read as the history of schools.**
+
+The one pattern that shows up in two sources is the **2010s rise**: recorded years go from 5% to 8%, dissertation records from 3% to 8.5%. Even that may reflect which recent records get linked into the tree, rather than renewed growth.
+
+**What would fix it:** one source that dates PhDs consistently across the century and links advisors, which is what ProQuest provides. Short of that, the honest comparison is within a source, and Wikidata is the only one spanning 1930–2010.
+
+## A5. No clear sign that advisor standing affects placement
+
+![Placement by advisor standing](figs/a5_placement.png)
+
+**Question:** compare students from the *same PhD program and decade*. Do students of more prolific advisors (more PhD students) or more cited advisors (higher h-index) get faculty jobs in higher-ranked sociology departments? Comparing classmates holds the program's own prestige constant, which placement studies without advisor links can't do.
+
+**Data:**
+- Students with a documented PhD year whose program maps to the hiring census (12,877).
+- **Outcome 1, first faculty job:** the first professor or lecturer position in ORCID within 6 years of the PhD. 782 students have one, and for 348 it is in a ranked US sociology department.
+- **Outcome 2, later faculty institution:** where the person advised students, or else a recorded affiliation (419 ranked).
+- Placement is the department's prestige percentile from Wapman et al. (100 = top).
+- The advisor measure is ranked within the student's program and decade. The p-values come from 1,000 permutations within those groups.
+
+| Outcome | Advisor measure | n | r | p |
+|---|---|---|---|---|
+| First faculty job | other PhD students | 258 | 0.03 | 0.70 |
+| First faculty job | h-index | 154 | 0.20 | 0.04 |
+| Later faculty institution | other PhD students | 280 | 0.04 | 0.62 |
+| Later faculty institution | h-index | 148 | −0.12 | 0.23 |
+| First job is in a ranked department at all | other PhD students | 685 | 0.02 | 0.66 |
+
+- Four of five tests are null. The one nominal hit is advisor h-index → first job. Students of the top third by h-index place about 5 percentile points above their classmates. That hit doesn't survive a correction for five tests (Bonferroni threshold 0.01), and the same measure points the other way for later faculty institution.
+- **Read this as "no detectable effect", not "no effect".** With about 150–280 students in groups that hold at least two classmates, the test can only detect correlations of roughly 0.15–0.2 or larger.
 
 **Caveats:**
-- **Source mix changes by decade.** Wikidata dates notable people, who sit disproportionately in famous lineages, so pre-1970 shares are probably too high. The 1980s–90s are dominated by French theses, which rarely link to US schools, so those shares are probably too low. Part of the peak-and-decline could be this mix rather than history.
-- **The 2010s uptick** coincides with the AFT's own recent curation, which follows the lineages users care about.
-- **School definitions are a seed list.** Shares depend on which founders are named, and descendants of several schools count for each.
+- **ORCID coverage is selective.** Only 20% of the 12,877 students have an ORCID career at all, and 30% of those list a faculty job within six years of the PhD (6% overall). Older cohorts rarely use ORCID.
+- **Matching is strict.** ORCID organisation names map to census departments only by exact name. That avoids false matches (George Washington ≠ WashU) but drops some real ones.
+- **Institution vs department.** The census ranks sociology departments, while ORCID records the university, so a job in another department of a ranked university counts as a sociology placement.
+- **h-index is current, not as of the student's PhD year**, so it partly reflects the advisor's later career.
+
+**What would fix it:** more first-job records. The census's own person-level data, if Wapman et al. would share it under agreement, would multiply the sample.
 
 ---
 
@@ -100,6 +141,6 @@ The 10,382 years estimated from relatives or first papers are excluded. Only peo
 - **Years:** each person's PhD year carries a basis code (recorded, record, birth, first paper, estimated). Analyses that need years state which bases they use.
 
 ## Next analyses
-1. **Advisor prestige → student placement:** join ORCID employment (now 7,434 careers) to the hiring census ranks.
-2. **Topic similarity instead of shared top-3 topics** for A3b, with co-authorship modelled rather than dropped.
-3. **A4 by source:** recompute school shares within one source at a time (for example only recorded years, or only US repositories) to separate history from source mix. ProQuest advisor data would remove most of this problem.
+1. **Schools over time within Wikidata only,** with founders reviewed. Wikidata is the one source that spans 1930–2010, though it covers only notable people.
+2. **Placement with more first-job data:** ask Wapman et al. for person-level census data, or use OpenAlex affiliation histories as a first-job proxy.
+3. **Topic similarity instead of shared top-3 topics** for A3b, with co-authorship modelled rather than dropped.
