@@ -1,13 +1,19 @@
 {
   "data": {
-    "people": 82323,
-    "phd_links": 72711,
+    "people": 82326,
+    "phd_links": 72713,
     "sources": {
       "wikidata": {
         "records": 24619,
         "confirmed": 4458,
         "added": 20153,
         "skipped_cycle": 7
+      },
+      "manual": {
+        "records": 4,
+        "confirmed": 0,
+        "added": 4,
+        "skipped_cycle": 0
       }
     }
   },
@@ -67,7 +73,7 @@
   "A2": {
     "pairs": 11213,
     "spearman_rho": 0.06178987705172675,
-    "null_overall_rho_mean": -0.0045068156078592065,
+    "null_overall_rho_mean": -0.004814548153934131,
     "within_decade_rho": 0.06532094589081773,
     "within_perm_p": 0.001996007984031936,
     "rho_by_decade": {
@@ -83,18 +89,18 @@
       {
         "bin": "0",
         "n": 1118,
-        "mean": 0.007863066869316803,
-        "lo": -0.07650486726786497,
-        "hi": 0.10509942262677789,
+        "mean": 0.007863066869316817,
+        "lo": -0.07919911465719674,
+        "hi": 0.10843931056068526,
         "raw_mean": 0.3336314847942755,
         "share_any": 0.0885509838998211
       },
       {
         "bin": "1\u20134",
         "n": 4017,
-        "mean": -0.08169770606500995,
-        "lo": -0.12585389663844887,
-        "hi": -0.03273902817186836,
+        "mean": -0.08169770606500994,
+        "lo": -0.12545060412348502,
+        "hi": -0.03196348276917391,
         "raw_mean": 0.22479462285287527,
         "share_any": 0.06671645506596963
       },
@@ -102,8 +108,8 @@
         "bin": "5\u20139",
         "n": 2824,
         "mean": -0.0345451144721787,
-        "lo": -0.07960533388088395,
-        "hi": 0.018001482358263415,
+        "lo": -0.07978463844042794,
+        "hi": 0.015351578354914599,
         "raw_mean": 0.2669971671388102,
         "share_any": 0.07896600566572239
       },
@@ -111,17 +117,17 @@
         "bin": "10\u201319",
         "n": 2204,
         "mean": 0.08990090571569481,
-        "lo": 0.016279755746929192,
-        "hi": 0.17328705000186326,
+        "lo": 0.01576329862894118,
+        "hi": 0.16856315805785466,
         "raw_mean": 0.3870235934664247,
         "share_any": 0.10798548094373865
       },
       {
         "bin": "20+",
         "n": 1050,
-        "mean": 0.2083834129288475,
-        "lo": 0.08238799715187671,
-        "hi": 0.3586441200158861,
+        "mean": 0.20838341292884754,
+        "lo": 0.08868649905379732,
+        "hi": 0.34812154223870617,
         "raw_mean": 0.5076190476190476,
         "share_any": 0.13523809523809524
       }
@@ -134,492 +140,492 @@
         "subfield": "Condensed Matter Physics",
         "pairs": 2734,
         "observed": 0.7249451353328457,
-        "expected": 0.1547128749085589,
-        "lift": 4.68574535740038
+        "expected": 0.15433247988295537,
+        "lift": 4.697294671106424
       },
       {
         "subfield": "Geophysics",
         "pairs": 2647,
         "observed": 0.5368341518700416,
-        "expected": 0.08746127691726482,
-        "lift": 6.137963802859488
+        "expected": 0.08761805817907065,
+        "lift": 6.126980704969279
       },
       {
         "subfield": "Astronomy and Astrophysics",
         "pairs": 2169,
         "observed": 0.6127247579529738,
-        "expected": 0.08774089442139235,
-        "lift": 6.98334296673848
+        "expected": 0.0882319041032734,
+        "lift": 6.9444807315480075
       },
       {
         "subfield": "Optics Physics",
         "pairs": 1622,
         "observed": 0.6319358816276203,
-        "expected": 0.08322133168927251,
-        "lift": 7.593436307737897
+        "expected": 0.08247533908754624,
+        "lift": 7.662119230050458
       },
       {
         "subfield": "Elementary Particles and High Energy Physics",
         "pairs": 1437,
         "observed": 0.7856645789839944,
-        "expected": 0.09381002087682673,
-        "lift": 8.375060272245094
+        "expected": 0.0937787056367432,
+        "lift": 8.377856930840013
       },
       {
         "subfield": "General Biophysics",
         "pairs": 1104,
         "observed": 0.5163043478260869,
-        "expected": 0.04536684782608696,
-        "lift": 11.380652890086852
+        "expected": 0.04486413043478261,
+        "lift": 11.50817686250757
       },
       {
         "subfield": "Materials Science Engineering",
         "pairs": 1043,
         "observed": 0.6011505273250239,
-        "expected": 0.06606423777564717,
-        "lift": 9.099484797910167
+        "expected": 0.06577660594439118,
+        "lift": 9.139275563005612
       },
       {
         "subfield": "Electronics and Electrical Engineering",
         "pairs": 997,
         "observed": 0.6960882647943831,
-        "expected": 0.06502006018054163,
-        "lift": 10.70574623987659
+        "expected": 0.06570712136409228,
+        "lift": 10.5938024729049
       },
       {
         "subfield": "Fluid and Plasma Physics",
         "pairs": 789,
         "observed": 0.5982256020278834,
-        "expected": 0.04259188846641318,
-        "lift": 14.045528939145962
+        "expected": 0.0417680608365019,
+        "lift": 14.3225610681232
       },
       {
         "subfield": "Electricity and Magnetism Physics",
         "pairs": 610,
         "observed": 0.3655737704918033,
-        "expected": 0.0265327868852459,
-        "lift": 13.778189681804141
+        "expected": 0.02698360655737705,
+        "lift": 13.547995139732684
       },
       {
         "subfield": "Nuclear Physics",
         "pairs": 605,
         "observed": 0.5900826446280992,
-        "expected": 0.03539669421487603,
-        "lift": 16.670558020079387
+        "expected": 0.03520661157024794,
+        "lift": 16.76056338028169
       },
       {
         "subfield": "General Physics",
         "pairs": 603,
         "observed": 0.41625207296849087,
-        "expected": 0.05023217247097844,
-        "lift": 8.28656322218554
+        "expected": 0.0502653399668325,
+        "lift": 8.281095348069945
       },
       {
         "subfield": "Theory Physics",
         "pairs": 600,
         "observed": 0.47333333333333333,
-        "expected": 0.041,
-        "lift": 11.544715447154472
+        "expected": 0.04066666666666666,
+        "lift": 11.639344262295083
       },
       {
         "subfield": "Medical Biophysics",
         "pairs": 536,
         "observed": 0.5093283582089553,
-        "expected": 0.02833955223880597,
-        "lift": 17.97235023041475
+        "expected": 0.027947761194029853,
+        "lift": 18.22429906542056
       },
       {
         "subfield": "Geology",
         "pairs": 529,
         "observed": 0.8412098298676749,
-        "expected": 0.0425992438563327,
-        "lift": 19.74706012868871
+        "expected": 0.04216446124763705,
+        "lift": 19.95068370320556
       },
       {
         "subfield": "Radiation Physics",
         "pairs": 505,
         "observed": 0.5188118811881188,
-        "expected": 0.030168316831683167,
-        "lift": 17.197243190022974
+        "expected": 0.031,
+        "lift": 16.73586713510061
       },
       {
         "subfield": "Atomic Physics",
         "pairs": 450,
         "observed": 0.6444444444444445,
-        "expected": 0.0291,
-        "lift": 22.14585719740359
+        "expected": 0.02961111111111111,
+        "lift": 21.763602251407132
       },
       {
         "subfield": "Acoustics Physics",
         "pairs": 425,
         "observed": 0.38588235294117645,
-        "expected": 0.013258823529411764,
-        "lift": 29.103815439219165
+        "expected": 0.012741176470588235,
+        "lift": 30.28624192059095
       },
       {
         "subfield": "Atmospheric Science Physics",
         "pairs": 405,
         "observed": 0.5432098765432098,
-        "expected": 0.02223456790123457,
-        "lift": 24.430871737923372
+        "expected": 0.022753086419753085,
+        "lift": 23.874118285404233
       },
       {
         "subfield": "Biomedical Engineering",
         "pairs": 401,
         "observed": 0.7007481296758105,
-        "expected": 0.029750623441396506,
-        "lift": 23.554065381391453
+        "expected": 0.02822942643391521,
+        "lift": 24.823321554770317
       },
       {
         "subfield": "Mechanical Engineering",
         "pairs": 394,
         "observed": 0.8223350253807107,
-        "expected": 0.030532994923857866,
-        "lift": 26.93266832917706
+        "expected": 0.03199238578680203,
+        "lift": 25.7040856802856
       },
       {
         "subfield": "Molecular Physics",
         "pairs": 333,
         "observed": 0.4954954954954955,
-        "expected": 0.018123123123123124,
-        "lift": 27.340513670256833
+        "expected": 0.017897897897897898,
+        "lift": 27.68456375838926
       },
       {
         "subfield": "Radiology",
         "pairs": 329,
         "observed": 0.6443768996960486,
-        "expected": 0.02,
-        "lift": 32.21884498480243
+        "expected": 0.020531914893617022,
+        "lift": 31.384159881569204
       },
       {
         "subfield": "Molecular Biology",
         "pairs": 316,
         "observed": 0.6835443037974683,
-        "expected": 0.02050632911392405,
-        "lift": 33.33333333333333
+        "expected": 0.020648734177215192,
+        "lift": 33.103448275862064
       },
       {
         "subfield": "Astrophysics Physics",
         "pairs": 304,
         "observed": 0.5361842105263158,
-        "expected": 0.05726973684210526,
-        "lift": 9.362435381964389
+        "expected": 0.057055921052631575,
+        "lift": 9.397520899394639
       },
       {
         "subfield": "Aerospace Engineering",
         "pairs": 272,
         "observed": 0.7058823529411765,
-        "expected": 0.017959558823529412,
-        "lift": 39.303991811668375
+        "expected": 0.017187499999999998,
+        "lift": 41.06951871657755
       },
       {
         "subfield": "Physical Chemistry",
         "pairs": 271,
         "observed": 0.5535055350553506,
-        "expected": 0.01555350553505535,
-        "lift": 35.58718861209965
+        "expected": 0.016346863468634686,
+        "lift": 33.86004514672687
       },
       {
         "subfield": "Civil Engineering",
         "pairs": 256,
         "observed": 0.91015625,
-        "expected": 0.01794921875,
-        "lift": 50.70729053318825
+        "expected": 0.018125,
+        "lift": 50.21551724137932
       },
       {
         "subfield": "Quantum Physics",
         "pairs": 246,
         "observed": 0.36585365853658536,
-        "expected": 0.02274390243902439,
-        "lift": 16.0857908847185
+        "expected": 0.02136178861788618,
+        "lift": 17.126546146527115
       },
       {
         "subfield": "Cell Biology",
         "pairs": 243,
         "observed": 0.6255144032921811,
-        "expected": 0.017016460905349792,
-        "lift": 36.75937122128175
+        "expected": 0.016358024691358025,
+        "lift": 38.23899371069182
       },
       {
         "subfield": "Hydrology",
         "pairs": 230,
         "observed": 0.5826086956521739,
-        "expected": 0.013000000000000001,
-        "lift": 44.81605351170568
+        "expected": 0.012956521739130434,
+        "lift": 44.966442953020135
       },
       {
         "subfield": "Biochemistry",
         "pairs": 221,
         "observed": 0.669683257918552,
-        "expected": 0.015361990950226244,
-        "lift": 43.59351988217968
+        "expected": 0.015475113122171945,
+        "lift": 43.27485380116959
       },
       {
         "subfield": "Theoretical physics",
         "pairs": 203,
         "observed": 0.2315270935960591,
-        "expected": 0.04251231527093596,
-        "lift": 5.446118192352259
+        "expected": 0.040270935960591135,
+        "lift": 5.749235474006116
       },
       {
         "subfield": "Oncology",
         "pairs": 179,
         "observed": 0.5195530726256983,
-        "expected": 0.013631284916201117,
-        "lift": 38.114754098360656
+        "expected": 0.013743016759776535,
+        "lift": 37.80487804878049
       },
       {
         "subfield": "Environmental Sciences",
         "pairs": 174,
         "observed": 0.5689655172413793,
-        "expected": 0.013591954022988507,
-        "lift": 41.860465116279066
+        "expected": 0.01456896551724138,
+        "lift": 39.053254437869825
       },
       {
         "subfield": "Nanoscience",
         "pairs": 157,
         "observed": 0.36942675159235666,
-        "expected": 0.015636942675159235,
-        "lift": 23.625254582484725
+        "expected": 0.014617834394904458,
+        "lift": 25.272331154684096
       },
       {
         "subfield": "Mathematics",
         "pairs": 154,
         "observed": 0.551948051948052,
-        "expected": 0.04064935064935065,
-        "lift": 13.578274760383387
+        "expected": 0.0398051948051948,
+        "lift": 13.866231647634585
       },
       {
         "subfield": "Nuclear Engineering",
         "pairs": 151,
         "observed": 0.8278145695364238,
-        "expected": 0.010066225165562914,
-        "lift": 82.23684210526316
+        "expected": 0.010463576158940398,
+        "lift": 79.1139240506329
       }
     ]
   },
   "A3b": {
     "pairs": 26228,
     "share_any_topic": 0.6517843526002746,
-    "expected_any_topic": 0.047552996797315845,
+    "expected_any_topic": 0.04764297697117584,
     "perm_p": 0.004975124378109453,
     "topics": [
       {
         "topic": "Particle physics theoretical and experimental studies",
         "pairs": 2459,
         "observed": 0.5640504270028467,
-        "expected": 0.08527856852379015,
-        "lift": 6.614210777300907
+        "expected": 0.08611630744204961,
+        "lift": 6.549867774839441
       },
       {
         "topic": "Stellar, planetary, and galactic studies",
         "pairs": 2085,
         "observed": 0.6892086330935252,
-        "expected": 0.07788968824940048,
-        "lift": 8.848522167487685
+        "expected": 0.07761390887290168,
+        "lift": 8.879962922910552
       },
       {
         "topic": "Quantum Chromodynamics and Particle Interactions",
         "pairs": 2077,
         "observed": 0.5469427058257101,
-        "expected": 0.07696918632643236,
-        "lift": 7.1059956838582545
+        "expected": 0.07726287915262398,
+        "lift": 7.0789842654619095
       },
       {
         "topic": "Physics of Superconductivity and Magnetism",
         "pairs": 1695,
         "observed": 0.39705014749262535,
-        "expected": 0.040879056047197646,
-        "lift": 9.712801270024533
+        "expected": 0.04105899705014749,
+        "lift": 9.670234930670308
       },
       {
         "topic": "Galaxies: Formation, Evolution, Phenomena",
         "pairs": 1680,
         "observed": 0.6720238095238096,
-        "expected": 0.06329464285714285,
-        "lift": 10.617388442187428
+        "expected": 0.06299107142857142,
+        "lift": 10.668556579258212
       },
       {
         "topic": "Theoretical and Computational Physics",
         "pairs": 1343,
         "observed": 0.31422189128816086,
-        "expected": 0.030387192851824275,
-        "lift": 10.340602793432982
+        "expected": 0.03110945644080417,
+        "lift": 10.10052656773576
       },
       {
         "topic": "Nuclear physics research studies",
         "pairs": 1322,
         "observed": 0.4341906202723147,
-        "expected": 0.06940998487140697,
-        "lift": 6.255448997384481
+        "expected": 0.0697428139183056,
+        "lift": 6.225596529284165
       },
       {
         "topic": "Atomic and Molecular Physics",
         "pairs": 1190,
         "observed": 0.33361344537815124,
-        "expected": 0.05365126050420168,
-        "lift": 6.218184665987939
+        "expected": 0.0528781512605042,
+        "lift": 6.309098132697656
       },
       {
         "topic": "Quantum and electron transport phenomena",
         "pairs": 1007,
         "observed": 0.4299900695134062,
-        "expected": 0.03308341608738828,
-        "lift": 12.9971484316374
+        "expected": 0.033316782522343595,
+        "lift": 12.906110283159464
       },
       {
         "topic": "Astrophysics and Star Formation Studies",
         "pairs": 967,
         "observed": 0.5822130299896587,
-        "expected": 0.037631851085832474,
-        "lift": 15.471283319593294
+        "expected": 0.03736297828335057,
+        "lift": 15.582618322723498
       },
       {
         "topic": "Semiconductor Quantum Structures and Devices",
         "pairs": 961,
         "observed": 0.3517169614984391,
-        "expected": 0.025504682622268474,
-        "lift": 13.790289677682576
+        "expected": 0.02446409989594173,
+        "lift": 14.376860910250954
       },
       {
         "topic": "Astrophysical Phenomena and Observations",
         "pairs": 957,
         "observed": 0.5882967607105538,
-        "expected": 0.03802507836990596,
-        "lift": 15.471283319593294
+        "expected": 0.03803030303030303,
+        "lift": 15.469157851353208
       },
       {
         "topic": "Black Holes and Theoretical Physics",
         "pairs": 902,
         "observed": 0.5576496674057649,
-        "expected": 0.030759423503325944,
-        "lift": 18.12939268336637
+        "expected": 0.03143015521064302,
+        "lift": 17.742504409171072
       },
       {
         "topic": "Quantum optics and atomic interactions",
         "pairs": 886,
         "observed": 0.43792325056433407,
-        "expected": 0.02306433408577878,
-        "lift": 18.987032052850502
+        "expected": 0.023668171557562075,
+        "lift": 18.502622794468287
       },
       {
         "topic": "Quantum Information and Cryptography",
         "pairs": 861,
         "observed": 0.586527293844367,
-        "expected": 0.03977932636469222,
-        "lift": 14.744525547445255
+        "expected": 0.04013937282229965,
+        "lift": 14.612268518518517
       },
       {
         "topic": "Cosmology and Gravitation Theories",
         "pairs": 784,
         "observed": 0.49489795918367346,
-        "expected": 0.028616071428571428,
-        "lift": 17.294406061956764
+        "expected": 0.02899234693877551,
+        "lift": 17.0699516058073
       },
       {
         "topic": "Advanced Condensed Matter Physics",
         "pairs": 778,
         "observed": 0.37789203084832906,
-        "expected": 0.023637532133676094,
-        "lift": 15.98694942903752
+        "expected": 0.023104113110539847,
+        "lift": 16.35605006954103
       },
       {
         "topic": "Material Dynamics and Properties",
         "pairs": 747,
         "observed": 0.3373493975903614,
-        "expected": 0.019738955823293172,
-        "lift": 17.09053916581892
+        "expected": 0.019183400267737617,
+        "lift": 17.585484996510814
       },
       {
         "topic": "Laser-Matter Interactions and Applications",
         "pairs": 704,
         "observed": 0.4375,
-        "expected": 0.02231534090909091,
-        "lift": 19.6053469127944
+        "expected": 0.022926136363636364,
+        "lift": 19.083023543990087
       },
       {
         "topic": "Astrophysics and Cosmic Phenomena",
         "pairs": 679,
         "observed": 0.43888070692194403,
-        "expected": 0.0229160530191458,
-        "lift": 19.151670951156813
+        "expected": 0.023519882179675995,
+        "lift": 18.65998747651847
       },
       {
         "topic": "Astro and Planetary Science",
         "pairs": 653,
         "observed": 0.5895865237366003,
-        "expected": 0.026408882082695255,
-        "lift": 22.325311684546243
+        "expected": 0.025781010719754978,
+        "lift": 22.869022869022867
       },
       {
         "topic": "Surface and Thin Film Phenomena",
         "pairs": 635,
         "observed": 0.2188976377952756,
-        "expected": 0.01374015748031496,
-        "lift": 15.931232091690545
+        "expected": 0.013196850393700789,
+        "lift": 16.58711217183771
       },
       {
         "topic": "Cold Atom Physics and Bose-Einstein Condensates",
         "pairs": 614,
         "observed": 0.5781758957654723,
-        "expected": 0.02757328990228013,
-        "lift": 20.96869462492617
+        "expected": 0.02736156351791531,
+        "lift": 21.130952380952383
       },
       {
         "topic": "Advanced Chemical Physics Studies",
         "pairs": 609,
         "observed": 0.40229885057471265,
-        "expected": 0.020689655172413793,
-        "lift": 19.444444444444446
+        "expected": 0.021141215106732347,
+        "lift": 19.029126213592235
       },
       {
         "topic": "Semiconductor materials and interfaces",
         "pairs": 603,
         "observed": 0.28524046434494194,
-        "expected": 0.013432835820895522,
-        "lift": 21.234567901234566
+        "expected": 0.013681592039800995,
+        "lift": 20.848484848484848
       },
       {
         "topic": "Quantum Mechanics and Applications",
         "pairs": 589,
         "observed": 0.3616298811544992,
-        "expected": 0.017792869269949066,
-        "lift": 20.324427480916032
+        "expected": 0.01734295415959253,
+        "lift": 20.851688693098385
       },
       {
         "topic": "High-Energy Particle Collisions Research",
         "pairs": 571,
         "observed": 0.44308231173380036,
-        "expected": 0.02220665499124343,
-        "lift": 19.95268138801262
+        "expected": 0.02237302977232925,
+        "lift": 19.804305283757337
       },
       {
         "topic": "Astronomy and Astrophysical Research",
         "pairs": 570,
         "observed": 0.5157894736842106,
-        "expected": 0.027684210526315787,
-        "lift": 18.63117870722434
+        "expected": 0.0275,
+        "lift": 18.75598086124402
       },
       {
         "topic": "Solar and Space Plasma Dynamics",
         "pairs": 512,
         "observed": 0.587890625,
-        "expected": 0.018037109375,
-        "lift": 32.59339469409854
-      },
-      {
-        "topic": "Quantum many-body systems",
-        "pairs": 492,
-        "observed": 0.4451219512195122,
-        "expected": 0.022947154471544714,
-        "lift": 19.397697077059345
+        "expected": 0.016796875,
+        "lift": 35.0
       },
       {
         "topic": "Relativity and Gravitational Theory",
         "pairs": 492,
         "observed": 0.30284552845528456,
-        "expected": 0.016585365853658537,
-        "lift": 18.259803921568626
+        "expected": 0.01649390243902439,
+        "lift": 18.36105976586568
+      },
+      {
+        "topic": "Quantum many-body systems",
+        "pairs": 492,
+        "observed": 0.4451219512195122,
+        "expected": 0.022865853658536585,
+        "lift": 19.46666666666667
       },
       {
         "topic": "Particle Detector Development and Performance",
@@ -632,358 +638,358 @@
         "topic": "Fluid Dynamics and Turbulent Flows",
         "pairs": 478,
         "observed": 0.4351464435146444,
-        "expected": 0.013451882845188284,
-        "lift": 32.34836702954899
+        "expected": 0.013347280334728033,
+        "lift": 32.60188087774295
       },
       {
         "topic": "Magnetic properties of thin films",
         "pairs": 478,
         "observed": 0.4393305439330544,
-        "expected": 0.01760460251046025,
-        "lift": 24.9554367201426
+        "expected": 0.017531380753138075,
+        "lift": 25.059665871121716
       },
       {
         "topic": "Protein Structure and Dynamics",
         "pairs": 473,
         "observed": 0.47568710359408034,
-        "expected": 0.0200845665961945,
-        "lift": 23.68421052631579
+        "expected": 0.021289640591966173,
+        "lift": 22.343594836146973
       },
       {
         "topic": "Neutrino Physics Research",
         "pairs": 452,
         "observed": 0.45132743362831856,
-        "expected": 0.017555309734513275,
-        "lift": 25.708884688090734
+        "expected": 0.017610619469026548,
+        "lift": 25.628140703517587
       },
       {
         "topic": "Ionosphere and magnetosphere dynamics",
         "pairs": 447,
         "observed": 0.6241610738255033,
-        "expected": 0.015838926174496646,
-        "lift": 39.40677966101694
+        "expected": 0.01570469798657718,
+        "lift": 39.743589743589745
       },
       {
         "topic": "Photorefractive and Nonlinear Optics",
         "pairs": 444,
         "observed": 0.28603603603603606,
-        "expected": 0.010743243243243243,
-        "lift": 26.624737945492665
+        "expected": 0.0109009009009009,
+        "lift": 26.239669421487605
       },
       {
         "topic": "Graphene research and applications",
         "pairs": 443,
         "observed": 0.48306997742663654,
-        "expected": 0.02709932279909707,
-        "lift": 17.8259058725531
+        "expected": 0.026376975169300227,
+        "lift": 18.31407787762088
       },
       {
         "topic": "Magnetic and transport properties of perovskites and related materials",
         "pairs": 441,
         "observed": 0.3832199546485261,
-        "expected": 0.013866213151927438,
-        "lift": 27.636958299264105
+        "expected": 0.01427437641723356,
+        "lift": 26.846703733121526
       },
       {
         "topic": "Gamma-ray bursts and supernovae",
         "pairs": 415,
         "observed": 0.45542168674698796,
-        "expected": 0.017542168674698797,
-        "lift": 25.96153846153846
+        "expected": 0.01855421686746988,
+        "lift": 24.545454545454547
       },
       {
         "topic": "earthquake and tectonic studies",
         "pairs": 413,
         "observed": 0.585956416464891,
-        "expected": 0.014128329297820824,
-        "lift": 41.4738646101114
+        "expected": 0.013486682808716708,
+        "lift": 43.447037701974864
       },
       {
         "topic": "Geological and Geophysical Studies",
         "pairs": 392,
         "observed": 0.49744897959183676,
-        "expected": 0.01191326530612245,
-        "lift": 41.7558886509636
+        "expected": 0.012321428571428572,
+        "lift": 40.37267080745342
       },
       {
         "topic": "Pulsars and Gravitational Waves Research",
         "pairs": 385,
         "observed": 0.5012987012987012,
-        "expected": 0.015168831168831168,
-        "lift": 33.04794520547945
+        "expected": 0.015571428571428571,
+        "lift": 32.193494578815674
       },
       {
         "topic": "Dark Matter and Cosmic Phenomena",
         "pairs": 380,
         "observed": 0.41842105263157897,
-        "expected": 0.015407894736842107,
-        "lift": 27.156276686592655
+        "expected": 0.016144736842105264,
+        "lift": 25.91687041564792
       },
       {
         "topic": "Seismic Waves and Analysis",
         "pairs": 378,
         "observed": 0.6481481481481481,
-        "expected": 0.013783068783068782,
-        "lift": 47.02495201535509
+        "expected": 0.012645502645502646,
+        "lift": 51.25523012552301
       },
       {
         "topic": "Plasmonic and Surface Plasmon Research",
         "pairs": 372,
         "observed": 0.47043010752688175,
-        "expected": 0.021008064516129032,
-        "lift": 22.392834293026233
+        "expected": 0.022016129032258063,
+        "lift": 21.36752136752137
       },
       {
         "topic": "Noncommutative and Quantum Gravity Theories",
         "pairs": 362,
         "observed": 0.3839779005524862,
-        "expected": 0.012638121546961326,
-        "lift": 30.38251366120219
+        "expected": 0.012707182320441988,
+        "lift": 30.217391304347828
       },
       {
         "topic": "Spectroscopy and Quantum Chemical Studies",
         "pairs": 358,
         "observed": 0.2877094972067039,
-        "expected": 0.009748603351955308,
-        "lift": 29.51289398280802
+        "expected": 0.009734636871508379,
+        "lift": 29.55523672883788
       },
       {
         "topic": "Meteorological Phenomena and Simulations",
         "pairs": 357,
         "observed": 0.6722689075630253,
-        "expected": 0.014859943977591036,
-        "lift": 45.240339302544776
+        "expected": 0.014271708683473388,
+        "lift": 47.10500490677135
       },
       {
         "topic": "Metamaterials and Metasurfaces Applications",
         "pairs": 351,
         "observed": 0.4131054131054131,
-        "expected": 0.01762108262108262,
-        "lift": 23.443815683104287
-      },
-      {
-        "topic": "Advanced Physical and Chemical Molecular Interactions",
-        "pairs": 345,
-        "observed": 0.3130434782608696,
-        "expected": 0.013565217391304348,
-        "lift": 23.07692307692308
+        "expected": 0.01715099715099715,
+        "lift": 24.08637873754153
       },
       {
         "topic": "Magnetic confinement fusion research",
         "pairs": 345,
         "observed": 0.5855072463768116,
-        "expected": 0.011898550724637682,
-        "lift": 49.2082825822168
+        "expected": 0.011811594202898552,
+        "lift": 49.57055214723926
+      },
+      {
+        "topic": "Advanced Physical and Chemical Molecular Interactions",
+        "pairs": 345,
+        "observed": 0.3130434782608696,
+        "expected": 0.014246376811594203,
+        "lift": 21.9735503560529
       },
       {
         "topic": "Geological and Geochemical Analysis",
         "pairs": 343,
         "observed": 0.5306122448979592,
-        "expected": 0.01055393586005831,
-        "lift": 50.27624309392265
+        "expected": 0.011705539358600582,
+        "lift": 45.33001245330013
       },
       {
         "topic": "Electron and X-Ray Spectroscopy Techniques",
         "pairs": 337,
         "observed": 0.2344213649851632,
-        "expected": 0.006127596439169139,
-        "lift": 38.256658595641646
+        "expected": 0.006498516320474777,
+        "lift": 36.073059360730596
       },
       {
         "topic": "Planetary Science and Exploration",
         "pairs": 335,
         "observed": 0.591044776119403,
-        "expected": 0.013477611940298506,
-        "lift": 43.85382059800665
+        "expected": 0.014104477611940298,
+        "lift": 41.904761904761905
       },
       {
         "topic": "High-pressure geophysics and materials",
         "pairs": 325,
         "observed": 0.48615384615384616,
-        "expected": 0.011246153846153845,
-        "lift": 43.228454172366625
+        "expected": 0.010292307692307693,
+        "lift": 47.23467862481316
       },
       {
         "topic": "Semiconductor materials and devices",
         "pairs": 325,
         "observed": 0.3507692307692308,
-        "expected": 0.010307692307692308,
-        "lift": 34.02985074626866
+        "expected": 0.01093846153846154,
+        "lift": 32.0675105485232
       },
       {
         "topic": "Topological Materials and Phenomena",
         "pairs": 321,
         "observed": 0.3395638629283489,
-        "expected": 0.01791277258566978,
-        "lift": 18.956521739130434
+        "expected": 0.01705607476635514,
+        "lift": 19.908675799086758
       },
       {
         "topic": "2D Materials and Applications",
         "pairs": 317,
         "observed": 0.4227129337539432,
-        "expected": 0.0272397476340694,
-        "lift": 15.518239722061379
-      },
-      {
-        "topic": "Photonic and Optical Devices",
-        "pairs": 305,
-        "observed": 0.39672131147540984,
-        "expected": 0.012590163934426229,
-        "lift": 31.510416666666668
+        "expected": 0.02733438485804416,
+        "lift": 15.46451240623197
       },
       {
         "topic": "Astronomical and nuclear sciences",
         "pairs": 305,
         "observed": 0.49508196721311476,
-        "expected": 0.01378688524590164,
-        "lift": 35.90963139120095
+        "expected": 0.013540983606557377,
+        "lift": 36.56174334140436
+      },
+      {
+        "topic": "Photonic and Optical Devices",
+        "pairs": 305,
+        "observed": 0.39672131147540984,
+        "expected": 0.012,
+        "lift": 33.060109289617486
       },
       {
         "topic": "Atomic and Subatomic Physics Research",
         "pairs": 300,
         "observed": 0.3233333333333333,
-        "expected": 0.007783333333333333,
-        "lift": 41.54175588865096
+        "expected": 0.007666666666666666,
+        "lift": 42.17391304347826
       },
       {
         "topic": "Low-Pressure Plasma Processing and Diagnostics",
         "pairs": 299,
         "observed": 0.42474916387959866,
-        "expected": 0.00968227424749164,
-        "lift": 43.868739205526765
+        "expected": 0.010635451505016724,
+        "lift": 39.93710691823899
       },
       {
         "topic": "Seismic Imaging and Inversion Techniques",
         "pairs": 279,
         "observed": 0.5591397849462365,
-        "expected": 0.009802867383512544,
-        "lift": 57.038391224862885
+        "expected": 0.010268817204301076,
+        "lift": 54.450261780104704
       },
       {
         "topic": "Advanced NMR Techniques and Applications",
         "pairs": 279,
         "observed": 0.45161290322580644,
-        "expected": 0.009086021505376345,
-        "lift": 49.704142011834314
+        "expected": 0.01017921146953405,
+        "lift": 44.36619718309859
       },
       {
         "topic": "Quantum, superfluid, helium dynamics",
         "pairs": 268,
         "observed": 0.22388059701492538,
-        "expected": 0.0062313432835820895,
-        "lift": 35.92814371257485
+        "expected": 0.006119402985074626,
+        "lift": 36.585365853658544
       },
       {
         "topic": "Stochastic processes and statistical mechanics",
         "pairs": 263,
         "observed": 0.22053231939163498,
-        "expected": 0.006083650190114069,
-        "lift": 36.25
+        "expected": 0.00596958174904943,
+        "lift": 36.94267515923567
       },
       {
         "topic": "Climate variability and models",
         "pairs": 258,
         "observed": 0.5542635658914729,
-        "expected": 0.009941860465116279,
-        "lift": 55.7504873294347
+        "expected": 0.009321705426356588,
+        "lift": 59.45945945945946
       },
       {
         "topic": "Atmospheric aerosols and clouds",
         "pairs": 252,
         "observed": 0.5158730158730159,
-        "expected": 0.010714285714285714,
-        "lift": 48.14814814814815
+        "expected": 0.010357142857142856,
+        "lift": 49.80842911877396
       },
       {
         "topic": "Advanced MEMS and NEMS Technologies",
         "pairs": 251,
         "observed": 0.4541832669322709,
-        "expected": 0.010577689243027887,
-        "lift": 42.93785310734464
+        "expected": 0.0099402390438247,
+        "lift": 45.69138276553106
       },
       {
         "topic": "Semiconductor Lasers and Optical Devices",
         "pairs": 241,
         "observed": 0.27800829875518673,
-        "expected": 0.006452282157676349,
-        "lift": 43.08681672025723
+        "expected": 0.0070746887966804985,
+        "lift": 39.29618768328446
       },
       {
         "topic": "Photochemistry and Electron Transfer Studies",
         "pairs": 240,
         "observed": 0.2625,
-        "expected": 0.0060416666666666665,
-        "lift": 43.44827586206897
+        "expected": 0.005958333333333333,
+        "lift": 44.05594405594406
       },
       {
         "topic": "Cellular Mechanics and Interactions",
         "pairs": 237,
         "observed": 0.35864978902953587,
-        "expected": 0.01379746835443038,
-        "lift": 25.99388379204893
+        "expected": 0.011835443037974683,
+        "lift": 30.303030303030305
       },
       {
         "topic": "Advanced Radiotherapy Techniques",
         "pairs": 234,
         "observed": 0.7948717948717948,
-        "expected": 0.01579059829059829,
-        "lift": 50.33829499323409
+        "expected": 0.01482905982905983,
+        "lift": 53.602305475504316
       },
       {
         "topic": "Force Microscopy Techniques and Applications",
         "pairs": 232,
         "observed": 0.40086206896551724,
-        "expected": 0.010969827586206897,
-        "lift": 36.54223968565815
+        "expected": 0.009870689655172415,
+        "lift": 40.611353711790386
       },
       {
         "topic": "Neural dynamics and brain function",
         "pairs": 227,
         "observed": 0.4977973568281938,
-        "expected": 0.010418502202643173,
-        "lift": 47.78012684989429
+        "expected": 0.011145374449339206,
+        "lift": 44.66403162055336
       },
       {
         "topic": "Molecular Spectroscopy and Structure",
         "pairs": 224,
         "observed": 0.33035714285714285,
-        "expected": 0.011696428571428571,
-        "lift": 28.244274809160306
+        "expected": 0.010647321428571428,
+        "lift": 31.027253668763105
       },
       {
         "topic": "Quantum and Classical Electrodynamics",
         "pairs": 224,
         "observed": 0.11160714285714286,
-        "expected": 0.019129464285714288,
-        "lift": 5.834305717619603
+        "expected": 0.018973214285714284,
+        "lift": 5.882352941176471
       },
       {
         "topic": "Oceanographic and Atmospheric Processes",
         "pairs": 223,
         "observed": 0.4798206278026906,
-        "expected": 0.00804932735426009,
-        "lift": 59.6100278551532
+        "expected": 0.007511210762331839,
+        "lift": 63.88059701492537
       },
       {
         "topic": "Quantum Computing Algorithms and Architecture",
         "pairs": 222,
         "observed": 0.44594594594594594,
-        "expected": 0.014414414414414415,
-        "lift": 30.9375
+        "expected": 0.014099099099099099,
+        "lift": 31.629392971246006
       },
       {
         "topic": "Gold and Silver Nanoparticles Synthesis and Applications",
         "pairs": 220,
         "observed": 0.41363636363636364,
-        "expected": 0.012954545454545455,
-        "lift": 31.929824561403507
+        "expected": 0.013931818181818182,
+        "lift": 29.69004893964111
       },
       {
         "topic": "Lipid Membrane Structure and Behavior",
         "pairs": 216,
         "observed": 0.2916666666666667,
-        "expected": 0.007523148148148148,
-        "lift": 38.769230769230774
+        "expected": 0.007175925925925926,
+        "lift": 40.645161290322584
       },
       {
         "topic": "Enzyme Structure and Function",
@@ -996,113 +1002,113 @@
         "topic": "Strong Light-Matter Interactions",
         "pairs": 209,
         "observed": 0.3492822966507177,
-        "expected": 0.008732057416267942,
-        "lift": 40.0
-      },
-      {
-        "topic": "Superconducting and THz Device Technology",
-        "pairs": 207,
-        "observed": 0.3961352657004831,
-        "expected": 0.008381642512077295,
-        "lift": 47.26224783861671
+        "expected": 0.008373205741626795,
+        "lift": 41.71428571428571
       },
       {
         "topic": "Laser-Plasma Interactions and Diagnostics",
         "pairs": 207,
         "observed": 0.48792270531400966,
-        "expected": 0.009154589371980677,
-        "lift": 53.29815303430079
+        "expected": 0.008599033816425121,
+        "lift": 56.741573033707866
+      },
+      {
+        "topic": "Superconducting and THz Device Technology",
+        "pairs": 207,
+        "observed": 0.3961352657004831,
+        "expected": 0.008502415458937198,
+        "lift": 46.590909090909086
       },
       {
         "topic": "Surfactants and Colloidal Systems",
         "pairs": 204,
         "observed": 0.22058823529411764,
-        "expected": 0.005661764705882353,
-        "lift": 38.96103896103896
+        "expected": 0.005049019607843137,
+        "lift": 43.689320388349515
       },
       {
         "topic": "Advancements in Semiconductor Devices and Circuit Design",
         "pairs": 196,
         "observed": 0.3163265306122449,
-        "expected": 0.0064285714285714285,
-        "lift": 49.20634920634921
+        "expected": 0.006479591836734694,
+        "lift": 48.818897637795274
       },
       {
         "topic": "Rheology and Fluid Dynamics Studies",
         "pairs": 195,
         "observed": 0.26153846153846155,
-        "expected": 0.006384615384615385,
-        "lift": 40.963855421686745
+        "expected": 0.0059743589743589745,
+        "lift": 43.776824034334766
       },
       {
         "topic": "Radiation Therapy and Dosimetry",
         "pairs": 193,
         "observed": 0.5906735751295337,
-        "expected": 0.009740932642487045,
-        "lift": 60.63829787234043
+        "expected": 0.008808290155440414,
+        "lift": 67.05882352941177
       },
       {
         "topic": "Advanced Fluorescence Microscopy Techniques",
         "pairs": 186,
         "observed": 0.43010752688172044,
-        "expected": 0.011478494623655912,
-        "lift": 37.470725995316165
+        "expected": 0.009811827956989247,
+        "lift": 43.83561643835617
       },
       {
         "topic": "Advanced MRI Techniques and Applications",
         "pairs": 184,
         "observed": 0.5489130434782609,
-        "expected": 0.010054347826086957,
-        "lift": 54.59459459459459
+        "expected": 0.009592391304347825,
+        "lift": 57.22379603399434
       },
       {
         "topic": "Spectroscopy and Laser Applications",
         "pairs": 184,
         "observed": 0.266304347826087,
-        "expected": 0.008043478260869565,
-        "lift": 33.10810810810811
+        "expected": 0.007445652173913044,
+        "lift": 35.76642335766423
       },
       {
         "topic": "Nonlinear Dynamics and Pattern Formation",
         "pairs": 179,
         "observed": 0.25139664804469275,
-        "expected": 0.004720670391061452,
-        "lift": 53.254437869822496
+        "expected": 0.004888268156424581,
+        "lift": 51.42857142857143
       },
       {
         "topic": "Particle accelerators and beam dynamics",
         "pairs": 178,
         "observed": 0.4157303370786517,
-        "expected": 0.00800561797752809,
-        "lift": 51.929824561403514
+        "expected": 0.008146067415730337,
+        "lift": 51.03448275862069
       },
       {
         "topic": "Mechanical and Optical Resonators",
         "pairs": 178,
         "observed": 0.47191011235955055,
-        "expected": 0.010955056179775281,
-        "lift": 43.07692307692307
+        "expected": 0.011123595505617978,
+        "lift": 42.42424242424242
       },
       {
         "topic": "Liquid Crystal Research Advancements",
         "pairs": 178,
         "observed": 0.5,
-        "expected": 0.00752808988764045,
-        "lift": 66.41791044776119
+        "expected": 0.006994382022471911,
+        "lift": 71.4859437751004
       },
       {
         "topic": "Computational Fluid Dynamics and Aerodynamics",
         "pairs": 177,
         "observed": 0.4519774011299435,
-        "expected": 0.0059039548022598864,
-        "lift": 76.55502392344498
+        "expected": 0.00655367231638418,
+        "lift": 68.96551724137932
       },
       {
         "topic": "X-ray Spectroscopy and Fluorescence Analysis",
         "pairs": 176,
         "observed": 0.30113636363636365,
-        "expected": 0.0046875,
-        "lift": 64.24242424242425
+        "expected": 0.005596590909090909,
+        "lift": 53.807106598984774
       },
       {
         "topic": "Photonic Crystals and Applications",
@@ -1115,8 +1121,8 @@
         "topic": "Rare-earth and actinide compounds",
         "pairs": 174,
         "observed": 0.25287356321839083,
-        "expected": 0.004252873563218391,
-        "lift": 59.45945945945946
+        "expected": 0.005172413793103448,
+        "lift": 48.88888888888889
       },
       {
         "topic": "Fusion and Plasma Physics Studies",
@@ -1129,148 +1135,148 @@
         "topic": "Organic Electronics and Photovoltaics",
         "pairs": 168,
         "observed": 0.48214285714285715,
-        "expected": 0.010684523809523809,
-        "lift": 45.12534818941504
+        "expected": 0.011964285714285714,
+        "lift": 40.29850746268657
       },
       {
         "topic": "Spectroscopy Techniques in Biomedical and Chemical Research",
         "pairs": 166,
         "observed": 0.41566265060240964,
-        "expected": 0.006445783132530121,
-        "lift": 64.48598130841121
+        "expected": 0.006054216867469879,
+        "lift": 68.65671641791046
       },
       {
         "topic": "Optical Imaging and Spectroscopy Techniques",
         "pairs": 165,
         "observed": 0.4484848484848485,
-        "expected": 0.007121212121212121,
-        "lift": 62.97872340425532
+        "expected": 0.007151515151515151,
+        "lift": 62.71186440677967
       },
       {
         "topic": "Atmospheric chemistry and aerosols",
         "pairs": 164,
         "observed": 0.5365853658536586,
-        "expected": 0.008841463414634146,
-        "lift": 60.6896551724138
+        "expected": 0.00871951219512195,
+        "lift": 61.53846153846155
       },
       {
         "topic": "Geology and Paleoclimatology Research",
         "pairs": 163,
         "observed": 0.6134969325153374,
-        "expected": 0.007576687116564418,
-        "lift": 80.97165991902833
+        "expected": 0.00861963190184049,
+        "lift": 71.17437722419929
       },
       {
         "topic": "Surface Chemistry and Catalysis",
         "pairs": 162,
         "observed": 0.3271604938271605,
-        "expected": 0.005617283950617284,
-        "lift": 58.24175824175824
+        "expected": 0.006296296296296296,
+        "lift": 51.96078431372549
       },
       {
         "topic": "Magnetic Properties of Alloys",
         "pairs": 158,
         "observed": 0.3670886075949367,
-        "expected": 0.005379746835443038,
-        "lift": 68.23529411764706
+        "expected": 0.004715189873417722,
+        "lift": 77.85234899328859
       },
       {
         "topic": "Advanced X-ray Imaging Techniques",
         "pairs": 156,
         "observed": 0.22435897435897437,
-        "expected": 0.004871794871794872,
-        "lift": 46.05263157894737
+        "expected": 0.005224358974358974,
+        "lift": 42.944785276073624
       },
       {
         "topic": "Carbon Nanotubes in Composites",
         "pairs": 154,
         "observed": 0.3051948051948052,
-        "expected": 0.006233766233766234,
-        "lift": 48.95833333333333
+        "expected": 0.007012987012987013,
+        "lift": 43.51851851851851
       },
       {
         "topic": "Lightning and Electromagnetic Phenomena",
         "pairs": 151,
         "observed": 0.5827814569536424,
-        "expected": 0.006059602649006623,
-        "lift": 96.17486338797814
+        "expected": 0.005728476821192053,
+        "lift": 101.73410404624276
       },
       {
         "topic": "Ferroelectric and Piezoelectric Materials",
         "pairs": 151,
         "observed": 0.39072847682119205,
-        "expected": 0.006887417218543046,
-        "lift": 56.73076923076923
+        "expected": 0.006556291390728477,
+        "lift": 59.59595959595959
       },
       {
         "topic": "Microfluidic and Capillary Electrophoresis Applications",
         "pairs": 150,
         "observed": 0.4066666666666667,
-        "expected": 0.006366666666666666,
-        "lift": 63.87434554973822
+        "expected": 0.006666666666666667,
+        "lift": 61.0
       },
       {
         "topic": "Quantum Dots Synthesis And Properties",
         "pairs": 147,
         "observed": 0.42857142857142855,
-        "expected": 0.00826530612244898,
-        "lift": 51.85185185185185
+        "expected": 0.0076870748299319724,
+        "lift": 55.75221238938053
       },
       {
         "topic": "Dust and Plasma Wave Phenomena",
         "pairs": 145,
         "observed": 0.3448275862068966,
-        "expected": 0.003896551724137931,
-        "lift": 88.49557522123895
+        "expected": 0.004586206896551724,
+        "lift": 75.18796992481204
       },
       {
         "topic": "Silicon and Solar Cell Technologies",
         "pairs": 145,
         "observed": 0.2482758620689655,
-        "expected": 0.004689655172413793,
-        "lift": 52.94117647058823
+        "expected": 0.004,
+        "lift": 62.068965517241374
       },
       {
         "topic": "Medical Imaging Techniques and Applications",
         "pairs": 144,
         "observed": 0.4722222222222222,
-        "expected": 0.006215277777777778,
-        "lift": 75.97765363128491
+        "expected": 0.005659722222222222,
+        "lift": 83.43558282208589
       },
       {
         "topic": "Fluid Dynamics and Heat Transfer",
         "pairs": 143,
         "observed": 0.35664335664335667,
-        "expected": 0.006468531468531468,
-        "lift": 55.13513513513514
+        "expected": 0.005874125874125874,
+        "lift": 60.714285714285715
       },
       {
         "topic": "Thermodynamic and Structural Properties of Metals and Alloys",
         "pairs": 141,
         "observed": 0.1347517730496454,
-        "expected": 0.004468085106382979,
-        "lift": 30.158730158730158
+        "expected": 0.003687943262411348,
+        "lift": 36.53846153846153
       },
       {
         "topic": "Superconducting Materials and Applications",
         "pairs": 139,
         "observed": 0.17266187050359713,
-        "expected": 0.003381294964028777,
-        "lift": 51.06382978723405
+        "expected": 0.003093525179856115,
+        "lift": 55.8139534883721
       },
       {
         "topic": "Microstructure and mechanical properties",
         "pairs": 139,
         "observed": 0.2589928057553957,
-        "expected": 0.0035971223021582736,
-        "lift": 72.0
+        "expected": 0.004748201438848921,
+        "lift": 54.54545454545454
       },
       {
         "topic": "Fluid Dynamics and Thin Films",
         "pairs": 137,
         "observed": 0.32116788321167883,
-        "expected": 0.0048540145985401465,
-        "lift": 66.16541353383458
+        "expected": 0.004963503649635037,
+        "lift": 64.70588235294117
       },
       {
         "topic": "Particle Accelerators and Free-Electron Lasers",
@@ -1283,267 +1289,267 @@
         "topic": "Geological formations and processes",
         "pairs": 135,
         "observed": 0.4962962962962963,
-        "expected": 0.006296296296296296,
-        "lift": 78.82352941176471
+        "expected": 0.006999999999999999,
+        "lift": 70.89947089947091
       },
       {
         "topic": "Radiation Dose and Imaging",
         "pairs": 134,
         "observed": 0.5447761194029851,
-        "expected": 0.00783582089552239,
-        "lift": 69.52380952380952
+        "expected": 0.007350746268656717,
+        "lift": 74.11167512690355
       },
       {
         "topic": "Thermal properties of materials",
         "pairs": 133,
         "observed": 0.2857142857142857,
-        "expected": 0.0034586466165413537,
-        "lift": 82.6086956521739
+        "expected": 0.002744360902255639,
+        "lift": 104.10958904109589
       },
       {
         "topic": "Robotic Mechanisms and Dynamics",
         "pairs": 131,
         "observed": 0.4198473282442748,
-        "expected": 0.0033206106870229007,
-        "lift": 126.43678160919539
+        "expected": 0.00450381679389313,
+        "lift": 93.22033898305084
       },
       {
         "topic": "Solid-state spectroscopy and crystallography",
         "pairs": 130,
         "observed": 0.12307692307692308,
-        "expected": 0.0053076923076923075,
-        "lift": 23.188405797101453
+        "expected": 0.005692307692307692,
+        "lift": 21.621621621621625
       },
       {
         "topic": "Advanced Thermodynamics and Statistical Mechanics",
         "pairs": 129,
         "observed": 0.2248062015503876,
-        "expected": 0.00496124031007752,
-        "lift": 45.3125
+        "expected": 0.004728682170542635,
+        "lift": 47.54098360655738
       },
       {
         "topic": "Visual perception and processing mechanisms",
         "pairs": 129,
         "observed": 0.3643410852713178,
-        "expected": 0.0048449612403100775,
-        "lift": 75.2
-      },
-      {
-        "topic": "GaN-based semiconductor devices and materials",
-        "pairs": 128,
-        "observed": 0.5,
-        "expected": 0.008125,
-        "lift": 61.53846153846153
+        "expected": 0.004689922480620155,
+        "lift": 77.68595041322314
       },
       {
         "topic": "Ultrasonics and Acoustic Wave Propagation",
         "pairs": 128,
         "observed": 0.4140625,
-        "expected": 0.0043359375,
-        "lift": 95.49549549549549
+        "expected": 0.0046484375,
+        "lift": 89.07563025210085
+      },
+      {
+        "topic": "GaN-based semiconductor devices and materials",
+        "pairs": 128,
+        "observed": 0.5,
+        "expected": 0.00875,
+        "lift": 57.14285714285714
       },
       {
         "topic": "Granular flow and fluidized beds",
         "pairs": 127,
         "observed": 0.36220472440944884,
-        "expected": 0.0035826771653543307,
-        "lift": 101.09890109890111
+        "expected": 0.00405511811023622,
+        "lift": 89.32038834951457
       },
       {
         "topic": "Genomics and Chromatin Dynamics",
         "pairs": 126,
         "observed": 0.3888888888888889,
-        "expected": 0.00626984126984127,
-        "lift": 62.0253164556962
+        "expected": 0.006706349206349206,
+        "lift": 57.98816568047337
       },
       {
         "topic": "Algebraic structures and combinatorial models",
         "pairs": 125,
         "observed": 0.376,
-        "expected": 0.00696,
-        "lift": 54.02298850574713
+        "expected": 0.00636,
+        "lift": 59.11949685534591
       },
       {
         "topic": "Advanced Semiconductor Detectors and Materials",
         "pairs": 124,
         "observed": 0.3951612903225806,
-        "expected": 0.006088709677419355,
-        "lift": 64.90066225165562
+        "expected": 0.005564516129032257,
+        "lift": 71.01449275362319
       },
       {
         "topic": "Cryospheric studies and observations",
         "pairs": 122,
         "observed": 0.639344262295082,
-        "expected": 0.005491803278688525,
-        "lift": 116.41791044776119
+        "expected": 0.005409836065573771,
+        "lift": 118.18181818181819
       },
       {
         "topic": "History and Developments in Astronomy",
         "pairs": 121,
         "observed": 0.1652892561983471,
-        "expected": 0.014338842975206613,
-        "lift": 11.527377521613833
+        "expected": 0.014462809917355372,
+        "lift": 11.428571428571429
       },
       {
         "topic": "Combustion and flame dynamics",
         "pairs": 121,
         "observed": 0.3884297520661157,
-        "expected": 0.0044214876033057855,
-        "lift": 87.85046728971962
-      },
-      {
-        "topic": "Groundwater flow and contamination studies",
-        "pairs": 120,
-        "observed": 0.43333333333333335,
-        "expected": 0.003625,
-        "lift": 119.54022988505747
+        "expected": 0.005,
+        "lift": 77.68595041322314
       },
       {
         "topic": "Hydrology and Watershed Management Studies",
         "pairs": 120,
         "observed": 0.5416666666666666,
-        "expected": 0.005,
-        "lift": 108.33333333333333
+        "expected": 0.00475,
+        "lift": 114.03508771929825
       },
       {
-        "topic": "Electronic and Structural Properties of Oxides",
+        "topic": "Groundwater flow and contamination studies",
         "pairs": 120,
-        "observed": 0.23333333333333334,
-        "expected": 0.004166666666666667,
-        "lift": 56.0
+        "observed": 0.43333333333333335,
+        "expected": 0.004416666666666667,
+        "lift": 98.11320754716981
       },
       {
         "topic": "DNA and Nucleic Acid Chemistry",
         "pairs": 120,
         "observed": 0.30833333333333335,
-        "expected": 0.00575,
-        "lift": 53.6231884057971
+        "expected": 0.0060416666666666665,
+        "lift": 51.03448275862069
+      },
+      {
+        "topic": "Electronic and Structural Properties of Oxides",
+        "pairs": 120,
+        "observed": 0.23333333333333334,
+        "expected": 0.00425,
+        "lift": 54.90196078431372
       },
       {
         "topic": "Orbital Angular Momentum in Optics",
         "pairs": 117,
         "observed": 0.46153846153846156,
-        "expected": 0.008504273504273505,
-        "lift": 54.2713567839196
+        "expected": 0.009743589743589742,
+        "lift": 47.36842105263159
       },
       {
         "topic": "Laser Material Processing Techniques",
         "pairs": 115,
         "observed": 0.28695652173913044,
-        "expected": 0.0037391304347826086,
-        "lift": 76.74418604651163
+        "expected": 0.002956521739130435,
+        "lift": 97.05882352941177
       },
       {
         "topic": "Geophysical and Geoelectrical Methods",
         "pairs": 114,
         "observed": 0.5789473684210527,
-        "expected": 0.005789473684210527,
-        "lift": 100.0
+        "expected": 0.00631578947368421,
+        "lift": 91.66666666666667
       },
       {
         "topic": "X-ray Diffraction in Crystallography",
         "pairs": 113,
         "observed": 0.23893805309734514,
-        "expected": 0.005575221238938053,
-        "lift": 42.857142857142854
-      },
-      {
-        "topic": "Acoustic Wave Resonator Technologies",
-        "pairs": 109,
-        "observed": 0.3669724770642202,
-        "expected": 0.005688073394495413,
-        "lift": 64.51612903225806
+        "expected": 0.004557522123893805,
+        "lift": 52.42718446601942
       },
       {
         "topic": "NMR spectroscopy and applications",
         "pairs": 109,
         "observed": 0.3394495412844037,
-        "expected": 0.004174311926605505,
-        "lift": 81.31868131868131
+        "expected": 0.004220183486238533,
+        "lift": 80.43478260869564
+      },
+      {
+        "topic": "Acoustic Wave Resonator Technologies",
+        "pairs": 109,
+        "observed": 0.3669724770642202,
+        "expected": 0.0052752293577981646,
+        "lift": 69.56521739130436
       },
       {
         "topic": "Multiferroics and related materials",
         "pairs": 108,
         "observed": 0.2962962962962963,
-        "expected": 0.0044907407407407405,
-        "lift": 65.97938144329898
+        "expected": 0.004537037037037037,
+        "lift": 65.30612244897958
       },
       {
         "topic": "Magnetic Properties and Applications",
         "pairs": 107,
         "observed": 0.3925233644859813,
-        "expected": 0.004626168224299065,
-        "lift": 84.84848484848484
+        "expected": 0.0031308411214953273,
+        "lift": 125.37313432835819
       },
       {
         "topic": "Quantum chaos and dynamical systems",
         "pairs": 107,
         "observed": 0.34579439252336447,
-        "expected": 0.004579439252336449,
-        "lift": 75.51020408163265
+        "expected": 0.004672897196261682,
+        "lift": 74.0
       },
       {
         "topic": "Paleontology and Stratigraphy of Fossils",
         "pairs": 106,
         "observed": 0.42452830188679247,
-        "expected": 0.0038679245283018866,
-        "lift": 109.75609756097562
-      },
-      {
-        "topic": "Adaptive optics and wavefront sensing",
-        "pairs": 106,
-        "observed": 0.5754716981132075,
-        "expected": 0.007830188679245283,
-        "lift": 73.49397590361446
+        "expected": 0.0037735849056603774,
+        "lift": 112.5
       },
       {
         "topic": "Advanced Fiber Laser Technologies",
         "pairs": 106,
         "observed": 0.25471698113207547,
-        "expected": 0.003915094339622642,
-        "lift": 65.06024096385542
+        "expected": 0.004575471698113207,
+        "lift": 55.670103092783506
+      },
+      {
+        "topic": "Adaptive optics and wavefront sensing",
+        "pairs": 106,
+        "observed": 0.5754716981132075,
+        "expected": 0.006273584905660378,
+        "lift": 91.72932330827066
       },
       {
         "topic": "Ion-surface interactions and analysis",
         "pairs": 105,
         "observed": 0.2857142857142857,
-        "expected": 0.0030476190476190477,
-        "lift": 93.74999999999999
+        "expected": 0.002666666666666667,
+        "lift": 107.14285714285712
       },
       {
         "topic": "Advanced Materials and Mechanics",
         "pairs": 104,
         "observed": 0.2403846153846154,
-        "expected": 0.004855769230769231,
-        "lift": 49.5049504950495
-      },
-      {
-        "topic": "Laser Design and Applications",
-        "pairs": 103,
-        "observed": 0.10679611650485436,
-        "expected": 0.003300970873786408,
-        "lift": 32.35294117647058
+        "expected": 0.005096153846153847,
+        "lift": 47.16981132075471
       },
       {
         "topic": "Nuclear reactor physics and engineering",
         "pairs": 103,
         "observed": 0.3786407766990291,
-        "expected": 0.0044174757281553395,
-        "lift": 85.71428571428572
+        "expected": 0.004320388349514563,
+        "lift": 87.64044943820225
       },
       {
         "topic": "Electrostatics and Colloid Interactions",
         "pairs": 103,
         "observed": 0.2621359223300971,
-        "expected": 0.005,
-        "lift": 52.42718446601941
+        "expected": 0.005922330097087379,
+        "lift": 44.26229508196721
+      },
+      {
+        "topic": "Laser Design and Applications",
+        "pairs": 103,
+        "observed": 0.10679611650485436,
+        "expected": 0.0032524271844660197,
+        "lift": 32.83582089552238
       },
       {
         "topic": "Molecular Junctions and Nanostructures",
         "pairs": 102,
         "observed": 0.3627450980392157,
-        "expected": 0.005343137254901961,
-        "lift": 67.88990825688073
+        "expected": 0.0055882352941176465,
+        "lift": 64.9122807017544
       },
       {
         "topic": "DNA Repair Mechanisms",
@@ -1553,284 +1559,284 @@
         "lift": 116.36363636363636
       },
       {
-        "topic": "Dynamics and Control of Mechanical Systems",
-        "pairs": 99,
-        "observed": 0.3434343434343434,
-        "expected": 0.0035858585858585855,
-        "lift": 95.77464788732395
-      },
-      {
         "topic": "Vacuum and Plasma Arcs",
         "pairs": 99,
         "observed": 0.47474747474747475,
-        "expected": 0.004494949494949495,
-        "lift": 105.61797752808988
+        "expected": 0.0036363636363636364,
+        "lift": 130.55555555555554
       },
       {
-        "topic": "Terahertz technology and applications",
-        "pairs": 98,
-        "observed": 0.46938775510204084,
-        "expected": 0.004795918367346938,
-        "lift": 97.87234042553193
+        "topic": "Dynamics and Control of Mechanical Systems",
+        "pairs": 99,
+        "observed": 0.3434343434343434,
+        "expected": 0.0033333333333333335,
+        "lift": 103.03030303030302
       },
       {
         "topic": "Fusion materials and technologies",
         "pairs": 98,
         "observed": 0.32653061224489793,
-        "expected": 0.004387755102040816,
-        "lift": 74.4186046511628
+        "expected": 0.003316326530612245,
+        "lift": 98.46153846153844
       },
       {
-        "topic": "Boron and Carbon Nanomaterials Research",
-        "pairs": 97,
-        "observed": 0.1134020618556701,
-        "expected": 0.0028865979381443303,
-        "lift": 39.28571428571428
+        "topic": "Terahertz technology and applications",
+        "pairs": 98,
+        "observed": 0.46938775510204084,
+        "expected": 0.005306122448979592,
+        "lift": 88.46153846153847
       },
       {
         "topic": "Soft Robotics and Applications",
         "pairs": 97,
         "observed": 0.4329896907216495,
-        "expected": 0.003608247422680412,
-        "lift": 120.00000000000001
+        "expected": 0.004381443298969072,
+        "lift": 98.82352941176471
+      },
+      {
+        "topic": "Boron and Carbon Nanomaterials Research",
+        "pairs": 97,
+        "observed": 0.1134020618556701,
+        "expected": 0.0019072164948453609,
+        "lift": 59.45945945945946
       },
       {
         "topic": "Lithium- and Sodium-Ion Battery Electrodes",
         "pairs": 95,
         "observed": 0.21052631578947367,
-        "expected": 0.009789473684210527,
-        "lift": 21.50537634408602
+        "expected": 0.00936842105263158,
+        "lift": 22.47191011235955
       },
       {
         "topic": "Diamond and Carbon-based Materials Research",
         "pairs": 95,
         "observed": 0.29473684210526313,
-        "expected": 0.005368421052631579,
-        "lift": 54.90196078431372
+        "expected": 0.005789473684210527,
+        "lift": 50.9090909090909
       },
       {
         "topic": "Rock Mechanics and Modeling",
         "pairs": 94,
         "observed": 0.4574468085106383,
-        "expected": 0.0026595744680851063,
-        "lift": 172.0
+        "expected": 0.0031382978723404256,
+        "lift": 145.76271186440678
       },
       {
         "topic": "Mathematical Dynamics and Fractals",
         "pairs": 94,
         "observed": 0.13829787234042554,
-        "expected": 0.003085106382978723,
-        "lift": 44.827586206896555
+        "expected": 0.002021276595744681,
+        "lift": 68.42105263157895
       },
       {
         "topic": "Organic Light-Emitting Diodes Research",
         "pairs": 94,
         "observed": 0.39361702127659576,
-        "expected": 0.004574468085106383,
-        "lift": 86.04651162790698
-      },
-      {
-        "topic": "RNA and protein synthesis mechanisms",
-        "pairs": 93,
-        "observed": 0.23655913978494625,
-        "expected": 0.006344086021505376,
-        "lift": 37.28813559322034
+        "expected": 0.004042553191489362,
+        "lift": 97.36842105263159
       },
       {
         "topic": "Micro and Nano Robotics",
         "pairs": 93,
         "observed": 0.3225806451612903,
-        "expected": 0.006827956989247312,
-        "lift": 47.24409448818897
+        "expected": 0.007903225806451612,
+        "lift": 40.81632653061225
+      },
+      {
+        "topic": "RNA and protein synthesis mechanisms",
+        "pairs": 93,
+        "observed": 0.23655913978494625,
+        "expected": 0.004301075268817204,
+        "lift": 55.0
       },
       {
         "topic": "Photonic Crystal and Fiber Optics",
         "pairs": 92,
         "observed": 0.34782608695652173,
-        "expected": 0.004184782608695653,
-        "lift": 83.1168831168831
+        "expected": 0.0062499999999999995,
+        "lift": 55.652173913043484
       },
       {
         "topic": "Spectral Theory in Mathematical Physics",
         "pairs": 90,
         "observed": 0.14444444444444443,
-        "expected": 0.0021111111111111113,
-        "lift": 68.42105263157893
+        "expected": 0.0018333333333333335,
+        "lift": 78.78787878787877
       },
       {
         "topic": "Bacterial Genetics and Biotechnology",
         "pairs": 90,
         "observed": 0.3111111111111111,
-        "expected": 0.006277777777777777,
-        "lift": 49.55752212389381
-      },
-      {
-        "topic": "Advanced Frequency and Time Standards",
-        "pairs": 89,
-        "observed": 0.25842696629213485,
-        "expected": 0.0029775280898876404,
-        "lift": 86.7924528301887
+        "expected": 0.006833333333333334,
+        "lift": 45.52845528455284
       },
       {
         "topic": "Chaos control and synchronization",
         "pairs": 89,
         "observed": 0.2808988764044944,
+        "expected": 0.0024719101123595504,
+        "lift": 113.63636363636365
+      },
+      {
+        "topic": "Advanced Frequency and Time Standards",
+        "pairs": 89,
+        "observed": 0.25842696629213485,
         "expected": 0.0031460674157303375,
-        "lift": 89.28571428571428
+        "lift": 82.14285714285714
       },
       {
         "topic": "Crystal structures of chemical compounds",
         "pairs": 88,
         "observed": 0.26136363636363635,
-        "expected": 0.009829545454545454,
-        "lift": 26.589595375722546
+        "expected": 0.010511363636363636,
+        "lift": 24.864864864864863
       },
       {
         "topic": "History of Science and Medicine",
         "pairs": 88,
         "observed": 0.03409090909090909,
-        "expected": 0.007954545454545454,
-        "lift": 4.285714285714286
+        "expected": 0.008806818181818181,
+        "lift": 3.870967741935484
       },
       {
         "topic": "Neural Networks and Applications",
         "pairs": 86,
         "observed": 0.23255813953488372,
-        "expected": 0.0021511627906976743,
-        "lift": 108.10810810810811
+        "expected": 0.004069767441860465,
+        "lift": 57.142857142857146
       },
       {
         "topic": "Acoustic Wave Phenomena Research",
         "pairs": 85,
         "observed": 0.4470588235294118,
-        "expected": 0.0028823529411764704,
-        "lift": 155.10204081632654
+        "expected": 0.0034705882352941177,
+        "lift": 128.8135593220339
       },
       {
         "topic": "Advanced Combustion Engine Technologies",
         "pairs": 85,
         "observed": 0.4235294117647059,
-        "expected": 0.002764705882352941,
-        "lift": 153.19148936170214
+        "expected": 0.0022941176470588237,
+        "lift": 184.6153846153846
       },
       {
         "topic": "Cardiac electrophysiology and arrhythmias",
         "pairs": 85,
         "observed": 0.5176470588235295,
-        "expected": 0.004588235294117647,
-        "lift": 112.82051282051283
+        "expected": 0.0052352941176470585,
+        "lift": 98.87640449438204
       },
       {
         "topic": "Metallic Glasses and Amorphous Alloys",
         "pairs": 84,
         "observed": 0.35714285714285715,
-        "expected": 0.0027380952380952383,
-        "lift": 130.43478260869566
-      },
-      {
-        "topic": "Geomagnetism and Paleomagnetism Studies",
-        "pairs": 83,
-        "observed": 0.5180722891566265,
-        "expected": 0.002710843373493976,
-        "lift": 191.11111111111111
+        "expected": 0.002619047619047619,
+        "lift": 136.36363636363637
       },
       {
         "topic": "Space Satellite Systems and Control",
         "pairs": 83,
         "observed": 0.4819277108433735,
-        "expected": 0.0027710843373493976,
-        "lift": 173.91304347826087
-      },
-      {
-        "topic": "Complex Systems and Time Series Analysis",
-        "pairs": 83,
-        "observed": 0.24096385542168675,
-        "expected": 0.0018072289156626504,
-        "lift": 133.33333333333334
+        "expected": 0.003554216867469879,
+        "lift": 135.59322033898306
       },
       {
         "topic": "Polymer crystallization and properties",
         "pairs": 83,
         "observed": 0.2289156626506024,
-        "expected": 0.0025903614457831324,
-        "lift": 88.37209302325581
+        "expected": 0.003373493975903615,
+        "lift": 67.85714285714285
       },
       {
-        "topic": "Electron Spin Resonance Studies",
-        "pairs": 82,
-        "observed": 0.3048780487804878,
-        "expected": 0.004329268292682926,
-        "lift": 70.42253521126761
+        "topic": "Complex Systems and Time Series Analysis",
+        "pairs": 83,
+        "observed": 0.24096385542168675,
+        "expected": 0.002108433734939759,
+        "lift": 114.28571428571428
+      },
+      {
+        "topic": "Geomagnetism and Paleomagnetism Studies",
+        "pairs": 83,
+        "observed": 0.5180722891566265,
+        "expected": 0.0037349397590361448,
+        "lift": 138.70967741935485
       },
       {
         "topic": "Neuroscience and Neuropharmacology Research",
         "pairs": 82,
         "observed": 0.21951219512195122,
-        "expected": 0.007865853658536585,
-        "lift": 27.906976744186046
+        "expected": 0.00774390243902439,
+        "lift": 28.346456692913385
+      },
+      {
+        "topic": "Electron Spin Resonance Studies",
+        "pairs": 82,
+        "observed": 0.3048780487804878,
+        "expected": 0.0036585365853658534,
+        "lift": 83.33333333333334
       },
       {
         "topic": "Analog and Mixed-Signal Circuit Design",
         "pairs": 82,
         "observed": 0.23170731707317074,
-        "expected": 0.001707317073170732,
-        "lift": 135.7142857142857
+        "expected": 0.0018902439024390243,
+        "lift": 122.58064516129033
       },
       {
         "topic": "Glass properties and applications",
         "pairs": 81,
         "observed": 0.2962962962962963,
-        "expected": 0.0035802469135802466,
-        "lift": 82.75862068965517
+        "expected": 0.0034567901234567903,
+        "lift": 85.71428571428571
       },
       {
         "topic": "Gas Dynamics and Kinetic Theory",
         "pairs": 80,
         "observed": 0.125,
-        "expected": 0.003125,
-        "lift": 40.0
-      },
-      {
-        "topic": "Iron-based superconductors research",
-        "pairs": 79,
-        "observed": 0.189873417721519,
-        "expected": 0.002911392405063291,
-        "lift": 65.21739130434783
+        "expected": 0.003,
+        "lift": 41.666666666666664
       },
       {
         "topic": "Nonlinear Optical Crystals and Chromophores",
         "pairs": 79,
         "observed": 0.189873417721519,
-        "expected": 0.0018987341772151898,
-        "lift": 100.00000000000001
+        "expected": 0.0017721518987341774,
+        "lift": 107.14285714285714
+      },
+      {
+        "topic": "Iron-based superconductors research",
+        "pairs": 79,
+        "observed": 0.189873417721519,
+        "expected": 0.003417721518987342,
+        "lift": 55.55555555555556
       },
       {
         "topic": "Atmospheric Ozone and Climate",
         "pairs": 78,
         "observed": 0.32051282051282054,
-        "expected": 0.003141025641025641,
-        "lift": 102.04081632653062
+        "expected": 0.002948717948717949,
+        "lift": 108.69565217391305
       },
       {
         "topic": "Solidification and crystal growth phenomena",
         "pairs": 78,
         "observed": 0.21794871794871795,
-        "expected": 0.002692307692307692,
-        "lift": 80.95238095238096
+        "expected": 0.0020512820512820513,
+        "lift": 106.25
       },
       {
         "topic": "Conducting polymers and applications",
         "pairs": 78,
         "observed": 0.41025641025641024,
-        "expected": 0.0032692307692307695,
-        "lift": 125.49019607843135
+        "expected": 0.0033974358974358976,
+        "lift": 120.75471698113206
       },
       {
         "topic": "Geotechnical Engineering and Soil Mechanics",
         "pairs": 77,
         "observed": 0.6233766233766234,
-        "expected": 0.003961038961038961,
-        "lift": 157.37704918032787
+        "expected": 0.003181818181818182,
+        "lift": 195.91836734693877
       },
       {
         "topic": "Advanced Electron Microscopy Techniques and Applications",
@@ -1843,85 +1849,85 @@
         "topic": "Microfluidic and Bio-sensing Technologies",
         "pairs": 76,
         "observed": 0.19736842105263158,
-        "expected": 0.002236842105263158,
-        "lift": 88.23529411764704
+        "expected": 0.0024342105263157896,
+        "lift": 81.08108108108108
       },
       {
         "topic": "Neuroscience and Neural Engineering",
         "pairs": 75,
         "observed": 0.44,
-        "expected": 0.002533333333333333,
-        "lift": 173.6842105263158
+        "expected": 0.004066666666666666,
+        "lift": 108.19672131147541
       },
       {
         "topic": "Nuclear Physics and Applications",
         "pairs": 74,
         "observed": 0.24324324324324326,
-        "expected": 0.006824324324324324,
-        "lift": 35.64356435643565
+        "expected": 0.0072297297297297305,
+        "lift": 33.64485981308411
       },
       {
         "topic": "Copper Interconnects and Reliability",
         "pairs": 73,
         "observed": 0.2328767123287671,
-        "expected": 0.0019178082191780824,
-        "lift": 121.42857142857142
-      },
-      {
-        "topic": "Developmental Biology and Gene Regulation",
-        "pairs": 73,
-        "observed": 0.273972602739726,
-        "expected": 0.003287671232876712,
-        "lift": 83.33333333333333
+        "expected": 0.0028082191780821916,
+        "lift": 82.92682926829268
       },
       {
         "topic": "Digital Holography and Microscopy",
         "pairs": 73,
         "observed": 0.3698630136986301,
-        "expected": 0.0026027397260273972,
-        "lift": 142.10526315789474
+        "expected": 0.003424657534246575,
+        "lift": 108.0
       },
       {
         "topic": "Gene Regulatory Network Analysis",
         "pairs": 73,
         "observed": 0.3698630136986301,
-        "expected": 0.005068493150684932,
-        "lift": 72.97297297297297
+        "expected": 0.005479452054794521,
+        "lift": 67.5
+      },
+      {
+        "topic": "Developmental Biology and Gene Regulation",
+        "pairs": 73,
+        "observed": 0.273972602739726,
+        "expected": 0.003493150684931507,
+        "lift": 78.4313725490196
       },
       {
         "topic": "Electromagnetic Scattering and Analysis",
         "pairs": 72,
         "observed": 0.3333333333333333,
-        "expected": 0.0025,
-        "lift": 133.33333333333331
+        "expected": 0.002361111111111111,
+        "lift": 141.17647058823528
       },
       {
         "topic": "Advanced Optical Imaging Technologies",
         "pairs": 72,
         "observed": 0.3194444444444444,
-        "expected": 0.0025694444444444445,
-        "lift": 124.32432432432431
-      },
-      {
-        "topic": "Radiation Detection and Scintillator Technologies",
-        "pairs": 71,
-        "observed": 0.2535211267605634,
-        "expected": 0.004084507042253521,
-        "lift": 62.068965517241374
-      },
-      {
-        "topic": "Ion channel regulation and function",
-        "pairs": 71,
-        "observed": 0.5070422535211268,
-        "expected": 0.004225352112676056,
-        "lift": 120.00000000000001
+        "expected": 0.0022222222222222222,
+        "lift": 143.75
       },
       {
         "topic": "Radioactive Decay and Measurement Techniques",
         "pairs": 71,
         "observed": 0.16901408450704225,
-        "expected": 0.009788732394366197,
-        "lift": 17.26618705035971
+        "expected": 0.009084507042253522,
+        "lift": 18.604651162790695
+      },
+      {
+        "topic": "Radiation Detection and Scintillator Technologies",
+        "pairs": 71,
+        "observed": 0.2535211267605634,
+        "expected": 0.003591549295774648,
+        "lift": 70.58823529411764
+      },
+      {
+        "topic": "Ion channel regulation and function",
+        "pairs": 71,
+        "observed": 0.5070422535211268,
+        "expected": 0.004436619718309859,
+        "lift": 114.28571428571429
       },
       {
         "topic": "Ultrasound Imaging and Elastography",
@@ -1934,15 +1940,15 @@
         "topic": "Thin-Film Transistor Technologies",
         "pairs": 69,
         "observed": 0.2898550724637681,
-        "expected": 0.004202898550724638,
-        "lift": 68.96551724137932
+        "expected": 0.0033333333333333335,
+        "lift": 86.95652173913044
       },
       {
         "topic": "Scientific Research and Discoveries",
         "pairs": 68,
         "observed": 0.07352941176470588,
-        "expected": 0.06470588235294118,
-        "lift": 1.1363636363636362
+        "expected": 0.06448529411764706,
+        "lift": 1.1402508551881414
       },
       {
         "topic": "Advanced optical system design",
@@ -1955,106 +1961,106 @@
         "topic": "Soil and Unsaturated Flow",
         "pairs": 67,
         "observed": 0.29850746268656714,
-        "expected": 0.0017164179104477613,
-        "lift": 173.91304347826085
+        "expected": 0.0023880597014925373,
+        "lift": 124.99999999999999
       },
       {
         "topic": "Catalytic Processes in Materials Science",
         "pairs": 67,
         "observed": 0.2537313432835821,
-        "expected": 0.004253731343283581,
-        "lift": 59.649122807017555
+        "expected": 0.003507462686567164,
+        "lift": 72.3404255319149
       },
       {
         "topic": "Pulsed Power Technology Applications",
         "pairs": 66,
         "observed": 0.42424242424242425,
-        "expected": 0.003787878787878788,
-        "lift": 112.0
+        "expected": 0.0033333333333333335,
+        "lift": 127.27272727272727
       },
       {
         "topic": "Magnetism in coordination complexes",
         "pairs": 66,
         "observed": 0.18181818181818182,
-        "expected": 0.0031818181818181815,
-        "lift": 57.14285714285715
+        "expected": 0.0026515151515151512,
+        "lift": 68.57142857142858
       },
       {
         "topic": "Nonlinear Photonic Systems",
         "pairs": 65,
         "observed": 0.38461538461538464,
-        "expected": 0.003076923076923077,
-        "lift": 125.0
+        "expected": 0.0025384615384615385,
+        "lift": 151.51515151515153
       },
       {
         "topic": "Organic and Molecular Conductors Research",
         "pairs": 64,
         "observed": 0.234375,
-        "expected": 0.001796875,
-        "lift": 130.43478260869566
+        "expected": 0.001875,
+        "lift": 125.0
       },
       {
         "topic": "Geophysical Methods and Applications",
         "pairs": 63,
         "observed": 0.5079365079365079,
-        "expected": 0.003492063492063492,
-        "lift": 145.45454545454544
+        "expected": 0.003412698412698413,
+        "lift": 148.83720930232556
       },
       {
         "topic": "Block Copolymer Self-Assembly",
         "pairs": 63,
         "observed": 0.42857142857142855,
-        "expected": 0.0038095238095238095,
-        "lift": 112.5
+        "expected": 0.004126984126984127,
+        "lift": 103.84615384615383
       },
       {
         "topic": "Science Education and Pedagogy",
         "pairs": 63,
         "observed": 0.5396825396825397,
-        "expected": 0.003412698412698413,
-        "lift": 158.13953488372093
+        "expected": 0.0038888888888888888,
+        "lift": 138.77551020408163
       },
       {
         "topic": "Nanoparticle-Based Drug Delivery",
         "pairs": 61,
         "observed": 0.32786885245901637,
-        "expected": 0.005409836065573771,
-        "lift": 60.6060606060606
+        "expected": 0.0069672131147540985,
+        "lift": 47.05882352941176
       },
       {
         "topic": "Medical Image Segmentation Techniques",
         "pairs": 61,
         "observed": 0.4262295081967213,
-        "expected": 0.005655737704918032,
-        "lift": 75.36231884057972
+        "expected": 0.004344262295081967,
+        "lift": 98.11320754716981
       },
       {
         "topic": "Optical Polarization and Ellipsometry",
         "pairs": 60,
         "observed": 0.4166666666666667,
-        "expected": 0.0024166666666666664,
-        "lift": 172.4137931034483
-      },
-      {
-        "topic": "Fluid Mechanics Fundamentals and Applications",
-        "pairs": 60,
-        "observed": 0.16666666666666666,
-        "expected": 0.002,
-        "lift": 83.33333333333333
+        "expected": 0.0029166666666666664,
+        "lift": 142.8571428571429
       },
       {
         "topic": "Statistical Mechanics and Entropy",
         "pairs": 60,
         "observed": 0.16666666666666666,
-        "expected": 0.00175,
-        "lift": 95.23809523809523
+        "expected": 0.0013333333333333333,
+        "lift": 125.0
       },
       {
         "topic": "Advanced Thermoelectric Materials and Devices",
         "pairs": 60,
         "observed": 0.4,
-        "expected": 0.003,
-        "lift": 133.33333333333334
+        "expected": 0.0033333333333333335,
+        "lift": 120.0
+      },
+      {
+        "topic": "Fluid Mechanics Fundamentals and Applications",
+        "pairs": 60,
+        "observed": 0.16666666666666666,
+        "expected": 0.0010833333333333333,
+        "lift": 153.84615384615384
       }
     ],
     "non_coauthor_pairs": 8452,
@@ -2075,7 +2081,7 @@
       "1980": 2780,
       "1990": 3269,
       "2000": 16629,
-      "2010": 11250
+      "2010": 11251
     },
     "by_basis": {
       "Recorded training years": {
@@ -2108,7 +2114,7 @@
         "1980": 408,
         "1990": 579,
         "2000": 503,
-        "2010": 671
+        "2010": 672
       },
       "Wikidata birth year + 28": {
         "1880": 59,
@@ -2158,7 +2164,7 @@
       "1980": 0.5388489208633094,
       "1990": 0.5481798715203426,
       "2000": 0.4248601840158759,
-      "2010": 0.5183111111111111
+      "2010": 0.518353924095636
     },
     "share_by_school": {
       "cavendish": {
@@ -2175,7 +2181,7 @@
         "1980": 0.5017985611510791,
         "1990": 0.5172835729580911,
         "2000": 0.3995429671056588,
-        "2010": 0.49564444444444444
+        "2010": 0.49568927206470537
       },
       "sommerfeld": {
         "1880": 0.0,
@@ -2191,7 +2197,7 @@
         "1980": 0.3064748201438849,
         "1990": 0.31752829611501987,
         "2000": 0.24775993745865657,
-        "2010": 0.3231111111111111
+        "2010": 0.32317127366456316
       },
       "copenhagen": {
         "1880": 0.0,
@@ -2207,7 +2213,7 @@
         "1980": 0.30287769784172663,
         "1990": 0.31752829611501987,
         "2000": 0.2489025196945096,
-        "2010": 0.3363555555555556
+        "2010": 0.33641454092969514
       },
       "gottingen": {
         "1880": 0.0,
@@ -2223,7 +2229,7 @@
         "1980": 0.35,
         "1990": 0.362496176200673,
         "2000": 0.29424499368572976,
-        "2010": 0.37724444444444444
+        "2010": 0.3772997955737268
       },
       "leiden": {
         "1880": 0.0,
@@ -2239,7 +2245,7 @@
         "1980": 0.258273381294964,
         "1990": 0.2517589476904252,
         "2000": 0.2117385290757111,
-        "2010": 0.27386666666666665
+        "2010": 0.2738423251266554
       },
       "landau": {
         "1880": 0.0,
@@ -2255,7 +2261,7 @@
         "1980": 0.009712230215827337,
         "1990": 0.005812174977057204,
         "2000": 0.0036081544290095615,
-        "2010": 0.005155555555555556
+        "2010": 0.005155097324682251
       },
       "berkeley": {
         "1880": 0.0,
@@ -2271,7 +2277,7 @@
         "1980": 0.09568345323741007,
         "1990": 0.09207708779443255,
         "2000": 0.07450838895904745,
-        "2010": 0.10746666666666667
+        "2010": 0.10754599591147454
       },
       "fermi": {
         "1880": 0.0,
@@ -2287,7 +2293,7 @@
         "1980": 0.09928057553956834,
         "1990": 0.10828999694096055,
         "2000": 0.0841902700102231,
-        "2010": 0.10951111111111111
+        "2010": 0.10950137765531953
       },
       "bethe": {
         "1880": 0.0,
@@ -2303,7 +2309,7 @@
         "1980": 0.033093525179856115,
         "1990": 0.03456714591618232,
         "2000": 0.02549762463166757,
-        "2010": 0.033244444444444445
+        "2010": 0.03324148964536486
       },
       "wheeler": {
         "1880": 0.0,
@@ -2319,7 +2325,7 @@
         "1980": 0.020863309352517987,
         "1990": 0.026613643315998775,
         "2000": 0.024535450117265017,
-        "2010": 0.03351111111111111
+        "2010": 0.03350813261043463
       },
       "qed-columbia-harvard": {
         "1880": 0.0,
@@ -2335,7 +2341,7 @@
         "1980": 0.05827338129496403,
         "1990": 0.06852248394004283,
         "2000": 0.05496421913524566,
-        "2010": 0.0768888888888889
+        "2010": 0.07688205492845081
       },
       "wigner": {
         "1880": 0.0,
@@ -2351,10 +2357,10 @@
         "1980": 0.051798561151079135,
         "1990": 0.05169776690119302,
         "2000": 0.04377894040531601,
-        "2010": 0.06364444444444445
+        "2010": 0.06363878766331882
       }
     },
-    "excluded_estimated": 12306,
+    "excluded_estimated": 12308,
     "by_source": {
       "Recorded training years": {
         "n": {
@@ -2463,7 +2469,7 @@
           "1980": 408,
           "1990": 579,
           "2000": 503,
-          "2010": 671
+          "2010": 672
         },
         "any": {
           "1960": 0.494949494949495,
@@ -2471,7 +2477,7 @@
           "1980": 0.32598039215686275,
           "1990": 0.3540587219343696,
           "2000": 0.4433399602385686,
-          "2010": 0.5350223546944859
+          "2010": 0.5357142857142857
         },
         "cavendish": {
           "1960": 0.42424242424242425,
@@ -2479,7 +2485,7 @@
           "1980": 0.2965686274509804,
           "1990": 0.34196891191709844,
           "2000": 0.4095427435387674,
-          "2010": 0.526080476900149
+          "2010": 0.5267857142857143
         },
         "gottingen": {
           "1960": 0.32323232323232326,
@@ -2487,7 +2493,7 @@
           "1980": 0.19362745098039216,
           "1990": 0.26424870466321243,
           "2000": 0.3101391650099404,
-          "2010": 0.38748137108792846
+          "2010": 0.38839285714285715
         },
         "copenhagen": {
           "1960": 0.21212121212121213,
@@ -2495,7 +2501,7 @@
           "1980": 0.18382352941176472,
           "1990": 0.23316062176165803,
           "2000": 0.30417495029821073,
-          "2010": 0.368107302533532
+          "2010": 0.36904761904761907
         },
         "sommerfeld": {
           "1960": 0.2727272727272727,
@@ -2503,7 +2509,7 @@
           "1980": 0.18137254901960784,
           "1990": 0.23316062176165803,
           "2000": 0.30417495029821073,
-          "2010": 0.32786885245901637
+          "2010": 0.3288690476190476
         },
         "leiden": {
           "1960": 0.21212121212121213,
@@ -2511,7 +2517,7 @@
           "1980": 0.1568627450980392,
           "1990": 0.16407599309153714,
           "2000": 0.22664015904572565,
-          "2010": 0.3055141579731744
+          "2010": 0.30505952380952384
         }
       },
       "Wikidata birth year + 28": {
@@ -2625,145 +2631,145 @@
       "first:adv_students": {
         "n": 734,
         "strata": 147,
-        "r": -0.0026742870603008264,
-        "perm_p": 0.9310689310689311,
+        "r": -0.004226790219274312,
+        "perm_p": 0.935064935064935,
         "bins": [
           {
             "bin": "Bottom third",
-            "n": 179,
-            "mean": -0.007740327322121458,
-            "lo": -0.0352117979371675,
-            "hi": 0.018623739704239743
+            "n": 178,
+            "mean": -0.006018506621955375,
+            "lo": -0.03491756129098847,
+            "hi": 0.01757761659809465
           },
           {
             "bin": "Middle third",
-            "n": 260,
-            "mean": 0.006052549879270518,
-            "lo": -0.020746025605393372,
-            "hi": 0.03128092992458457
+            "n": 262,
+            "mean": 0.00432991815518569,
+            "lo": -0.01900787298203509,
+            "hi": 0.029439630517907878
           },
           {
             "bin": "Top third",
-            "n": 295,
-            "mean": -0.0006377775523749145,
-            "lo": -0.0214389388376561,
-            "hi": 0.019451067837293393
+            "n": 294,
+            "mean": -0.00021477679575033793,
+            "lo": -0.02032744536771884,
+            "hi": 0.02122889561049377
           }
         ]
       },
       "first:adv_h": {
-        "n": 631,
+        "n": 628,
         "strata": 135,
-        "r": -0.004991447370265082,
+        "r": -0.005196515642855074,
         "perm_p": 0.9120879120879121,
         "bins": [
           {
             "bin": "Bottom third",
-            "n": 149,
-            "mean": 0.01554896757317979,
-            "lo": -0.012157421965878466,
-            "hi": 0.044047585265678875
+            "n": 148,
+            "mean": 0.014870127380989686,
+            "lo": -0.01237627483946836,
+            "hi": 0.042465357655239
           },
           {
             "bin": "Middle third",
             "n": 230,
-            "mean": -0.012068125517272519,
-            "lo": -0.03819506684829902,
-            "hi": 0.014516134134556985
+            "mean": -0.011894024256214736,
+            "lo": -0.03918187319369965,
+            "hi": 0.01385716153524311
           },
           {
             "bin": "Top third",
-            "n": 252,
-            "mean": 0.001820923414955908,
-            "lo": -0.02080149227937229,
-            "hi": 0.02481662975576656
+            "n": 250,
+            "mean": 0.002139386906171662,
+            "lo": -0.02174041183079769,
+            "hi": 0.024384160900726565
           }
         ]
       },
       "fac:adv_students": {
-        "n": 3606,
+        "n": 3605,
         "strata": 343,
-        "r": -0.011577628719913614,
-        "perm_p": 0.5244755244755245,
+        "r": -0.011642584373757583,
+        "perm_p": 0.5104895104895105,
         "bins": [
           {
             "bin": "Bottom third",
-            "n": 1024,
-            "mean": -0.0008467908544193253,
-            "lo": -0.011305608230267975,
-            "hi": 0.008390763371889511
+            "n": 1025,
+            "mean": -4.7835588572002766e-05,
+            "lo": -0.010374028492298596,
+            "hi": 0.009880200466288203
           },
           {
             "bin": "Middle third",
-            "n": 1269,
-            "mean": 0.003140824250257285,
-            "lo": -0.005552026936333615,
-            "hi": 0.011777463384445581
+            "n": 1270,
+            "mean": 0.002050391237113533,
+            "lo": -0.006343922667785108,
+            "hi": 0.010897408685498289
           },
           {
             "bin": "Top third",
-            "n": 1313,
-            "mean": -0.0023751653759718975,
-            "lo": -0.011740486437544861,
-            "hi": 0.005996938260799732
+            "n": 1310,
+            "mean": -0.0019503552617159468,
+            "lo": -0.011047382245285333,
+            "hi": 0.0068076408741750355
           }
         ]
       },
       "fac:adv_h": {
-        "n": 2631,
-        "strata": 278,
-        "r": 0.0431832754556292,
-        "perm_p": 0.04495504495504495,
+        "n": 2639,
+        "strata": 280,
+        "r": 0.04418945530692976,
+        "perm_p": 0.03696303696303696,
         "bins": [
           {
             "bin": "Bottom third",
-            "n": 750,
-            "mean": -0.01202829295922767,
-            "lo": -0.023437838761320547,
-            "hi": -0.0005181863604723247
+            "n": 753,
+            "mean": -0.011051511479275725,
+            "lo": -0.023253777569987366,
+            "hi": 0.0004114357713459299
           },
           {
             "bin": "Middle third",
-            "n": 896,
-            "mean": 0.0010904103219118305,
-            "lo": -0.009515692573002733,
-            "hi": 0.011625928466239943
+            "n": 891,
+            "mean": 0.0010274536852032596,
+            "lo": -0.00956330113714788,
+            "hi": 0.011082998197834114
           },
           {
             "bin": "Top third",
-            "n": 985,
-            "mean": 0.008166712762424111,
-            "lo": -0.0015463302747512815,
-            "hi": 0.0188624744603309
+            "n": 995,
+            "mean": 0.007443544633546229,
+            "lo": -0.002151765092938003,
+            "hi": 0.01719724564929619
           }
         ]
       },
       "got_ranked_first_job": {
         "n": 1574,
         "strata": 228,
-        "r": -0.006478965562689024,
-        "perm_p": 0.8271728271728271,
+        "r": -0.000624250718285949,
+        "perm_p": 0.974025974025974,
         "bins": [
           {
             "bin": "Bottom third",
-            "n": 426,
-            "mean": -0.015354927333899846,
-            "lo": -0.060632814116196886,
-            "hi": 0.026190937243719813
+            "n": 425,
+            "mean": -0.013719229949298504,
+            "lo": -0.05618281692227568,
+            "hi": 0.028170228407040636
           },
           {
             "bin": "Middle third",
-            "n": 552,
-            "mean": 0.019526687688215843,
-            "lo": -0.015936897723604213,
-            "hi": 0.0544195526758469
+            "n": 553,
+            "mean": 0.012781564716285122,
+            "lo": -0.02129591682819801,
+            "hi": 0.05164207691882546
           },
           {
             "bin": "Top third",
             "n": 596,
-            "mean": -0.007109953959150665,
-            "lo": -0.043442339715649335,
-            "hi": 0.02791499083627366
+            "mean": -0.0020763969121708,
+            "lo": -0.037009989140135056,
+            "hi": 0.03505637122118462
           }
         ]
       }

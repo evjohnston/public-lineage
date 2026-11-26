@@ -1,0 +1,5 @@
+advisor_pid,advisor_name,student_pid,student_name,year,institution,url,note,role,degree
+272389,Reyco Henning,,Chelsea Bartram,2019,"University of North Carolina, Chapel Hill",,"PhD in physics, dissertation: CALIOPE, a Search for CPT-Violation in Positronium (work at TUNL)",director,PhD
+,Chelsea Bartram,,Pamela Stark,,Stanford University,,"Student in the Bartram lab at SLAC; formal advisor Kent Irwin",mentor,
+169697,Kent D. Irwin,,Pamela Stark,,Stanford University,,"PhD advisor",director,PhD
+,Chelsea Bartram,,Barkotel Zemenu,,Stanford University,,"Student in the Bartram lab at SLAC",mentor,
