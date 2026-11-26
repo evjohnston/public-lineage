@@ -24,10 +24,12 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
 sys.path.insert(0, str(ROOT / "scripts"))
 from fetch_wikidata import chunks, qid, sparql, values, year  # noqa: E402
 
-OUT = ROOT / "data" / "review" / "wikidata_name_matches.csv"
+OUT = WORK / "data" / "review" / "wikidata_name_matches.csv"
 N = int(sys.argv[1]) if len(sys.argv) > 1 and sys.argv[1].isdigit() else 3000
 STOP = {"university", "of", "the", "and", "college", "de", "la", "le", "du", "des", "school", "institute", "at", "in", "universite", "state"}
 
@@ -52,11 +54,11 @@ def lit(s):
 
 
 def main():
-    lin = json.loads((ROOT / "explorer" / "data" / "lineage.json").read_text())
+    lin = json.loads((EXPL / "lineage.json").read_text())
     P = {r[0]: r for r in lin["people"]}
     has_adv = {t for _m, t, *_ in lin["edges"]}
     known_q = set()
-    for r in pd.read_parquet(ROOT / "data" / "external" / "merged_edges.parquet").itertuples(index=False):
+    for r in pd.read_parquet(WORK / "data" / "external" / "merged_edges.parquet").itertuples(index=False):
         if r.source == "wikidata" and "-" in str(r.source_id):
             known_q |= set(str(r.source_id).split("-", 1))
     roots = sorted((p for p, r in P.items() if not r[3] & 1 and p not in has_adv and r[5]), key=lambda p: -P[p][5])[:N]
@@ -75,7 +77,7 @@ def main():
           ?item rdfs:label|skos:altLabel ?l . ?item wdt:P31 wd:Q5 .
           OPTIONAL {{ ?item wdt:P569 ?birth }}
           OPTIONAL {{ ?item wdt:P184 ?adv . OPTIONAL {{ ?adv rdfs:label ?advLabel FILTER(LANG(?advLabel) = "en") }} }}
-          OPTIONAL {{ {{ ?item wdt:P106 wd:Q2306091 }} UNION {{ ?item wdt:P101 wd:Q21201 }} BIND(1 AS ?soc) }}
+          OPTIONAL {{ {{ ?item wdt:P106 wd:{CFG['wd_occ']} }} UNION {{ ?item wdt:P101 wd:{CFG['wd_field']} }} BIND(1 AS ?soc) }}
         }}"""
         for r in sparql(f"namematch_{i}", q):
             it = qid(r["item"])

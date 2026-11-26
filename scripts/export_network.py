@@ -28,9 +28,11 @@ import networkx as nx
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "explorer" / "data"
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
+DATA = EXPL
 K_SAMPLE = 500
-LAYOUT = ROOT / "data" / "external" / "network_layout.json"
+LAYOUT = WORK / "data" / "external" / "network_layout.json"
 SCALE = 60.0
 
 

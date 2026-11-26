@@ -1,7 +1,7 @@
-# Academic lineage: sociology
+# Academic lineage: sociology and physics
 
-A network of advisor–student ties among sociologists (about 45,000 people and 38,000 advisor links),
-with a local explorer for lineages, academic kinship (siblings, cousins, "n times removed"),
+Networks of advisor–student ties, one per field: sociology (about 45,000 people and 38,000 advisor
+links) and physics, switched with the Sociology / Physics tabs in the explorer header. Each has a local explorer for lineages, academic kinship (siblings, cousins, "n times removed"),
 co-authorship, schools of thought, institutions and placement, and time.
 
 ## Run the explorer
@@ -19,8 +19,17 @@ Raw downloads (`data/raw/`) and the DuckDB file are not in the repo. The fetch s
 `scripts/` recreate them; API keys go in `.env` (not committed). Then:
 
 ```sh
-sh scripts/build_all.sh
+sh scripts/build_all.sh                                    # sociology
+LINEAGE_FIELD=physics sh scripts/build_field.sh --fetch    # physics, first time (pulls every source)
+LINEAGE_FIELD=physics sh scripts/build_field.sh            # physics, rebuild from cache
 ```
+
+Sociology keeps the original layout (`data/`, `explorer/data/`, `docs/analysis/`). Other fields get
+their own tree: `fields/<field>/data/` (schools, manual edges, reviews), `explorer/data/<field>/` and
+`docs/analysis/<field>/`. Field settings live in [scripts/field.py](scripts/field.py); adding a field
+means adding an entry there and a `schools.json`. Physics uses the Academic Family Tree, Wikidata,
+OpenAlex, ORCID and the faculty hiring census; the sociology-only sources (NSF grants, theses.fr and
+the dissertation repositories) are not harvested for it.
 
 The analysis write-up is in [docs/analysis/README.md](docs/analysis/README.md).
 

@@ -1,7 +1,51 @@
-/* Lineage Explorer: sociology advisor -> student network.
-   Data: data/lineage.json, built by scripts/export_explorer.py. */
+/* Lineage Explorer: advisor -> student networks, one field at a time (?field=physics).
+   Data: data/lineage.json (sociology) or data/<field>/lineage.json, built by scripts/export_explorer.py
+   with LINEAGE_FIELD set. */
 (() => {
   "use strict";
+
+  // ---- which field is loaded. Each field has its own data folder, examples and findings.
+  const FIELDS = {
+    sociology: {
+      label: "Sociology", lower: "sociology", noun: "sociologist", nouns: "sociologists", tree: "sociology",
+      starts: ["Talcott Parsons", "Robert K. Merton", "Charles Tilly", "Robert M. Hauser", "Pitirim Sorokin", "Erik Olin Wright", "Arlie Russell Hochschild", "Michael Burawoy"],
+      pairs: [["Talcott Parsons", "Erik Olin Wright"], ["Pitirim Sorokin", "Robert M. Hauser"], ["Robert K. Merton", "Michael Burawoy"]],
+      kin: "Erik Olin Wright",
+      findings: [
+        "<b>Ten programs trained a third of US sociology faculty</b>, and nine in ten moves between departments go down the prestige ranking.",
+        "<b>Students publish on their advisor's topics</b> far more often than chance, though much of that comes from joint papers.",
+        "<b>Students of the most prolific advisors advise a little more</b>; advisor standing shows no clear effect on where students are hired.",
+        "<b>The rise and fall of schools can't be read off these records yet</b>: within any one source of PhD years, the shares stay flat.",
+      ],
+      sources: "Academic Family Tree snapshot of 2022-03-12 (CC-BY-4.0), extended with Wikidata, theses.fr, NSF dissertation grants, six US dissertation repositories, OpenAlex, ORCID and the US faculty hiring census. Ties read from dissertation text are kept separate and marked unverified.",
+      blurb: "Every recorded advisor-to-student tie in the field, from the Academic Family Tree and eight outside sources.",
+    },
+    physics: {
+      label: "Physics", lower: "physics", noun: "physicist", nouns: "physicists", tree: "physics",
+      starts: ["Arnold Johannes Wilhelm Sommerfeld", "Niels Bohr", "Ernest Rutherford", "Max Born", "Enrico Fermi", "John Archibald Wheeler", "Richard P. Feynman", "Hans Albrecht Bethe"],
+      pairs: [["Ernest Rutherford", "Richard P. Feynman"], ["Arnold Johannes Wilhelm Sommerfeld", "Kip S. Thorne"], ["Max Born", "Murray Gell-Mann"]],
+      kin: "Richard P. Feynman",
+      findings: [
+        "<b>Ten programs trained 30% of US physics faculty</b>, and nearly nine in ten moves between departments go down the prestige ranking.",
+        "<b>Students publish on their advisor's topics</b> far more than chance, and 38% still do when they never wrote a paper together.",
+        "<b>About half of physicists since the 1950s descend from the Cavendish</b>, and the mid-century rise of the big schools holds up in every source of PhD years.",
+        "<b>Advisor standing shows no detectable effect on where students are hired</b>, in samples several times larger than sociology's.",
+      ],
+      sources: "Academic Family Tree snapshot of 2022-03-12 (CC-BY-4.0), extended with Wikidata, OpenAlex and the US faculty hiring census (physics).",
+      blurb: "Every recorded advisor-to-student tie in physics, from the Academic Family Tree, Wikidata and OpenAlex.",
+    },
+  };
+  const FIELD = (() => { try { const f = new URLSearchParams(location.search).get("field"); return f && FIELDS[f.toLowerCase()] ? f.toLowerCase() : "sociology"; } catch { return "sociology"; } })();
+  const FLD = FIELDS[FIELD];
+  const DATA = FIELD === "sociology" ? "data/" : `data/${FIELD}/`;
+  // per-field browser storage, so pins and recent people don't mix across fields (sociology keeps its old keys)
+  // header: mark the current field, label the legend, title the tab
+  document.querySelectorAll("#fieldSwitch a").forEach((a) => { if (a.dataset.field === FIELD) a.setAttribute("aria-current", "page"); });
+  { const l = document.getElementById("fieldLegend"); if (l) l.textContent = FLD.label; }
+  if (FIELD !== "sociology") document.title = `Lineage Explorer · ${FLD.label}`;
+  const SCHOOLS_FILE = FIELD === "sociology" ? "data/schools.json" : `fields/${FIELD}/data/schools.json`;
+  const BUILD = FIELD === "sociology" ? "scripts/build_all.sh" : `LINEAGE_FIELD=${FIELD} sh scripts/build_field.sh`;
+  const KEY = (k) => FIELD === "sociology" ? `lineage:${k}` : `lineage:${FIELD}:${k}`;
 
   const F = { OUTSIDE: 1, ISOLATED: 2, NO_ADVISOR: 4, MULTI_ADVISOR: 8, EDUC: 16, SMALL: 32, PROF_INST: 64, EDU_AREA: 128, DUP: 256, EXTERNAL: 512, KNOWN_ROOT: 1024 };
   const SRC = { AFT: 1, NSF: 2, WIKIDATA: 4, DISS: 8 };
@@ -108,8 +152,8 @@
     subfield: { label: "Subfield", key: (pid) => PC.get(pid)?.sf?.[0], name: (k) => CTX.subfields[k]?.name, href: (k) => `#/schools/subfields/${k}` },
   };
   let pins = {};
-  try { pins = JSON.parse(localStorage.getItem("lineage:pins") || "{}"); } catch { pins = {}; }
-  const savePins = () => { try { localStorage.setItem("lineage:pins", JSON.stringify(pins)); } catch { /* storage unavailable */ } };
+  try { pins = JSON.parse(localStorage.getItem(KEY("pins")) || "{}"); } catch { pins = {}; }
+  const savePins = () => { try { localStorage.setItem(KEY("pins"), JSON.stringify(pins)); } catch { /* storage unavailable */ } };
 
   function load(data) {
     META = data.meta;
@@ -140,22 +184,23 @@
     META.dangling = dangling;
     if (dangling) console.warn(`${dangling} advisor links point to people missing from the export; skipped.`);
     let formal = false;
-    try { formal = localStorage.getItem("lineage:formal") === "1"; } catch { /* storage unavailable */ }
+    try { formal = localStorage.getItem(KEY("formal")) === "1"; } catch { /* storage unavailable */ }
     applyFormal(formal);
   }
 
-  // Mentor links (relation 6: documented trainer, not the formal thesis director) count in lineages by
-  // default. "Formal directors only" rebuilds the advisor maps without them and switches to the
+  // Mentor links count in lineages by default: relation 6 (a documented trainer who was not the formal
+  // thesis director) and the Academic Family Tree's non-PhD ties (0 undergraduate research, 2 postdoc,
+  // 3 research scientist). "Formal directors only" rebuilds the advisor maps without them and switches to the
   // descendant counts the export computed over formal directors alone.
   const ALL_EDGES = [];
   let FORMAL = false;
-  const MENTOR = 6;
-  const isMentor = (m, t) => relOf.get(m + ">" + t) === MENTOR;
+  const NONFORMAL = new Set([0, 2, 3, 6]);
+  const isMentor = (m, t) => NONFORMAL.has(relOf.get(m + ">" + t));
   function applyFormal(on) {
     FORMAL = !!on;
     kids.clear(); parents.clear();
     for (const [m, t, rel] of ALL_EDGES) {
-      if (FORMAL && rel === MENTOR) continue;
+      if (FORMAL && NONFORMAL.has(rel)) continue;
       if (!kids.has(m)) kids.set(m, []);
       if (!parents.has(t)) parents.set(t, []);
       kids.get(m).push(t); parents.get(t).push(m);
@@ -171,7 +216,7 @@
     if (tag) tag.hidden = !FORMAL;
   }
   function setFormal(on) {
-    try { localStorage.setItem("lineage:formal", on ? "1" : "0"); } catch { /* storage unavailable */ }
+    try { localStorage.setItem(KEY("formal"), on ? "1" : "0"); } catch { /* storage unavailable */ }
     applyFormal(on); route();
   }
   const formalToggle = () => `<label class="check"><input type="checkbox" data-formal ${FORMAL ? "checked" : ""}> Formal directors only</label>`;
@@ -179,6 +224,8 @@
 
   const isOut = (p) => (p.f & F.OUTSIDE) !== 0;
   const findByName = (name) => index.find((p) => p.key === norm(name));
+  // a link in a long ancestor chain: most of their descendants run through one student
+  const isChain = (p) => (kids.get(p.id) || []).some((c) => (P.get(c)?.nd || 0) >= 0.8 * p.nd);
 
   /* ---------------------------------------------------------------- search */
   function searchPeople(q, limit = 12) {
@@ -294,7 +341,6 @@
           "curve-style": "straight", opacity: 1,
           "transition-property": "opacity, line-color, width", "transition-duration": 200,
         } },
-        { selector: "edge.postdoc", style: { "line-style": "dashed" } },
         { selector: "edge.ext", style: { "line-style": "dotted", width: 1.8 } },
         // a second advisor drawn without steering the layout: bow it away from the rows it crosses
         { selector: "edge.second", style: { opacity: 0.45, "curve-style": "unbundled-bezier", "control-point-distances": "data(bow)", "control-point-weights": 0.5 } },
@@ -368,7 +414,7 @@
   function edgeEl(m, t, cls = "") {
     const rel = relOf.get(m + ">" + t);
     const outside = !((srcOf.get(m + ">" + t) ?? 1) & SRC.AFT);
-    return { group: "edges", data: { id: `e${m}-${t}`, source: String(m), target: String(t) }, classes: [cls, rel === 2 ? "postdoc" : "", rel === MENTOR ? "mentor" : "", outside && rel !== MENTOR ? "ext" : ""].filter(Boolean).join(" ") };
+    return { group: "edges", data: { id: `e${m}-${t}`, source: String(m), target: String(t) }, classes: [cls, NONFORMAL.has(rel) ? "mentor" : "", outside && !NONFORMAL.has(rel) ? "ext" : ""].filter(Boolean).join(" ") };
   }
 
   // First frame: fit what matters (by default the focus, its ancestors and its first generation;
@@ -635,8 +681,7 @@
   }
 
   function startChips() {
-    const names = ["Talcott Parsons", "Robert K. Merton", "Charles Tilly", "Robert M. Hauser", "Pitirim Sorokin", "Erik Olin Wright", "Arlie Russell Hochschild", "Michael Burawoy"];
-    return names.map(findByName).filter(Boolean)
+    return FLD.starts.map(findByName).filter(Boolean)
       .map((p) => `<a class="chip" href="#/p/${p.id}">${esc(p.name)}<small>${fmt(p.nd)}</small></a>`).join("");
   }
 
@@ -645,7 +690,7 @@
     if (pid == null) {
       // Return to the last lineage viewed; the starter screen is only for a first visit.
       let last = null;
-      try { last = +localStorage.getItem("lineage:last"); } catch { /* storage unavailable */ }
+      try { last = +localStorage.getItem(KEY("last")); } catch { /* storage unavailable */ }
       if (last && P.has(last)) { location.replace(lineageHash(last, params)); return; }
       state.focus = null;
       els.toolbar.innerHTML = "";
@@ -656,7 +701,7 @@
     }
     clearNotice();
     state.focus = pid;
-    try { localStorage.setItem("lineage:last", String(pid)); } catch { /* storage unavailable */ }
+    try { localStorage.setItem(KEY("last"), String(pid)); } catch { /* storage unavailable */ }
     const depth = Math.min(4, Math.max(1, +(params.get("d") || 1)));
     const showOut = params.get("out") !== "0";
     const p = P.get(pid);
@@ -674,7 +719,7 @@
     const budget0 = canvasBudget(true);
     const elements = make(budget0);
     if (elements.length === 1) {
-      notice(`<h2>${esc(p.name)} has no recorded advisor or students</h2><p class="note">No mentorship links on record. The Academic Family Tree lists this person under sociology, but nobody has connected them yet.</p>`, "lonely");
+      notice(`<h2>${esc(p.name)} has no recorded advisor or students</h2><p class="note">No mentorship links on record. The Academic Family Tree lists this person under ${FLD.lower}, but nobody has connected them yet.</p>`, "lonely");
     }
     draw(elements, { fitTo: `node[id="${pid}"]`, after: byYear ? () => timelineLayout(pid) : null, grow: byYear ? null : { budget: budget0, build: make } });
     renderPanel(pid);
@@ -797,7 +842,7 @@
     { const ps = parents.get(p.id) || [], dirs = ps.filter((m) => !isMentor(m, p.id)).length, ments = ps.length - dirs;
       if (dirs > 1) n.push(`Co-advised: ${dirs} thesis directors on record${ments ? `, plus ${plural(ments, "mentor")}` : ""}.`);
       else if (ments) n.push(`${dirs ? "One thesis director" : "No thesis director"} on record, plus ${plural(ments, "documented mentor")} who trained them.`); }
-    if (p.f & F.OUTSIDE) n.push("Outside sociology. Kept because they advised or trained a sociologist.");
+    if (p.f & F.OUTSIDE) n.push(`Outside ${FLD.lower}. Kept because they advised or trained a ${FLD.noun}.`);
     if (p.f & F.EXTERNAL) n.push("Not in the Academic Family Tree. Known only from an outside source; see the evidence below.");
     if (p.f & PROFDOC) {
       if (p.f & F.PROF_INST) n.push("Practitioner-doctorate institution: likely an Ed.D.-style or professional doctorate.");
@@ -835,7 +880,7 @@
         <a class="btn" href="#/connect/${pid}">${inConnect ? "Start a new connection here" : "Connect to someone"}</a>
         ${state.view !== "net" ? `<a class="btn" href="#/net?p=${pid}">See in sociogram</a>` : ""}
         ${p.oa ? `<a class="btn" href="https://openalex.org/${esc(p.oa)}" target="_blank" rel="noopener">OpenAlex<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3L5 11"/></svg></a>` : ""}
-        ${pid < 900000000 ? `<a class="btn" href="https://academictree.org/sociology/peopleinfo.php?pid=${pid}" target="_blank" rel="noopener">Academic Tree<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3L5 11"/></svg></a>` : ""}
+        ${pid < 900000000 ? `<a class="btn" href="https://academictree.org/${FLD.tree}/peopleinfo.php?pid=${pid}" target="_blank" rel="noopener">Academic Tree<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3L5 11"/></svg></a>` : ""}
       </div>
       ${flagNotes(p)}
       <div class="stats">
@@ -849,7 +894,7 @@
       </div>
       ${contextRows(pid)}
       <h3 id="advisors">Advisors</h3>${personList(adv.filter((m) => !isMentor(m, pid)))}
-      ${adv.some((m) => isMentor(m, pid)) ? `<h3>Mentors <span class="muted">· not the formal director</span></h3>${personList(adv.filter((m) => isMentor(m, pid)))}` : ""}
+      ${adv.some((m) => isMentor(m, pid)) ? `<h3>Mentors <span class="muted">· postdoc, research or informal; not the formal director</span></h3>${personList(adv.filter((m) => isMentor(m, pid)))}` : ""}
       <h3 id="students">Students</h3>${personList(stu.filter((t) => !isMentor(pid, t)))}
       ${stu.some((t) => isMentor(pid, t)) ? `<h3>Mentored <span class="muted">· not as formal director</span></h3>${personList(stu.filter((t) => isMentor(pid, t)))}` : ""}
       ${careerBlock(pid)}
@@ -906,11 +951,11 @@
   function renderPanelIntro() {
     const soc = index.filter((p) => !isOut(p)).length;
     els.panel.innerHTML = `
-      <h2>The sociology tree</h2>
+      <h2>The ${FLD.lower} tree</h2>
       <p class="inst">${esc(META.source)}</p>
       <div class="stats">
         <div class="stat"><span>People</span><b>${fmt(META.people)}</b></div>
-        <div class="stat"><span>Tagged sociology</span><b>${fmt(soc)}</b></div>
+        <div class="stat"><span>Tagged ${FLD.lower}</span><b>${fmt(soc)}</b></div>
         <div class="stat"><span>Advisor links</span><b>${fmt(META.edges)}</b></div>
         <div class="stat"><span>Separate clusters</span><b>${fmt(META.clusters)}</b></div>
         <div class="stat"><span>Largest cluster</span><b>${fmt(META.largest_cluster)}</b></div>
@@ -968,10 +1013,10 @@
     connectToolbar(a, b);
     if (!a || !b) {
       cy.elements().remove();
-      const ex = [["Talcott Parsons", "Erik Olin Wright"], ["Pitirim Sorokin", "Robert M. Hauser"], ["Robert K. Merton", "Michael Burawoy"]]
+      const ex = FLD.pairs
         .map(([x, y]) => [findByName(x), findByName(y)]).filter(([x, y]) => x && y)
         .map(([x, y]) => `<a class="chip" href="#/connect/${x.id}/${y.id}">${esc(x.name)} → ${esc(y.name)}</a>`).join("");
-      notice(`<h2>Trace how two sociologists are connected</h2><p>Pick two people. The shortest lineage path between them is drawn in red, along with their nearest shared academic ancestor.</p><div class="starts">${ex}</div>`);
+      notice(`<h2>Trace how two ${FLD.nouns} are connected</h2><p>Pick two people. The shortest lineage path between them is drawn in red, along with their nearest shared academic ancestor.</p><div class="starts">${ex}</div>`);
       if (a) renderPanel(a, { inConnect: true }); else renderPanelIntro();
       return;
     }
@@ -1080,15 +1125,16 @@
     state.view = "dynasties"; setTab("dynasties"); showCanvas(false); clearNotice(); els.toolbar.innerHTML = "";
     const sort = COLS[params.get("sort")] ? params.get("sort") : "nd";
     const socOnly = params.get("all") !== "1";
-    const rows = index.filter((p) => !socOnly || !isOut(p)).sort((x, y) => y[sort] - x[sort] || y.nd - x.nd).slice(0, 100);
+    // ranked by descendants, ancestor chains collapse to the person where the family branches
+    const rows = index.filter((p) => (!socOnly || !isOut(p)) && (sort !== "nd" || !isChain(p))).sort((x, y) => y[sort] - x[sort] || y.nd - x.nd).slice(0, 100);
     const setQ = (k, v) => { const q = new URLSearchParams(params); if (v == null) q.delete(k); else q.set(k, v); go(`#/dynasties${q.toString() ? "?" + q : ""}`); };
     const t = personTable(rows, { sortKey: sort, onSort: (k) => k !== "name" && setQ("sort", k === "nd" ? null : k) });
     els.sheet.innerHTML = `
       <h2>Dynasties</h2>
-      <p class="lede">The 100 largest academic families, ranked by ${COLS[sort].toLowerCase()}. Descendant counts include everyone below a person, inside the field or out. Double-click a row, or press Enter, to open its lineage.</p>
+      <p class="lede">The 100 largest academic families, ranked by ${COLS[sort].toLowerCase()}${sort === "nd" ? ", each listed at the person where the family branches (ancestors whose line runs through one student are folded in)" : ""}. Descendant counts include everyone below a person, inside the field or out. Double-click a row, or press Enter, to open its lineage.</p>
       <div class="sheet-controls">
         <span class="seg" role="group" aria-label="Rank by">${Object.entries(COLS).filter(([k]) => k !== "cs").map(([k, l]) => `<button type="button" data-k="${k}" aria-pressed="${k === sort}">${l}</button>`).join("")}</span>
-        <label class="check"><input type="checkbox" id="socOnly" ${socOnly ? "checked" : ""}> Sociology only</label>
+        <label class="check"><input type="checkbox" id="socOnly" ${socOnly ? "checked" : ""}> ${FLD.label} only</label>
       </div>
       ${t.html}`;
     t.bind(els.sheet);
@@ -1100,13 +1146,13 @@
 
   const GAPS = [
     { key: "no-advisor", label: "Missing advisors, biggest lines first", why: "Students on record but no advisor. A few are true founders; most are missing links, and each one filled at the top reconnects the most of the tree.", test: (p) => (p.f & F.NO_ADVISOR) && !(p.f & F.KNOWN_ROOT) && !isOut(p) && p.nd > 0, sort: "nd", curate: true },
-    { key: "isolated", label: "No links at all", why: "Tagged sociology, but no advisor or student on record.", test: (p) => p.f & F.ISOLATED },
+    { key: "isolated", label: "No links at all", why: `Tagged ${FLD.lower}, but no advisor or student on record.`, test: (p) => p.f & F.ISOLATED },
     { key: "small", label: "Small fragments", why: "Clusters of three or fewer, cut off from the main tree.", test: (p) => (p.f & F.SMALL) && !isOut(p) },
     { key: "prof-inst", label: "Practitioner-doctorate institution", why: "Capella, Walden, Alliant, La Verne and similar. Likely Ed.D.-style or professional doctorates.", test: (p) => (p.f & F.PROF_INST) && !isOut(p) },
     { key: "edu-area", label: "Education research area", why: "Research area is an education subject, or also listed in the education tree. Weaker signal; many are real sociologists.", test: (p) => (p.f & (F.EDU_AREA | F.EDUC)) && !(p.f & F.PROF_INST) && !isOut(p) },
     { key: "duplicate", label: "Possible duplicates", why: "Same name, or compatible names sharing an advisor or student.", test: (p) => p.f & F.DUP },
     { key: "multi", label: "Co-advised", why: "Two or more advisors on record. Not an error; worth a check.", test: (p) => p.f & F.MULTI_ADVISOR },
-    { key: "outside", label: "Outside the field", why: "Kept because they advised or trained a sociologist.", test: (p) => p.f & F.OUTSIDE },
+    { key: "outside", label: "Outside the field", why: `Kept because they advised or trained a ${FLD.noun}.`, test: (p) => p.f & F.OUTSIDE },
     { key: "no-openalex", label: "Not matched to OpenAlex", why: "No publication record linked yet.", test: (p) => !p.oa && !isOut(p), pending: () => !META.openalex_matched },
   ];
 
@@ -1183,7 +1229,7 @@
 
   // Record panel sections: every h3 in the panel becomes a collapsible section with a count, so the
   // record reads as a short summary first. Open/closed state is remembered per section title.
-  const SEC_KEY = "lineage:sec";
+  const SEC_KEY = "lineage:sec";  // panel sections: shared across fields
   let secState = {};
   try { secState = JSON.parse(localStorage.getItem(SEC_KEY) || "{}"); } catch { secState = {}; }
   let sectioning = false;
@@ -1217,7 +1263,7 @@
   }).observe(els.panel, { childList: true });
 
   // Recent people in the rail
-  const RECENT_KEY = "lineage:recent";
+  const RECENT_KEY = KEY("recent");
   function pushRecent(pid) {
     let r = [];
     try { r = JSON.parse(localStorage.getItem(RECENT_KEY) || "[]"); } catch { r = []; }
@@ -1240,7 +1286,7 @@
     if (CO.size) set("co", short(CO.size));
     const gap = GAPS.find((g) => g.key === "no-advisor");
     if (gap) set("gaps", short(index.reduce((n, p) => n + (gap.test(p) ? 1 : 0), 0)));
-    $("#fieldCounts").innerHTML = `<b>${fmt(soc)}</b> sociologists · <b>${fmt(META.edges)}</b> advisor links`;
+    $("#fieldCounts").innerHTML = `<b>${fmt(soc)}</b> ${FLD.nouns} · <b>${fmt(META.edges)}</b> advisor links`;
     renderRecent();
     const t = $("#railToggle");
     t.addEventListener("click", () => { const o = !els.rail.classList.contains("open"); els.rail.classList.toggle("open", o); t.setAttribute("aria-expanded", String(o)); });
@@ -1253,11 +1299,13 @@
     state.view = "home"; setTab("home"); showCanvas(false); clearNotice(); els.toolbar.innerHTML = "";
     els.legend.hidden = true;
     const soc = index.filter((p) => !isOut(p));
-    const pa = findByName("Talcott Parsons"), bu = findByName("Michael Burawoy"), wr = findByName("Erik Olin Wright");
+    const [pa, bu] = (FLD.pairs[0] || []).map(findByName), wr = findByName(FLD.kin);
     const gapN = (k) => { const g = GAPS.find((x) => x.key === k); return g ? index.reduce((n, p) => n + (g.test(p) ? 1 : 0), 0) : 0; };
     const schools = CTX?.schools ? CTX.schools.map((x, i) => ({ i, name: x.name, size: x.size, founders: x.founders })).sort((a, b) => b.size - a.size) : [];
     const smax = Math.max(1, ...schools.map((x) => x.size));
-    const top = soc.slice().sort((a, b) => b.nd - a.nd).slice(0, 12);
+    // skip links in a long ancestor chain: someone whose descendants mostly run through one student is
+    // listed through that student instead, so each entry is a real branching lineage
+    const top = soc.slice().sort((a, b) => b.nd - a.nd).filter((p) => !isChain(p)).slice(0, 12);
     const views = [
       ["Lineage", "#/p", "A person's ancestors and descendants as a tree"],
       ["Relatives", wr ? `#/kin/${wr.id}` : "#/kin", "Siblings, cousins and “times removed”"],
@@ -1271,7 +1319,7 @@
     ];
     const health = [
       ["Missing advisors", "no-advisor", "People with students but no advisor on record"],
-      ["No links at all", "isolated", "Tagged sociology, nobody connected"],
+      ["No links at all", "isolated", `Tagged ${FLD.lower}, nobody connected`],
       ["Small fragments", "small", "Clusters cut off from the main tree"],
       ["Possible duplicates", "duplicate", "Same person recorded twice?"],
     ];
@@ -1279,8 +1327,8 @@
       <div class="home">
         <header class="home-head">
           <div>
-            <h1>Who trained whom in sociology</h1>
-            <p>Every recorded advisor-to-student tie in the field, from the Academic Family Tree and eight outside sources. Start from a person, a school, or the whole network.</p>
+            <h1>Who trained whom in ${FLD.lower}</h1>
+            <p>${FLD.blurb} Start from a person, a school, or the whole network.</p>
             <div class="home-search" role="combobox" aria-expanded="false" aria-haspopup="listbox">
               <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4.5 4.5"/></svg>
               <input id="homeSearch" type="search" placeholder="Search ${fmt(META.people)} people by name" autocomplete="off" spellcheck="false" aria-label="Search people">
@@ -1288,7 +1336,7 @@
             </div>
           </div>
           <div class="ledger" aria-label="The data at a glance">
-            <b>${fmt(soc.length)}</b><span>sociologists</span>
+            <b>${fmt(soc.length)}</b><span>${FLD.nouns}</span>
             <b>${fmt(META.edges)}</b><span>advisor links</span>
             <b>${fmt(META.largest_cluster)}</b><span>on the main network</span>
             <b>${fmt(META.people_with_phd_year)}</b><span>with a recorded PhD year</span>
@@ -1297,13 +1345,8 @@
         </header>
         <div class="home-grid">
           <section class="tile">
-            <div class="tile-head"><h2>What the data shows so far</h2><a href="${REPO}/blob/main/docs/analysis/README.md" target="_blank" rel="noopener">Read the analysis</a></div>
-            <ol class="findings">
-              <li><b>Ten programs trained a third of US sociology faculty</b>, and nine in ten moves between departments go down the prestige ranking.</li>
-              <li><b>Students publish on their advisor's topics</b> far more often than chance, though much of that comes from joint papers.</li>
-              <li><b>Students of the most prolific advisors advise a little more</b>; advisor standing shows no clear effect on where students are hired.</li>
-              <li><b>The rise and fall of schools can't be read off these records yet</b>: within any one source of PhD years, the shares stay flat.</li>
-            </ol>
+            <div class="tile-head"><h2>What the data shows so far</h2><a href="${REPO}/blob/main/docs/analysis/${FIELD === "sociology" ? "" : FIELD + "/"}README.md" target="_blank" rel="noopener">Read the analysis</a></div>
+            <ol class="findings">${(FLD.findings || ["<b>Analyses for this field haven't been written up yet.</b>"]).map((f) => `<li>${f}</li>`).join("")}</ol>
           </section>
           <section class="tile">
             <div class="tile-head"><h2>Where the record is thin</h2><a href="#/gaps">Data gaps</a></div>
@@ -1325,7 +1368,7 @@
     els.sheet.hidden = false;
     attachSearch($("#homeSearch"), $("#homeRes"), (p) => go(lineageHash(p.id, new URLSearchParams())), { suggest: () => top });
     let last = null;
-    try { last = +localStorage.getItem("lineage:last"); } catch { /* storage unavailable */ }
+    try { last = +localStorage.getItem(KEY("last")); } catch { /* storage unavailable */ }
     const lp = last && P.has(last) ? P.get(last) : null;
     els.panel.innerHTML = `
       <h2>Start here</h2>
@@ -1333,7 +1376,7 @@
       ${lp ? `<div class="actions"><a class="btn primary" href="${lineageHash(lp.id, new URLSearchParams())}">Back to ${esc(lp.name)}</a></div>` : ""}
       <div class="starts">${startChips()}</div>
       <h3>About the data</h3>
-      <p class="muted">Academic Family Tree snapshot of 2022-03-12 (CC-BY-4.0), extended with Wikidata, theses.fr, NSF dissertation grants, six US dissertation repositories, OpenAlex, ORCID and the US faculty hiring census. Ties read from dissertation text are kept separate and marked unverified.</p>
+      <p class="muted">${FLD.sources}</p>
       <h3>Cite</h3>
       <p class="muted">${esc(META.citation || "")}</p>
       <div class="actions"><a class="btn" href="${REPO}" target="_blank" rel="noopener">Code and data on GitHub<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3L5 11"/></svg></a></div>`;
@@ -1346,7 +1389,7 @@
   const NET = { data: null, byId: new Map(), ids: [], sel: null, three: null, nodes: [], size: "pagerank" };
   const NET_SCOPES = {
     all: { label: "Everyone", test: () => true },
-    soc: { label: "Sociologists only", test: (n) => !isOut(P.get(n.id)) },
+    soc: { label: `${FLD.label[0]}${FLD.nouns.slice(1)} only`, test: (n) => !isOut(P.get(n.id)) },
     main: { label: "Main tree", test: (n) => n.comp === 0 },
     advisors: { label: "Advisors only", test: (n) => (kids.get(n.id) || []).length > 0 },
   };
@@ -1363,8 +1406,8 @@
 
   async function netData() {
     if (NET.data) return NET.data;
-    const res = await fetch("data/network.json");
-    if (!res.ok) throw new Error("data/network.json: " + res.status);
+    const res = await fetch(DATA + "network.json");
+    if (!res.ok) throw new Error(DATA + "network.json: " + res.status);
     const d = await res.json();
     for (const [id, comp, deg, pr, bt, ev, core, x, y, z] of d.nodes) {
       if (P.has(id) && x != null) NET.byId.set(id, { id, comp, deg, pr, bt: bt || 0, ev: ev || 0, core, x, y, z });
@@ -1517,7 +1560,7 @@
       key = `<b>${esc(cb.label)}</b>` + slots.map((k, i) => `<span class="ck"><i style="background:${CAT[i]}"></i>${esc(cb.name(k))}<span class="muted">${fmt(counts.get(k))}</span></span>`).join("")
         + `<span class="ck"><i style="background:${OTHER_CAT}"></i>Other</span><span class="ck"><i style="background:${OTHER_FILL}"></i>None recorded</span>`;
     } else {
-      key = `<b>Ink</b><span class="ck"><i style="background:${INK}"></i>Sociology</span><span class="ck"><i style="background:${FAINT}"></i>Outside the field</span><span class="ck"><i style="background:${RED}"></i>Selected and their ties</span>`;
+      key = `<b>Ink</b><span class="ck"><i style="background:${INK}"></i>${FLD.label}</span><span class="ck"><i style="background:${FAINT}"></i>Outside the field</span><span class="ck"><i style="background:${RED}"></i>Selected and their ties</span>`;
     }
     return { colorOf, key };
   }
@@ -1699,7 +1742,7 @@
   /* ---------------------------------------------------------------- recording missing links */
   // Advisor links typed here stay in this browser (a per-viewer draft) until downloaded as a CSV.
   // Saved in data/ as manual_edges*.csv, merge_external.py picks them up as source "manual".
-  const MANUAL_KEY = "lineage:manual";
+  const MANUAL_KEY = KEY("manual");
   const MANUAL_COLS = ["advisor_pid", "advisor_name", "student_pid", "student_name", "year", "institution", "url", "note", "role", "degree"];
   const manualRows = () => { try { return JSON.parse(localStorage.getItem(MANUAL_KEY) || "[]"); } catch { return []; } };
   const saveManual = (rows) => { try { localStorage.setItem(MANUAL_KEY, JSON.stringify(rows)); return true; } catch { return false; } };
@@ -1748,7 +1791,7 @@
         <p class="note" id="curateMsg" role="status" aria-live="polite"></p>
       </form>
       <div class="actions"><button type="button" class="btn" id="dlManual" ${saved.length ? "" : "disabled"}>Download ${plural(saved.length, "link")} as CSV</button>${saved.length ? `<button type="button" class="btn" id="clearManual">Clear saved links</button>` : ""}</div>
-      <p class="muted">Save the file in the project's data/ folder (keep the name starting manual_edges) and run scripts/build_all.sh.</p>
+      <p class="muted">Save the file in the project's ${FIELD === "sociology" ? "data/" : `fields/${FIELD}/data/`} folder (keep the name starting manual_edges) and run ${BUILD}.</p>
     </section>`;
     const anchor = els.panel.querySelector(".stats");
     if (anchor) anchor.insertAdjacentHTML("afterend", html); else els.panel.insertAdjacentHTML("beforeend", html);
@@ -2082,7 +2125,7 @@
     const seg = `<span class="seg" role="group" aria-label="Kind of school">${Object.entries(SCHOOL_KINDS).map(([k, l]) => `<button type="button" data-kind="${k}" aria-pressed="${k === kind}">${l}</button>`).join("")}</span>`;
     let lede = "", table = null, rows = [];
     if (kind === "curated") {
-      lede = `Schools named by their founders. Members are the founders and every recorded academic descendant, so schools overlap; "closest" counts people whose nearest founder belongs to this school. Edit the list in data/schools.json.`;
+      lede = `Schools named by their founders. Members are the founders and every recorded academic descendant, so schools overlap; "closest" counts people whose nearest founder belongs to this school. Edit the list in ${SCHOOLS_FILE}.`;
       rows = CTX.schools.map((s, i) => ({ id: i, name: s.name, founders: s.founders.map((f) => P.get(f)?.name).filter(Boolean), size: s.size, exclusive: s.exclusive, depth: s.depth, main: s.top_institutions[0]?.[0] }));
       table = [
         { key: "name", label: "School", fmt: (r) => `<span class="nm">${esc(r.name)}</span>` },
@@ -2262,7 +2305,7 @@
     draw(elements, { fitTo: `node[id="${founders[0]}"]`, topFirst: true, overview: true, after: byYear ? () => timelineLayout(founders[0]) : null,
       grow: byYear ? null : { budget: budget0, build: make } });
     renderSchoolPanel("curated", id);
-    if (founders.length < s.founders.length) notice(`<p class="note">${s.founders.length - founders.length} founder(s) in data/schools.json are not in this export.</p>`);
+    if (founders.length < s.founders.length) notice(`<p class="note">${s.founders.length - founders.length} founder(s) in ${SCHOOLS_FILE} are not in this export.</p>`);
   }
 
   function openSchoolLineage(kind, id) {
@@ -2281,7 +2324,7 @@
       stats = `<div class="stat"><span>Members</span><b>${fmt(s.size)}</b></div><div class="stat"><span>Closest to this school</span><b>${fmt(s.exclusive)}</b></div><div class="stat"><span>Generations deep</span><b>${fmt(s.depth)}</b></div>`;
       lists = `<h3>Founders</h3>${personList(s.founders.filter((f) => P.has(f)))}`
         + `<h3>Overlaps with</h3>${s.overlap.length ? `<ul class="plist">${s.overlap.map(([sid, n]) => { const j = CTX.schools.findIndex((x) => x.id === sid); return `<li><a href="#/schools/curated/${j}">${esc(CTX.schools[j].name)}</a><span class="ct">${fmt(n)} shared</span></li>`; }).join("")}</ul>` : `<p class="muted">No overlap.</p>`}`;
-      note = `Membership is the founders plus every recorded descendant. The founder attributions are conventional groupings; edit data/schools.json to change them.`;
+      note = `Membership is the founders plus every recorded descendant. The founder attributions are conventional groupings; edit ${SCHOOLS_FILE} to change them.`;
     } else if (kind === "detected") {
       const c = CTX.communities[id];
       title = c.label; sub = "Detected community";
@@ -2351,7 +2394,7 @@
     } else if (v === "map") {
       showCanvas(true, { map: true });
       const withGeo = [...INST.values()].filter((i) => i.lat != null).length;
-      toolbar(`${fmt(withGeo)} of ${fmt(INST.size)} institutions have coordinates. ${sel != null ? "Red lines: where its PhDs went. Dashed: where its faculty trained." : "Circle size is sociology PhDs granted. Click one to trace its placements."}`);
+      toolbar(`${fmt(withGeo)} of ${fmt(INST.size)} institutions have coordinates. ${sel != null ? "Red lines: where its PhDs went. Dashed: where its faculty trained." : `Circle size is ${FLD.lower} PhDs granted. Click one to trace its placements.`}`);
       drawMap(sel);
     } else {
       showCanvas(false); els.toolbar.innerHTML = "";
@@ -2449,8 +2492,8 @@
       <div class="sheet-controls"><span class="seg" role="group" aria-label="View">${Object.entries(INST_VIEWS).map(([k, l]) => `<button type="button" data-v="${k}" aria-pressed="${k === "table"}">${l}</button>`).join("")}</span></div>
       ${CTX.hiring_flows?.length ? `<div class="sheet-controls"><label class="selectlbl">Placement data <select id="flowSrcT">${Object.entries(FLOW_NAME).map(([k, l]) => `<option value="${k}" ${k === FLOW_SRC ? "selected" : ""}>${l}</option>`).join("")}</select></label></div>` : ""}
       <p class="lede">${FLOW_SRC === "census"
-        ? `Placement from the faculty hiring census: every US sociology faculty member 2011–20, by PhD institution and employer (${esc(CTX.hiring.citation)}). Prestige rank is the census's own ranking (1 = top). "Net" is PhDs placed on other faculties minus faculty hired from elsewhere.`
-        : `Placement from the Academic Family Tree: where people trained versus where they later advised students. Known only for people who went on to advise, so counts are small.`} PhDs are sociology PhDs on record in the Academic Family Tree.</p>
+        ? `Placement from the faculty hiring census: every US ${FLD.lower} faculty member 2011–20, by PhD institution and employer (${esc(CTX.hiring.citation)}). Prestige rank is the census's own ranking (1 = top). "Net" is PhDs placed on other faculties minus faculty hired from elsewhere.`
+        : `Placement from the Academic Family Tree: where people trained versus where they later advised students. Known only for people who went on to advise, so counts are small.`} PhDs are ${FLD.lower} PhDs on record in the Academic Family Tree.</p>
       ${t.html}<div class="tbl-foot"><span>Showing ${fmt(shown.length)} of ${fmt(rows.length)}</span>${rows.length > shown.length ? `<button type="button" class="btn" id="moreInst">Show more</button>` : ""}</div>`;
     t.bind(els.sheet);
     $("#flowSrcT")?.addEventListener("change", (e) => { setFlowSource(e.target.value); route(); });
@@ -2461,7 +2504,7 @@
 
   function renderInstIntro() {
     const totalPlaced = [...flowsOut.values()].reduce((s, l) => s + sum(l), 0);
-    els.panel.innerHTML = `<h2>Institutions</h2><p class="inst">Where sociologists trained and where they went</p>
+    els.panel.innerHTML = `<h2>Institutions</h2><p class="inst">Where ${FLD.nouns} trained and where they went</p>
       <div class="stats"><div class="stat"><span>Institutions</span><b>${fmt(INST.size)}</b></div>
       <div class="stat"><span>Placement links</span><b>${fmt([...flowsOut.values()].reduce((s, l) => s + l.length, 0))}</b></div>
       <div class="stat"><span>Faculty placed at another institution</span><b>${fmt(totalPlaced)}</b></div></div>
@@ -2484,7 +2527,7 @@
     els.panel.innerHTML = `
       <h2>${esc(i.name)}</h2><p class="inst">${esc(place || "Location not recorded")}</p>
       <div class="stats">
-        <div class="stat"><span>Sociology PhDs granted</span><b>${fmt(i.phds)}</b></div>
+        <div class="stat"><span>${FLD.label} PhDs granted</span><b>${fmt(i.phds)}</b></div>
         <div class="stat"><span>Advisors who supervised here</span><b>${fmt(i.advisors)}</b></div>
         <div class="stat"><span>People who advised here</span><b>${fmt(fac.length)}</b></div>
         ${i.prestige_rank ? `<div class="stat"><span>Prestige rank (hiring census)</span><b>${fmt(i.prestige_rank)}</b></div>` : ""}
@@ -2509,15 +2552,15 @@
   /* ---------------------------------------------------------------- boot */
   async function boot() {
     showCanvas(true);
-    const n = notice(`<h2>Loading the sociology tree</h2><p>Reading the people and their advisor links.</p>`, "loading");
+    const n = notice(`<h2>Loading the ${FLD.lower} tree</h2><p>Reading the people and their advisor links.</p>`, "loading");
     let data;
     try {
-      const res = await fetch("data/lineage.json");
+      const res = await fetch(DATA + "lineage.json");
       if (!res.ok) throw new Error(res.status + " " + res.statusText);
       data = await res.json();
     } catch (err) {
       n.remove();
-      notice(`<h2>Couldn't load data/lineage.json</h2><p>Open the explorer through a local server, not as a file. From the project folder run <b>python3 -m http.server -d explorer 8000</b>, then visit localhost:8000. If the file is missing, run <b>scripts/export_explorer.py</b>.</p><p class="note">${esc(err.message)}</p>`);
+      notice(`<h2>Couldn't load ${DATA}lineage.json</h2><p>Open the explorer through a local server, not as a file. From the project folder run <b>python3 -m http.server -d explorer 8000</b>, then visit localhost:8000. If the file is missing, run <b>scripts/export_explorer.py</b>.</p><p class="note">${esc(err.message)}</p>`);
       return;
     }
     try { load(data); } catch (err) {
@@ -2527,15 +2570,15 @@
       return;
     }
     try {
-      const res = await fetch("data/context.json");
+      const res = await fetch(DATA + "context.json");
       if (res.ok) loadContext(await res.json());
     } catch (err) { console.warn("context.json not loaded; schools and institutions are unavailable", err); }
     try {
-      const res = await fetch("data/careers.json");
+      const res = await fetch(DATA + "careers.json");
       if (res.ok) CAREERS = await res.json();
     } catch (err) { console.warn("careers.json not loaded", err); }
     try {
-      const res = await fetch("data/coauthors.json");
+      const res = await fetch(DATA + "coauthors.json");
       if (res.ok) loadCoauthors(await res.json());
     } catch (err) { console.warn("coauthors.json not loaded; co-author views are unavailable", err); }
     await document.fonts.ready;

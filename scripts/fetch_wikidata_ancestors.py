@@ -25,11 +25,13 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
 sys.path.insert(0, str(ROOT / "scripts"))
 from fetch_wikidata import chunks, qid, sparql, values, year  # noqa: E402  (same cache, pacing, User-Agent)
 from merges import load_merges  # noqa: E402
 
-EXT = ROOT / "data" / "external"
+EXT = WORK / "data" / "external"
 LEVELS = 4
 LANGS = ["en", "fr", "de", "ru", "es", "it", "pl", "nl"]
 
@@ -43,7 +45,7 @@ def advisors_of(qids: list[str], level: int) -> list[dict]:
           ?s wdt:P184 ?a .
           OPTIONAL {{ ?a rdfs:label ?lab . FILTER(LANG(?lab) = "en") }}
           OPTIONAL {{ ?a wdt:P569 ?b }}
-          OPTIONAL {{ {{ ?a wdt:P106 wd:Q2306091 }} UNION {{ ?a wdt:P101 wd:Q21201 }} BIND(1 AS ?soc) }}
+          OPTIONAL {{ {{ ?a wdt:P106 wd:{CFG['wd_occ']} }} UNION {{ ?a wdt:P101 wd:{CFG['wd_field']} }} BIND(1 AS ?soc) }}
         }} GROUP BY ?s ?a"""
         rows += sparql(f"anc{level}_{i}", q)
     return rows
@@ -68,7 +70,7 @@ def labels(qids: list[str]) -> dict[str, str]:
 def main() -> None:
     MERGE = load_merges()
     R = lambda p: MERGE.get(p, p)
-    lin = json.loads((ROOT / "explorer" / "data" / "lineage.json").read_text())
+    lin = json.loads((EXPL / "lineage.json").read_text())
     has_adv = {t for _m, t, *_ in lin["edges"]}
     soc = {r[0] for r in lin["people"] if not r[3] & 1}
 
@@ -120,7 +122,7 @@ def main() -> None:
     if len(pp):
         pp["birth_year"] = pp["birth_year"].astype("Int64")
     pp.to_parquet(EXT / "wdanc_people.parquet", index=False)
-    print(f"wrote {len(df):,} advisor links; {len(pp):,} advisors, {int(pp.is_sociologist.sum()) if len(pp) else 0:,} of them sociologists")
+    print(f"wrote {len(df):,} advisor links; {len(pp):,} advisors, {int(pp.is_sociologist.sum()) if len(pp) else 0:,} of them in the field")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,157 @@
+pid_a,name_a,inst_a,pid_b,name_b,inst_b,evidence
+730014,Yang Liu,Johns Hopkins University,124282,Yan Liu,Johns Hopkins University,inst
+146629,Changsoon Kim,Princeton University,744410,Chang-Bae Kim,Princeton University,inst
+871617,Wei-Ren Chen,Oak Ridge National Laboratory,735816,Weiqiang Chen,Tsinghua National University,inst
+783713,Xiao Li,City University of Hong Kong,764168,Xiaoyi Li,The Chinese University of Hong Kong,inst
+148344,Jie Lin,Columbia University,679254,J. Lin,Columbia University,inst
+790515,Cheng Li,California Institute of Technology,856448,Chen Li,"University of California, Riverside",inst
+790515,Cheng Li,California Institute of Technology,406264,Chengzhi Li,"University of California, Riverside",inst
+856448,Chen Li,"University of California, Riverside",406264,Chengzhi Li,"University of California, Riverside",inst
+800813,Sang-mook Lee,Seoul National University,829979,Sangmin Lee,Seoul National University,inst
+800813,Sang-mook Lee,Seoul National University,634865,Sangwook Lee,Kyungpook National University,inst
+824578,Seungtaek Lee,Pohang University of Science and Technology (POSTECH),119796,Seung Jae Lee,Massachusetts Institute of Technology,inst
+675587,Seung Joon Lee,Korea University,686022,Seungwoo Lee,Korea University,inst
+820328,Xiaoting Wang,University of Electronic Science and Technology of China,556780,X.-Q Wang,Georgia Institute of Technology,inst
+556780,X.-Q Wang,Georgia Institute of Technology,605815,Xiangrong Wang,Hong Kong University of Science and Technology,inst
+850073,Xiao-shu Liu,Tsinghu University,852466,Xiaofei Liu,Tsinghua National University,shared
+740110,Xiao Liu,Stanford University,140953,Xiaole Liu,Stanford University,inst
+870441,Y. G. Chen,"University of Maryland, College Park",500051,Yuanzhen Chen,"University of Maryland, College Park",inst
+348821,Kwang-Yul Kim,Florida State University,668110,Kwanghoon Kim,"University of Florida, Gainesville",inst
+348994,W Steven Holbrook,University of Wyoming,349017,Walter S. Holbrook,University of Wyoming,inst
+349192,S K. Gayen,City University of New York,448838,Swapan K. Gayen,City University of New York,inst
+171868,Sha Li,"University of California, Berkeley",821109,Shaowei Li,"University of California, San Diego",inst
+171868,Sha Li,"University of California, Berkeley",410590,Shaojing Li,"University of California, San Diego",inst
+171868,Sha Li,"University of California, Berkeley",607821,Shaofin Li,"University of California, Berkeley",inst
+177095,Sungsoo S. Kim,"University of California, Los Angeles",103371,Sung Soo Kim,"University of California, Santa Barbara",inst
+59256,Sung-Hou Kim,"University of California, Berkeley",107178,Sun H. Kim,"University of California, Davis",inst
+167107,Young Suh Kim,"University of Maryland, College Park",120982,Youngchan Kim,"University of Maryland, College Park",inst
+790573,Yong-Hyun Kim,National Renewable Energy Laboratory (NREL),838539,Yongho Kim,Los Alamos National Laboratory,inst
+666961,Yong-Hoon Kim,Korea Advanced Institute of Science and Technology,731001,Yongsun Kim,Massachusetts Institute of Technology,inst
+679870,Yong Baek Kim,Massachusetts Institute of Technology,731001,Yongsun Kim,Massachusetts Institute of Technology,inst
+388687,Young-Taeg Kim,Florida Institute of Technology,447606,Younghee Kim,Florida State University,inst
+145646,Chi Chen,Texas A & M University,277572,Ching-Ming Chen,Texas A & M University,inst
+187857,Mingwu Lu,California Institute of Technology,125830,Ming Lu,California Institute of Technology,inst
+356394,I W. Sudiarta,Dalhousie University,748224,I Wayan Sudiarta,UNIVERSITY OF MATARAM,shared
+358249,Nathan M. Craig,"University of California, Santa Barbara",190427,Nathaniel Craig,"University of California, Santa Barbara",inst
+804085,Jae Jin Kim,Argonne National Laboratory,861506,Jaesung Kim,Seoul National University,inst
+804085,Jae Jin Kim,Argonne National Laboratory,735490,Jaekook Kim,Chonnam National University,inst
+364525,Chengming Wang,Texas A & M University,471040,Cheng-Ching Wang,University of Texas at Austin,inst
+797145,Jun-Ho Lee,"University of California, Berkeley",121062,Jung-Hoon Lee,"University of California, Los Angeles",inst
+729365,Jaehyun Lee,Pohang University of Science and Technology (POSTECH),580661,Jae-Yeon Lee,Georgia Institute of Technology,inst
+367276,Dan J. Bower,California Institute of Technology,740628,Danielle Bower,California Institute of Technology,inst+years
+161652,Weiping Zhang,Macquarie University,271710,Wei-Wei Zhang,University of Calgary,shared
+629249,Yuanzhi Zhang,The Chinese University of Hong Kong,629299,Yuan-ting Zhang,The Chinese University of Hong Kong,inst
+436365,Daeho Kim,"University of California, Riverside",443080,Dae-Jeong Kim,"University of California, Irvine",inst+years
+789600,Qianli Chen,"University of Illinois, Urbana-Champaign",815261,Qian Chen,"University of Illinois, Urbana-Champaign",inst
+797274,Xianyi Zhang,Illinois Institute of Technology,814265,Xian Zhang,Stevens Institute of Technology,inst
+594993,X.-C Zhang,Rensselaer Polytechnic Institute,49666,Xiao Zhang,Rensselaer Polytechnic Institute,inst
+162059,Dong E. Chang,California Institute of Technology,439245,Dongdong Chang,"University of California, Davis",inst
+399944,Shu Zhou,"University of California, Irvine",400577,Shuyun Zhou,"University of California, Berkeley",inst
+838727,Xiao-Ye Xu,University of Science and Technology of China,529259,Xiaorong Xu,Rosalind Franklin University of Medicine and Science,inst
+443730,Helen L. W. Chan,Hong Kong Polytechnic University (Hong Kong),628015,H.L.W Chan,Hong Kong Polytechnic University (Hong Kong),inst
+813056,Jian Wang,National University of Singapore,66184,J.S. (&#31481;&#28330;) Wang (&#29579;),Tsinghua National University,inst
+636556,Jianpeng Wang,The Chinese University of Hong Kong,728721,Jian Wang,University of Hong Kong,inst
+728721,Jian Wang,University of Hong Kong,594983,Jiannong Wang,Hong Kong University of Science and Technology,inst
+752848,Jian-Sheng Wang,National University of Singapore,66184,J.S. (&#31481;&#28330;) Wang (&#29579;),Tsinghua National University,inst
+815672,Chao Zhang,Rochester Institute of Technology,846659,Chaoqi Zhang,Georgia Institute of Technology,inst
+778378,S N Bose,University of Calcutta,739333,Satyendra Nath Bose,University of Calcutta,inst
+91263,H. Dennis Drew,"University of Maryland, College Park",380335,Howard D. Drew,"University of Maryland, College Park",inst
+547358,Sang-Wook Cheong,"Rutgers University, New Brunswick",578035,S.-W Cheong,"Rutgers University, New Brunswick",inst
+136283,Brian C. Regan,"University of California, Berkeley",176774,B. C. Regan,"University of California, Los Angeles",inst
+227398,Hong Liu,Massachusetts Institute of Technology,802373,Hongya Liu,Dalian University of Technology,inst
+34842,Chris Pollard,Duke University,726578,Christopher Pollard,Duke University,shared+inst+years
+269533,Jong-Won Choi,Georgia Institute of Technology,519854,Jongnam Choi,"University of Georgia, Athens",inst
+269533,Jong-Won Choi,Georgia Institute of Technology,562123,Jongwoo Choi,"University of Georgia, Athens",inst
+172539,Gregory J. Stephens,"University of Maryland, College Park",38164,Greg Stephens,Princeton University,shared
+173050,Erica W. Carlson,"University of California, Los Angeles",714886,Eric Carlson,"University of California, Santa Cruz",inst
+850134,Mingyu Wang,Tsinghua National University,852476,Min Wang,Tsinghua National University,inst
+778371,Asesh K Datta,"Harish-Chandra Research Institute, Allahabad, India",816279,AseshKrishna Datta,"Harish-Chandra Research Institute, Allahabad, India",inst
+778371,Asesh K Datta,"Harish-Chandra Research Institute, Allahabad, India",716945,Aseshkrishna Datta,HRI Allahabad,inst
+171006,Steve K. Lamoreaux,Yale University,437587,Steven K. Lamoreaux,Yale University,inst
+188387,Zhaoyu Zhang,California Institute of Technology,594982,Zhao-Qing Zhang,Hong Kong University of Science and Technology,inst
+180720,Ron E. Taam,Northwestern University,226865,Ronald E. Taam,Northwestern University,inst
+203642,T X. Thuan,University of Virginia,721653,Trinh X. Thuan,University of Virginia,inst
+203696,J R. Jokipii,University of Arizona,213953,Jack R. Jokipii,University of Arizona,inst
+565423,Earnest D. Adams,"University of Florida, Gainesville",92496,E. Dwight Adams,"University of Florida, Gainesville",inst
+205469,Bevin A. Zauderer,"University of Maryland, College Park",743347,B. Ashley Zauderer,"University of Maryland, College Park",inst+years
+213952,James R. Prior Angel,University of Arizona,203695,J. Roger P. Angel,University of Arizona,inst
+235426,E Marc Parmentier,Brown University,443144,Edgar M. Parmentier,Brown University,shared+inst+years
+250572,V K. Saxena,North Carolina State University,522585,Vinod K. Saxena,North Carolina State University,inst
+273166,C D. Scarfe,University of Victoria,814924,Colin Scarfe,University of Victoria,inst
+214504,J Martin Scholtz,Texas A & M University,448908,John M. Scholtz,Texas A & M University,inst
+813830,Bing-Hong Wang,University of Science and Technology of China Hefei,753848,Bin Wang,University of Science and Technology of China,inst
+813830,Bing-Hong Wang,University of Science and Technology of China Hefei,440762,Bingzhu Wang,Missouri University of Science and Technology,inst
+753848,Bin Wang,University of Science and Technology of China,440762,Bingzhu Wang,Missouri University of Science and Technology,inst
+772389,Yonghao Gao,Fudan Univ,750486,Yong Gao,Fudan university,inst
+773952,Gregory J. Gemmen,"University of California, San Diego",663303,Greg Gemmen,"Scripps Research Institute, La Jolla",shared
+773993,J. P. McCollough,"University of Colorado, Boulder",767965,James P McCollough,"University of Colorado, Boulder",shared+inst+years
+782108,Jaewon Shim,Seoul National University College of Natural Sciences,826913,Jae Youn Shim,Seoul National University,inst
+172456,Junjie Zhu,"University of Michigan, Ann Arbor",744263,Jun Zhu,"University of Michigan, Ann Arbor",inst
+502161,Jian-Gang (Jimmy) Zhu,Carnegie Mellon University,594987,J.-G Zhu,Carnegie Mellon University,inst
+677125,William Williams,Smith College,728121,Will D. Williams,Smith College,inst
+798999,H Mariji,University of Porto,799001,Hodjat Mariji,University of Porto,inst
+828127,John David Brown,North Carolina State University,736393,J.David Brown,Université Libre de Bruxelles,shared+years
+800377,C.P. Carlson,"Indiana University, Bloomington",801454,Christopher P. Carlson,"Indiana University, Bloomington",shared+inst+years
+807430,Alex Wright,Queen's University,809507,Alexander J Wright,Queen's University,inst
+811244,K.-H. Rieder,Free University of Berlin,839763,Karl-Heinz Rieder,Free University of Berlin,inst
+817025,Georges Matheron,École des Mines de Paris,75625,George François Paul Marie Matheron,École Nationale Supérieure des Mines de Paris,inst
+833998,Ramakrishna Ramaswamy,IIT Delhi,97818,Ram Ramaswamy,Jawaharlal Nehru University,shared+years
+834496,Yaron Silberberg,Weizmann Institute of Science,595020,Y Silberberg,Weizmann Institute of Science,inst
+456256,R.J D. Miller,University of Toronto,67942,R. J. Dwayne Miller,University of Toronto,inst
+842130,Bartolome Luque,Universidad Politécnica de Madrid,853628,Bartolo Luque,Universidad Politécnica de Madrid,inst
+845310,Mack Alfred Breazeale,"University of Mississippi, Oxford, Mississippi",542276,M A. Breazeale,The University of Mississippi,inst
+845831,V. R. K. Murthy,IIT Madras,857170,Vemuri Rama Krishna Murthy,IIT Madras,inst
+850973,Kimberly A. Coble,San Francisco State University,768895,Kim Coble,University of Chicago,shared
+870292,David W. Latham,Harvard University,384159,D W. Latham,Harvard University,inst
+538766,William D. Goodhue,University of Massachusetts Lowell,506888,W D. Goodhue,University of Massachusetts Lowell,inst
+635480,Rosa A. Lukaszew,College of William and Mary,628032,R Ale Lukaszew,College of William and Mary,inst
+640251,C.K Shum,"Ohio State University, Columbus",629310,Che-Kwan Shum,"Ohio State University, Columbus",inst
+640308,Robert Rottapel,University of Toronto,460037,Rob Rottapel,University of Toronto,inst
+640317,Stanley E. Dosso,University of Victoria,460012,Stan Dosso,University of Victoria,inst
+629257,J. Kevin Ingersent,"University of Florida, Gainesville",615716,James K. Ingersent,"University of Florida, Gainesville",inst
+556768,J Kevin Ingersent,"University of Florida, Gainesville",615716,James K. Ingersent,"University of Florida, Gainesville",inst
+628083,Pui-Kuen Yeung,Georgia Institute of Technology,607940,P.K Yeung,Georgia Institute of Technology,inst
+448860,Naomi C R Makins,"University of Illinois, Urbana-Champaign",605833,N C. R. Makins,"University of Illinois, Urbana-Champaign",inst
+185666,Jacobus Johannes Maria Verbaarschot,Stony Brook University,547639,J J. M. Verbaarschot,Stony Brook University,inst
+36878,H. Eugene Stanley,Boston University,448960,Harry E. Stanley,Boston University,inst
+721458,Simon A. Kattenhorn,University of Idaho,629316,S Kattenhorn,University of Idaho,inst
+723517,Harold Neal Bertram,"University of California, San Diego",519443,H Neal Bertram,"University of California, San Diego",inst
+725480,P. Blair Blakie,University of Otago,67198,Peter B. Blakie,University of Otago,shared+inst
+380161,Chris M. Sorensen,Kansas State University,380337,Christopher M. Sorensen,Kansas State University,inst
+384218,Ming-Chung Chu,The Chinese University of Hong Kong,583290,M.-C Chu,The Chinese University of Hong Kong,inst
+393070,F Bary M. Malik,Southern Illinois University at Carbondale,437438,F Bary Malik,Southern Illinois University at Carbondale,inst
+437638,S Y. Savrasov,"University of California, Davis",456303,Sergey Savrasov,"University of California, Davis",inst
+443679,Roel Snieder,Colorado School of Mines,443680,Roelof K. Snieder,Colorado School of Mines,inst
+447873,Joonho Jang,"University of Illinois, Urbana-Champaign",600215,Joon I. Jang,"University of Illinois, Urbana-Champaign",inst
+456188,Sridhar Raghavachari,Duke University,7137,Sri Raghavachari,Duke University,inst
+456327,Frederick M. Rieke,"University of Washington, Seattle",444,Fred Rieke,"University of Washington, Seattle",inst
+547630,Nicholas L. S. Martin,University of Kentucky,615653,N.L.S Martin,University of Kentucky,inst
+459983,Gordon W. Drake,University of Windsor,595082,G W. F. Drake,University of Windsor,inst
+380145,T Venky Venkatesan,"University of Maryland, College Park",547633,Thirumalai Venkatesan,"University of Maryland, College Park",inst
+502131,Fred MacKintosh,"University of Michigan, Ann Arbor",560883,Frederick C. MacKintosh,"University of Michigan, Ann Arbor",inst
+459852,Tai-Chang Chiang,"University of Illinois, Urbana-Champaign",552240,T.-C Chiang,"University of Illinois, Urbana-Champaign",inst
+605710,Tom D. Milster,University of Arizona,619446,Tomas D. Milster,University of Arizona,inst
+510659,Hong-Liang Cui,Stevens Institute of Technology,590283,H.-L Cui,Stevens Institute of Technology,inst
+516258,L M. Paulius,Western Michigan University,595119,Lisa Paulius,Western Michigan University,inst
+519450,T A. Callcott,The University of Tennessee,532783,Tom Callcott,The University of Tennessee,inst
+519450,T A. Callcott,The University of Tennessee,556727,Thomas A. Callcott,The University of Tennessee,inst
+522595,R M. C. So,Hong Kong Polytechnic University (Hong Kong),607908,Ronald M. Cho So,Hong Kong Polytechnic University (Hong Kong),inst
+529831,R G. Leisure,Colorado State University,583316,Robert G. Leisure,Colorado State University,inst
+532797,D Schryvers,Universitaire Instelling Antwerpen (Belgium),625339,Dominique Schryvers,Universiteit Antwerpen (Belgium),inst
+532818,H Kirkici,Auburn University,607961,Hulya Kirkici,Auburn University,inst
+542258,G C. Lauchle,Pennsylvania State University,547623,Gerald C. Lauchle,Pennsylvania State University,inst
+552199,B R. Tittmann,Pennsylvania State University,615645,Bernhard R. Tittmann,Pennsylvania State University,inst
+565458,J L. Brebner,Université de Montréal,565459,John L. Brebner,Université de Montréal,inst
+573151,Chandras Roychoudhuri,University of Connecticut,506891,Chandra Roychoudhuri,University of Connecticut,inst
+578036,W J. Choyke,University of Pittsburgh,583357,Wolfgang J. Choyke,University of Pittsburgh,inst
+590212,Hon-ki Tsang,The Chinese University of Hong Kong,628087,H.K Tsang,The Chinese University of Hong Kong,inst
+594991,Vladislav Yakovlev,University of Wisconsin-Milwaukee,628018,V.V Yakovlev,University of Wisconsin-Milwaukee,inst
+595034,A I. Smolyakov,University of Saskatchewan,595076,Andrei Smolyakov,University of Saskatchewan,inst
+595157,Aram S. Karakashian,University of Massachusetts Lowell,506889,A S. Karakashian,University of Massachusetts Lowell,inst
+619397,Emad Tajkhorshid,"University of Illinois, Urbana-Champaign",622875,Emadeddin Tajkhorshid,"University of Illinois, Urbana-Champaign",inst
+622876,M R. Eskildsen,University of Notre Dame,622877,Morten R. Eskildsen,University of Notre Dame,inst
+625342,A.Z Panagiotopoulos,Princeton University,73617,Athanassios Z. Panagiotopoulos,Princeton University,inst
+625343,P.G Debenedetti,Princeton University,73585,Pablo G. Debenedetti,Princeton University,inst
+66849,G.J. Lapeyre Jr.,ICFO–Institut de Ci`encies Fot`oniques,139787,Gerald J. Lapeyre,University of Arizona,shared
+71804,Mishkat Bhattacharya,Rochester Institute of Technology,109069,Mishkatul Bhattacharya,University of Rochester,inst
+76525,G. Edward Marti,"University of California, Berkeley",141718,George E. Marti,"University of California, Berkeley",inst

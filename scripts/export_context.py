@@ -24,9 +24,11 @@ import duckdb
 import networkx as nx
 
 ROOT = Path(__file__).resolve().parents[1]
-DB = Path(sys.argv[sys.argv.index("--db") + 1]) if "--db" in sys.argv else ROOT / "data" / "lineage.duckdb"
-SCHOOLS = ROOT / "data" / "schools.json"
-OUT = ROOT / "explorer" / "data" / "context.json"
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
+DB = Path(sys.argv[sys.argv.index("--db") + 1]) if "--db" in sys.argv else WORK / "data" / "lineage.duckdb"
+SCHOOLS = WORK / "data" / "schools.json"
+OUT = EXPL / "context.json"
 MIN_SUBFIELD = 40
 MIN_COMMUNITY = 30
 
@@ -53,7 +55,7 @@ def main() -> None:
     G = nx.DiGraph()
     G.add_edges_from((m, t) for m, t, _, _ in edges if m in in_soc and t in in_soc)
     # links from outside sources (scripts/merge_external.py), skipping any that would form a cycle
-    ext = ROOT / "data" / "external"
+    ext = WORK / "data" / "external"
     if (ext / "merged_edges.parquet").exists():
         import pandas as pd
         if (ext / "ext_people.parquet").exists():
@@ -197,7 +199,7 @@ def main() -> None:
     # ---------------------------------------------------------------- faculty hiring census
     # Wapman et al. 2022 (CC-BY-3.0-US): US sociology faculty 2011-2020, PhD institution -> employer.
     hiring_flows, hiring_meta = [], None
-    hf, hm = ROOT / "data" / "external" / "faculty_hiring_sociology_flows.parquet", ROOT / "data" / "external" / "faculty_hiring_inst_map.parquet"
+    hf, hm = WORK / "data" / "external" / f"faculty_hiring_{FIELD}_flows.parquet", WORK / "data" / "external" / "faculty_hiring_inst_map.parquet"
     if hf.exists() and hm.exists():
         import pandas as pd
         fl, mp = pd.read_parquet(hf), pd.read_parquet(hm)
@@ -208,7 +210,7 @@ def main() -> None:
             if a is not None and b is not None:
                 agg[(a, b)] += int(r.n)
         hiring_flows = [[a, b, n] for (a, b), n in agg.items()]
-        ranks = pd.read_parquet(ROOT / "data" / "external" / "faculty_hiring_sociology_institutions.parquet")
+        ranks = pd.read_parquet(WORK / "data" / "external" / f"faculty_hiring_{FIELD}_institutions.parquet")
         for r in ranks.itertuples():
             loc = to_loc.get(int(r.institution_id))
             if loc is None:
@@ -232,7 +234,7 @@ def main() -> None:
     # ---------------------------------------------------------------- OpenAlex publication topics
     # each person's top 3 topics (summed over their matched OpenAlex profiles), plus works/citations
     top_topics, oa_stats, topic_info = {}, {}, {}
-    oa_path = ROOT / "data" / "external" / "openalex_authors.parquet"
+    oa_path = WORK / "data" / "external" / "openalex_authors.parquet"
     if oa_path.exists():
         import pandas as pd
         oa = pd.read_parquet(oa_path)

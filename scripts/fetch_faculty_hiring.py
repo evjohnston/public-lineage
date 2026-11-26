@@ -11,8 +11,8 @@ The dataset is aggregated: one row per (employing institution, doctoral institut
 network, with counts (Total/Men/Women). There are no person-level records, person ids, names,
 PhD years or academic ranks, so no per-person table can be built from it. Outputs:
 
-- data/external/faculty_hiring_sociology_flows.parquet         one row per PhD -> hiring pair
-- data/external/faculty_hiring_sociology_institutions.parquet  prestige/production ranks
+- data/external/faculty_hiring_{FIELD}_flows.parquet         one row per PhD -> hiring pair
+- data/external/faculty_hiring_{FIELD}_institutions.parquet  prestige/production ranks
 
 Raw files are untrusted; run with `python -I scripts/fetch_faculty_hiring.py [--refresh]`.
 """
@@ -27,8 +27,10 @@ import duckdb
 import httpx
 
 ROOT = Path(__file__).resolve().parents[1]
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
 RAW = ROOT / "data" / "raw" / "faculty_hiring"
-OUT = ROOT / "data" / "external"
+OUT = WORK / "data" / "external"
 
 ZENODO_API = "https://zenodo.org/api/records/6941651"
 GH_COMMIT = "841e9c96f949677aadbffded10a002586ff65cc4"
@@ -36,8 +38,8 @@ GH_RAW = f"https://raw.githubusercontent.com/LarremoreLab/us-faculty-hiring-netw
 GH_FILES = ["README.md", "data/edge-lists.csv", "data/institution-stats.csv",
             "data/stats.csv", "data/yearly-stats.csv"]
 
-FIELD = "Sociology"
-RELATED = ["Criminal Justice and Criminology", "Social Work", "Gender Studies",
+HFIELD = CFG["hiring"]  # field name in the census
+RELATED = [] if FIELD != "sociology" else ["Criminal Justice and Criminology", "Social Work", "Gender Studies",
            "Human Development and Family Sciences", "Anthropology"]
 
 
@@ -99,7 +101,7 @@ def build() -> None:
                CAST(AttritedFaculty AS INT) attrited_faculty,
                CAST(NonAttritionEvents AS INT) non_attrition_events,
                CAST(AttritionEvents AS INT) attrition_events
-        FROM inst WHERE TaxonomyLevel = 'Field' AND TaxonomyValue = '{FIELD}'
+        FROM inst WHERE TaxonomyLevel = 'Field' AND TaxonomyValue = '{HFIELD}'
         ORDER BY ordinal_prestige_rank;
         CREATE TABLE flows AS
         SELECT CAST(e.DegreeInstitutionId AS INT) phd_institution_id,
@@ -116,15 +118,15 @@ def build() -> None:
         FROM edges e
         LEFT JOIN soc_inst p ON p.institution_id = CAST(e.DegreeInstitutionId AS INT)
         LEFT JOIN soc_inst h ON h.institution_id = CAST(e.InstitutionId AS INT)
-        WHERE e.TaxonomyLevel = 'Field' AND e.TaxonomyValue = '{FIELD}'
+        WHERE e.TaxonomyLevel = 'Field' AND e.TaxonomyValue = '{HFIELD}'
         ORDER BY n DESC, phd_institution, hiring_institution;
     """)
     bad = con.execute("SELECT count(*) FROM flows WHERE n IS NULL OR phd_institution_id IS NULL "
                       "OR n_gender_unknown < 0").fetchone()[0]
     if bad:
         sys.exit(f"{bad} malformed sociology edges")
-    con.execute(f"COPY flows TO '{OUT / 'faculty_hiring_sociology_flows.parquet'}' (FORMAT parquet)")
-    con.execute(f"COPY soc_inst TO '{OUT / 'faculty_hiring_sociology_institutions.parquet'}' "
+    con.execute(f"COPY flows TO '{OUT / f'faculty_hiring_{FIELD}_flows.parquet'}' (FORMAT parquet)")
+    con.execute(f"COPY soc_inst TO '{OUT / f'faculty_hiring_{FIELD}_institutions.parquet'}' "
                 "(FORMAT parquet)")
 
     print(con.execute("SELECT count(*) edges, sum(n) faculty, sum(n_men) men, sum(n_women) women, "
@@ -133,7 +135,7 @@ def build() -> None:
                       "count(DISTINCT phd_institution_id) phd_insts FROM flows").df().T)
     print(f"ranked sociology institutions: {con.execute('SELECT count(*) FROM soc_inst').fetchone()[0]}")
     print(con.execute("SELECT phd_institution, hiring_institution, n FROM flows LIMIT 10").df())
-    names = ", ".join(f"'{r}'" for r in [FIELD, *RELATED])
+    names = ", ".join(f"'{r}'" for r in [HFIELD, *RELATED])
     print(con.execute(f"SELECT TaxonomyValue field, count(*) edges, sum(CAST(Total AS INT)) faculty "
                       f"FROM edges WHERE TaxonomyLevel = 'Field' AND TaxonomyValue IN ({names}) "
                       "GROUP BY 1 ORDER BY 3 DESC").df())

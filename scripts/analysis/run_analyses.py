@@ -31,7 +31,10 @@ import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib import font_manager  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / "docs" / "analysis"
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
+LBL = CFG["label"].lower()  # field name in figure text
+OUT = DOCS
 FIGS = OUT / "figs"
 FIGS.mkdir(parents=True, exist_ok=True)
 RNG = np.random.default_rng(7)
@@ -51,8 +54,8 @@ plt.rcParams.update({
 
 
 def load():
-    lin = json.loads((ROOT / "explorer" / "data" / "lineage.json").read_text())
-    ctx = json.loads((ROOT / "explorer" / "data" / "context.json").read_text())
+    lin = json.loads((EXPL / "lineage.json").read_text())
+    ctx = json.loads((EXPL / "context.json").read_text())
     people = {r[0]: {"name": r[1], "f": r[3], "ns": r[4], "nd": r[5], "h": r[9] if len(r) > 9 else None, "phd": r[12] if len(r) > 12 else None,
                      "year": r[13] if len(r) > 13 else None, "basis": r[14] if len(r) > 14 else None}
               for r in lin["people"]}
@@ -63,7 +66,7 @@ def load():
 
 # ------------------------------------------------------------------ A1 placement concentration
 def a1(res):
-    fl = pd.read_parquet(ROOT / "data" / "external" / "faculty_hiring_sociology_flows.parquet")
+    fl = pd.read_parquet(WORK / "data" / "external" / f"faculty_hiring_{FIELD}_flows.parquet")
     total = int(fl.n.sum())
     prod = fl.groupby("phd_institution").n.sum().sort_values(ascending=False)
     share = lambda k: float(prod.head(k).sum() / total)
@@ -92,11 +95,11 @@ def a1(res):
                 color=INK, fontsize=10, arrowprops={"arrowstyle": "-", "color": INK3, "lw": 0.8})
     ax.text(0.62, 0.52, "equal production", color=INK3, fontsize=9.5, rotation=35)
     ax.set_xlabel("Share of PhD-granting programs, most productive first")
-    ax.set_ylabel("Share of US sociology faculty trained")
+    ax.set_ylabel(f"Share of US {LBL} faculty trained")
     ax.set_xlim(0, 1); ax.set_ylim(0, 1)
     ax.xaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(1)); ax.yaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(1))
-    ax.set_title("A few programs train most US sociology faculty")
-    fig.text(0, -0.09, f"US sociology faculty 2011–20 (n = {total:,}), by PhD institution. Source: Wapman et al., Nature 2022.", color=INK3, fontsize=8.5)
+    ax.set_title(f"A few programs train most US {LBL} faculty")
+    fig.text(0, -0.09, f"US {LBL} faculty 2011–20 (n = {total:,}), by PhD institution. Source: Wapman et al., Nature 2022.", color=INK3, fontsize=8.5)
     fig.savefig(FIGS / "a1_concentration.png"); plt.close(fig)
 
 
@@ -162,8 +165,8 @@ def a2(res, people, phd_edges):
     lo = min(b["lo"] for b in summ); hi = max(b["hi"] for b in summ)
     ax.set_ylim(lo - 0.08, hi + 0.12)
     ax.set_title("Only students of the most prolific advisors go on to advise more")
-    fig.text(0, -0.13, f"Sociology advisor–student pairs, student PhD 2000–06 (n = {len(df):,}); outcome minus the mean of the student's PhD year, 95% CI.\n"
-             f"Cohort-adjusted Spearman ρ = {w_obs:.2f} (within-year permutation p = {p:.3f}); unadjusted ρ = {rho:.2f}. Sources: AFT, NSF, Wikidata.",
+    fig.text(0, -0.13, f"{LBL.capitalize()} advisor–student pairs, student PhD 2000–06 (n = {len(df):,}); outcome minus the mean of the student's PhD year, 95% CI.\n"
+             f"Cohort-adjusted Spearman ρ = {w_obs:.2f} (within-year permutation p = {p:.3f}); unadjusted ρ = {rho:.2f}. Sources: " + ("AFT, NSF, Wikidata." if FIELD == "sociology" else "AFT, Wikidata.") + "",
              color=INK3, fontsize=8.5)
     fig.savefig(FIGS / "a2_fecundity.png"); plt.close(fig)
 
@@ -258,7 +261,7 @@ def a3b(res, ctx, people, phd_edges):
     n = len(df)
     p = float((np.sum(np.array(null_any) >= obs_any) + 1) / (len(null_any) + 1))
     # joint papers make topics match mechanically: repeat for pairs who never co-authored
-    co = json.loads((ROOT / "explorer" / "data" / "coauthors.json").read_text())
+    co = json.loads((EXPL / "coauthors.json").read_text())
     coset = {frozenset(e[:2]) for e in co["edges"]}
     solo = np.array([frozenset((a, s)) not in coset for a, s in zip(adv, stu)])
     solo_any = sum(bool(tp[a] & tp[s]) for a, s, k in zip(adv, stu, solo) if k)
@@ -373,12 +376,12 @@ def a4(res, ctx, people, all_edges):
         ax.plot(decades, [by_basis[b][d] or np.nan for d in decades], color=shades[b], lw=2, ls=styles[b], marker="o", ms=4, label=DOCUMENTED[b])
     ax.set_yscale("log"); ax.set_ylim(1, max(max(c.values()) for c in by_basis.values()) * 3)
     ax.set_xticks(decades[::2], [f"{d}s" for d in decades[::2]])
-    ax.set_ylabel("Sociology PhDs (log scale)")
+    ax.set_ylabel(f"{LBL.capitalize()} PhDs (log scale)")
     ax.legend(loc="upper left", frameon=False, fontsize=9)
     ax.grid(axis="x", visible=False)
     ax.set_title("Documented PhD years now reach back a century, thinly")
     pre = sum(n[d] for d in decades if d < 2000)
-    fig.text(0, -0.08, f"{pre:,} documented sociology PhDs before 2000, {sum(n[d] for d in decades if d >= 2000):,} from 2000. "
+    fig.text(0, -0.08, f"{pre:,} documented {LBL} PhDs before 2000, {sum(n[d] for d in decades if d >= 2000):,} from 2000. "
              f"Excludes {res['A4']['excluded_estimated']:,} years estimated from relatives or first papers.", color=INK3, fontsize=8.5)
     fig.savefig(FIGS / "a4_coverage.png"); plt.close(fig)
 
@@ -399,7 +402,7 @@ def a4(res, ctx, people, all_edges):
         ax.set_visible(False)
     for ax in axes[-1]:
         ax.set_xticks(shown[::2], [f"{d}s" for d in shown[::2]])
-    fig.suptitle("Share of each decade's documented sociology PhDs descending from each school", x=0.01, ha="left", fontweight=700, fontsize=12)
+    fig.suptitle(f"Share of each decade's documented {LBL} PhDs descending from each school", x=0.01, ha="left", fontweight=700, fontsize=12)
     fig.text(0.01, -0.03, f"Decades with at least {MIN_N} documented PhDs: {shown[0]}s–{shown[-1]}s. A person can descend from several schools. "
              f"Founders from data/schools.json; descent follows every advisor link.\nAny school: "
              + ", ".join(f"{d}s {share_any[d]:.0%}" for d in shown) + ".", color=INK3, fontsize=8.5)
@@ -415,8 +418,8 @@ def census_matcher():
     import sys
     sys.path.insert(0, str(ROOT / "scripts"))
     from match_hiring_institutions import expand, toks
-    inst = pd.read_parquet(ROOT / "data" / "external" / "faculty_hiring_sociology_institutions.parquet")
-    mp = pd.read_parquet(ROOT / "data" / "external" / "faculty_hiring_inst_map.parquet")
+    inst = pd.read_parquet(WORK / "data" / "external" / f"faculty_hiring_{FIELD}_institutions.parquet")
+    mp = pd.read_parquet(WORK / "data" / "external" / "faculty_hiring_inst_map.parquet")
     mp = mp[mp.hiring_id.isin(inst.institution_id)]
     drop = {"the", "at", "main", "campus", "of"}
     flag = {"columbia", "manoa", "madison", "amherst", "ann", "arbor", "chapel", "hill", "twin", "cities", "urbana",
@@ -445,7 +448,7 @@ def census_matcher():
 
 def a5(res, ctx, people, phd_edges):
     match, pct, loc2h = census_matcher()
-    careers = json.loads((ROOT / "explorer" / "data" / "careers.json").read_text())
+    careers = json.loads((EXPL / "careers.json").read_text())
     FAC = ("professor", "lecturer")
 
     def first_job(pid, y):
@@ -539,7 +542,7 @@ def a5(res, ctx, people, phd_edges):
         axes[i, 0].set_ylabel("Percentile points vs\nclassmates' average")
     fig.suptitle("No clear advisor effect on placement, relative to classmates from the same program and decade", x=0.01, ha="left", fontweight=700, fontsize=12)
     fig.text(0.01, -0.05, "Advisor measure ranked within the student's PhD program and decade. Placement = prestige percentile of the hiring department "
-             "(Wapman et al. 2022 ranks; 100 = top).\nOnly students whose placement is a ranked US sociology department. 95% bootstrap CIs; p from 1,000 within-stratum permutations.",
+             f"(Wapman et al. 2022 ranks; 100 = top).\nOnly students whose placement is a ranked US {LBL} department. 95% bootstrap CIs; p from 1,000 within-stratum permutations.",
              color=INK3, fontsize=8.5)
     fig.tight_layout()
     fig.savefig(FIGS / "a5_placement.png"); plt.close(fig)

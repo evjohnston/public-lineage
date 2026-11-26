@@ -25,12 +25,17 @@ import httpx
 from dotenv import dotenv_values
 
 ROOT = Path(__file__).resolve().parents[1]
-DB = ROOT / "data" / "lineage.duckdb"
-AUTHORPUB = ROOT / "data" / "raw" / "aft" / "authorpub_soc.parquet"
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
+DB = WORK / "data" / "lineage.duckdb"
+AUTHORPUB = AUTHORPUB
 ENV = dotenv_values(ROOT / ".env")
 UA = {"User-Agent": "academic-lineage-research/0.1"}
 OA = "https://api.openalex.org"
-MAX_DOIS_PER_PERSON = 60  # keeps the OpenAlex budget bounded for very prolific people
+# keeps the OpenAlex budget bounded for very prolific people. Larger fields get fewer per person: a few
+# shared DOIs already identify the author (3 votes = high confidence), and the daily budget is ~10k requests.
+MAX_DOIS_PER_PERSON = 60 if FIELD == "sociology" else 6
+WORKERS = 1 if FIELD == "sociology" else 4  # parallel /works requests
 MIN_USD_LEFT = 0.05
 
 
@@ -156,13 +161,17 @@ def step_works(con: duckdb.DuckDBPyConnection) -> None:
                         con.executemany("INSERT INTO oa_authorships VALUES (?,?,?,?,?,?,?,?)", rows)
                 con.execute("INSERT OR IGNORE INTO oa_dois_fetched VALUES (?)", [doi])
     print(f"OpenAlex works: {len(todo):,} DOIs to look up (~{len(todo) // 50 + 1:,} requests)")
-    with httpx.Client(timeout=120, headers=UA) as c:
-        for i in range(0, len(todo), 50):
-            batch = todo[i : i + 50]
-            d = oa_get(
-                c, "/works", filter="doi:" + "|".join(batch), select="id,doi,publication_year,authorships",
-                **{"per-page": 50},
-            )
+    from concurrent.futures import ThreadPoolExecutor
+    batches = [todo[i : i + 50] for i in range(0, len(todo), 50)]
+    with httpx.Client(timeout=120, headers=UA) as c, ThreadPoolExecutor(WORKERS) as pool:
+        def fetch(batch):
+            try:
+                return batch, oa_get(c, "/works", filter="doi:" + "|".join(batch),
+                                     select="id,doi,publication_year,authorships", **{"per-page": 50})
+            except httpx.HTTPError:  # timeout or dropped connection: left unfetched for the next run
+                return batch, None
+        for n_done, (batch, d) in enumerate(pool.map(fetch, batches)):
+            i = n_done * 50
             if d is None:
                 continue
             rows = []

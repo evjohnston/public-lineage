@@ -9,19 +9,23 @@ from pathlib import Path
 import duckdb
 
 ROOT = Path(__file__).resolve().parents[1]
-DB = ROOT / "data" / "lineage.duckdb"
-OUT = ROOT / "data" / "raw" / "aft" / "authorpub_soc.parquet"
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
+DB = WORK / "data" / "lineage.duckdb"
+OUT = AUTHORPUB
 BASE = "https://zenodo.org/records/6349537/files/authorPub{:02d}.csv.gz?download=1"
 PARTS = [0, 5, 10, 15, 20, 25, 30]
 
 
 def main() -> None:
     con = duckdb.connect(str(DB), read_only=True)
-    con.execute("INSTALL httpfs; LOAD httpfs;")
+    if not all((ROOT / "data" / "raw" / "aft" / f"authorPub{p:02d}.csv.gz").exists() for p in PARTS):
+        con.execute("INSTALL httpfs; LOAD httpfs;")
     con.execute("CREATE TEMP TABLE ids AS SELECT pid FROM aft_people")
     chunks = []
     for i, part in enumerate(PARTS):
-        url = BASE.format(part)
+        local = ROOT / "data" / "raw" / "aft" / f"authorPub{part:02d}.csv.gz"
+        url = str(local) if local.exists() else BASE.format(part)  # local copy when downloaded
         con.execute(
             f"""
             CREATE TEMP TABLE part{i} AS

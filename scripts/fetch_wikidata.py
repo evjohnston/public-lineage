@@ -34,8 +34,10 @@ import httpx
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
 RAW = ROOT / "data" / "raw" / "wikidata"
-OUT = ROOT / "data" / "external"
+OUT = WORK / "data" / "external"
 ENDPOINT = "https://query.wikidata.org/sparql"
 UA = {
     "User-Agent": "academic-lineage-research/0.1 (personal research project)",
@@ -45,8 +47,8 @@ PAUSE = 2.0  # seconds between live queries
 BATCH = 250  # QIDs per attribute query
 REFRESH = "--refresh" in sys.argv
 
-SOCIOLOGIST = "Q2306091"
-SOCIOLOGY = "Q21201"
+SOCIOLOGIST = CFG["wd_occ"]   # the field's occupation (sociologist, physicist, ...)
+SOCIOLOGY = CFG["wd_field"]   # the field itself, as field of work
 DOCTORATE = "Q849697"
 DOCTORAL_THESIS = "Q187685"
 
@@ -60,7 +62,7 @@ def sparql(name: str, query: str, tries: int = 5) -> list[dict]:
     global _last_call
     RAW.mkdir(parents=True, exist_ok=True)
     h = hashlib.sha1(query.encode()).hexdigest()[:12]
-    path = RAW / f"{name}_{h}.json"
+    path = RAW / (f"{name}_{h}.json" if FIELD == "sociology" else f"{FIELD}_{name}_{h}.json")
     if path.exists() and not REFRESH:
         data = json.loads(path.read_text())
     else:
@@ -312,7 +314,7 @@ def main() -> None:
                 "student_qid": s,
                 "year": y if y is not None else ty,
                 "institution": inst or tinst,
-                "field": "sociology",
+                "field": FIELD,
                 "url": f"https://www.wikidata.org/wiki/{s}",
                 "via": ",".join(sorted(via)),  # which property asserted the link: P184, P185 or both
             }

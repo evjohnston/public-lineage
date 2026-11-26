@@ -25,8 +25,10 @@ import numpy as np
 import networkx as nx
 
 ROOT = Path(__file__).resolve().parents[1]
-DB = ROOT / "data" / "lineage.duckdb"
-OUT = ROOT / "explorer" / "data" / "lineage.json"
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
+DB = WORK / "data" / "lineage.duckdb"
+OUT = EXPL / "lineage.json"
 
 FLAG_OUTSIDE = 1       # not tagged sociology (boundary advisor/student)
 FLAG_ISOLATED = 2      # tagged sociology but no mentorship links at all
@@ -40,9 +42,11 @@ FLAG_DUPLICATE = 256   # another record looks like the same person
 FLAG_EXTERNAL = 512    # person known only from an outside source (NSF, Wikidata, a repository)
 FLAG_KNOWN_ROOT = 1024  # confirmed to have no doctoral advisor (data/known_roots.csv, reviewed)
 
-EXT = ROOT / "data" / "external"
+EXT = WORK / "data" / "external"
 # edge source bits: 1 = Academic Family Tree, 2 = NSF dissertation grant, 4 = Wikidata, 8 = dissertation repository, 16 = manual
-SRC_AFT, SRC_NSF, SRC_WIKIDATA, SRC_DISS, SRC_MANUAL = 1, 2, 4, 8, 16  # 16 = entered by hand (data/manual_edges.csv)
+SRC_AFT, SRC_NSF, SRC_WIKIDATA, SRC_DISS, SRC_MANUAL = 1, 2, 4, 8, 16
+# not the formal thesis director: AFT undergrad RA (0), postdoc (2), research scientist (3); mentor (6)
+NONFORMAL = {0, 2, 3, 6}  # 16 = entered by hand (data/manual_edges.csv)
 
 
 def src_bit(source: str) -> int:
@@ -117,11 +121,13 @@ def main() -> None:
     MERGE = load_merges()
     R = lambda p: MERGE.get(p, p)
     people = [r for r in people if r[0] not in MERGE]
+    # one relation per pair: a PhD tie (1) wins over postdoc (2), research scientist (3), undergrad RA (0)
+    RANK = {1: 0, 2: 1, 3: 2, 0: 3}
     agg = {}
     for m, t, rel in edges:
         k = (R(m), R(t))
         if k[0] != k[1]:
-            agg[k] = min(rel, agg.get(k, rel))
+            agg[k] = rel if k not in agg else min(rel, agg[k], key=lambda r: RANK.get(r, 9))
     edges = [(m, t, r) for (m, t), r in agg.items()]
     oa = {}
     if con.execute(
@@ -135,6 +141,19 @@ def main() -> None:
     G.add_edges_from((m, t) for m, t, _ in edges)
     edge_src = {(m, t): SRC_AFT for m, t, _ in edges}
     edge_rel = {(m, t): r for m, t, r in edges}
+    # The AFT itself can hold a loop (two people each listed as the other's mentor; physics has one,
+    # Townes <-> Zeiger, both postdoc). Lineage needs a DAG, so drop the weakest link of each loop:
+    # a non-PhD tie before a PhD tie, then the link from the person with fewer trainees.
+    cycle_breaks = []
+    while True:
+        try:
+            cyc = nx.find_cycle(G)
+        except nx.NetworkXNoCycle:
+            break
+        m, t = max(((u, v) for u, v in cyc), key=lambda e: (edge_rel[e] != 1, -G.out_degree(e[0])))
+        G.remove_edge(m, t); edge_rel.pop((m, t)); edge_src.pop((m, t))
+        cycle_breaks.append([m, t]); print(f"loop in the AFT: dropped {m} -> {t}")
+    edges = [(m, t, edge_rel[(m, t)]) for m, t in G.edges] if cycle_breaks else edges
 
     # ---- outside sources (scripts/merge_external.py): confirm AFT links or add new ones
     evidence = defaultdict(list)
@@ -177,7 +196,7 @@ def main() -> None:
         edges = [(m, t, edge_rel[(m, t)]) for m, t in G.edges]
     # reviewed corrections to individual links (data/edge_corrections.csv, written by apply_reviews.py):
     # action "remove" drops advisor -> student; "reverse" turns it into student -> advisor.
-    ec = ROOT / "data" / "edge_corrections.csv"
+    ec = WORK / "data" / "edge_corrections.csv"
     if ec.exists():
         import pandas as pd
         fixed = 0
@@ -223,7 +242,7 @@ def main() -> None:
     for n in reversed(list(nx.topological_sort(G))):
         st = set()
         for c in G.successors(n):
-            if edge_rel.get((n, c), 1) == 6:
+            if edge_rel.get((n, c), 1) in NONFORMAL:
                 continue
             st.add(c); st |= fsets[c]
         fsets[n] = st
@@ -260,7 +279,7 @@ def main() -> None:
         ys = [e[1] for e in ev if e[1]]
         if ys and t not in year:
             year[t], basis[t] = max(ys), 2
-    cj = ROOT / "explorer" / "data" / "careers.json"                    # 2: ORCID education entry for a PhD
+    cj = EXPL / "careers.json"                    # 2: ORCID education entry for a PhD
     if cj.exists():
         phd_re = re.compile(r"ph\.?\s?d|doctor|doctorat|dphil|d\.phil", re.I)
         for k, (_o, _b, items) in json.loads(cj.read_text()).items():
@@ -329,7 +348,7 @@ def main() -> None:
         wpf = EXT / "wikidata_people.parquet"
         if wpf.exists():
             wpd = pd.read_parquet(wpf)
-            soc_q |= set(wpd[wpd.sociologist_basis.apply(lambda b: any(x in ("P106:Q2306091", "P101:Q21201") for x in (b if b is not None else [])))].qid)
+            soc_q |= set(wpd[wpd.sociologist_basis.apply(lambda b: any(x in (f"P106:{CFG['wd_occ']}", f"P101:{CFG['wd_field']}") for x in (b if b is not None else [])))].qid)
         ancp = EXT / "wdanc_people.parquet"
         if ancp.exists():
             soc_q |= set(pd.read_parquet(ancp).query("is_sociologist").qid)
@@ -343,12 +362,12 @@ def main() -> None:
             else:
                 other_src |= {p for p, _ in ends}
         outside_ext = {p for p, qs in wd_q.items() if p >= 900_000_000 and p not in other_src and not (qs & soc_q)}
-        print(f"outside-source people flagged outside the field (not sociologists on Wikidata): {len(outside_ext):,}")
+        print(f"outside-source people flagged outside the field (not in the field on Wikidata): {len(outside_ext):,}")
 
     # confirmed founders: data/known_roots*.csv (pid, name, url, evidence, reason), reviewed by hand
     known_roots, root_info = set(), {}
     import pandas as pd
-    for kr in sorted((ROOT / "data").glob("known_roots*.csv")):
+    for kr in sorted((WORK / "data").glob("known_roots*.csv")):
         for r in pd.read_csv(kr, dtype=str).fillna("").itertuples(index=False):
             if r.pid.strip().isdigit():
                 pid = R(int(r.pid)); known_roots.add(pid)
@@ -393,8 +412,11 @@ def main() -> None:
 
     sizes = sorted({len(c) for c in nx.weakly_connected_components(G)}, reverse=True)
     meta = {
+        "field": FIELD, "field_label": CFG["label"], "noun": CFG["noun"], "nouns": CFG["nouns"],
         "known_roots": {str(k): v for k, v in root_info.items()},
+        "cycle_breaks": cycle_breaks,
         "mentor_links": sum(1 for v in edge_rel.values() if v == 6),
+        "nonformal_links": sum(1 for v in edge_rel.values() if v in NONFORMAL),
         "outside_sources": {k: dict(v) for k, v in ext_counts.items()},
         "people": len(rows),
         "edges": len(edges),

@@ -21,8 +21,10 @@ from pathlib import Path
 import duckdb
 
 ROOT = Path(__file__).resolve().parents[1]
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
 RAW = ROOT / "data" / "raw" / "aft"
-DB = ROOT / "data" / "lineage.duckdb"
+DB = WORK / "data" / "lineage.duckdb"
 
 RELATION_LABELS = """
     CASE relation
@@ -45,10 +47,10 @@ def main() -> None:
     con.execute(f"CREATE OR REPLACE TEMP TABLE connect_all AS SELECT * FROM {read('connect.csv.gz')}")
 
     con.execute(
-        """
+        f"""
         CREATE OR REPLACE TEMP TABLE soc_ids AS
         SELECT CAST(pid AS BIGINT) AS pid FROM people_all
-        WHERE list_contains(string_split(coalesce(majorarea, ''), ','), 'sociology')
+        WHERE list_contains(string_split(coalesce(majorarea, ''), ','), '{CFG["aft_tag"]}')
         """
     )
 

@@ -1,0 +1,17 @@
+{
+  "_note": "Seed list of physics schools, defined by founders. Members are the founders plus all their recorded academic descendants. These are conventional textbook groupings, not settled facts: edit, add or remove freely, then run LINEAGE_FIELD=physics scripts/export_context.py. Person ids are Academic Family Tree pids (see the explorer URL #/p/<pid>).",
+  "schools": [
+    {"id": "cavendish", "name": "Cavendish Laboratory", "founders": [13139, 13140], "note": "J. J. Thomson and Rutherford at Cambridge: the electron, the nucleus, experimental atomic physics."},
+    {"id": "sommerfeld", "name": "Sommerfeld school", "founders": [3211], "note": "Arnold Sommerfeld in Munich: atomic theory; students include Heisenberg, Pauli, Debye and Bethe."},
+    {"id": "copenhagen", "name": "Copenhagen school", "founders": [1943], "note": "Niels Bohr's institute: the Copenhagen interpretation of quantum mechanics."},
+    {"id": "gottingen", "name": "Göttingen quantum mechanics", "founders": [1942], "note": "Max Born in Göttingen: matrix mechanics and the statistical interpretation."},
+    {"id": "leiden", "name": "Leiden school", "founders": [23346], "note": "Paul Ehrenfest in Leiden: statistical physics and early quantum theory."},
+    {"id": "landau", "name": "Soviet theoretical physics", "founders": [59194, 145137], "note": "Landau and Tamm in Moscow: the Landau school and the Lebedev theory group."},
+    {"id": "berkeley", "name": "Berkeley Radiation Laboratory", "founders": [52640, 38088], "note": "Oppenheimer's theory group and Lawrence's cyclotron lab."},
+    {"id": "fermi", "name": "Fermi school", "founders": [34756], "note": "Enrico Fermi in Rome and Chicago: nuclear and particle physics."},
+    {"id": "bethe", "name": "Cornell nuclear theory", "founders": [32879], "note": "Hans Bethe at Cornell: nuclear physics and astrophysics."},
+    {"id": "wheeler", "name": "Wheeler school", "founders": [25559], "note": "John Wheeler at Princeton and Texas: relativity, gravitation, Feynman and Thorne."},
+    {"id": "qed-columbia-harvard", "name": "Columbia and Harvard QED", "founders": [24618, 36900], "note": "Rabi's molecular beams at Columbia and Schwinger's quantum electrodynamics at Harvard."},
+    {"id": "wigner", "name": "Princeton solid state", "founders": [47657], "note": "Eugene Wigner at Princeton: symmetry, nuclear and solid-state theory (Bardeen, Seitz)."}
+  ]
+}

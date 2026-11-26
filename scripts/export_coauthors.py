@@ -19,9 +19,11 @@ from pathlib import Path
 import duckdb
 
 ROOT = Path(__file__).resolve().parents[1]
-DB = Path(sys.argv[sys.argv.index("--db") + 1]) if "--db" in sys.argv else ROOT / "data" / "lineage.duckdb"
-OUT = ROOT / "explorer" / "data" / "coauthors.json"
-LIN = ROOT / "explorer" / "data" / "lineage.json"
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
+DB = Path(sys.argv[sys.argv.index("--db") + 1]) if "--db" in sys.argv else WORK / "data" / "lineage.duckdb"
+OUT = EXPL / "coauthors.json"
+LIN = EXPL / "lineage.json"
 
 sys.path.insert(0, str(Path(__file__).parent))
 from merges import load_merges  # noqa: E402

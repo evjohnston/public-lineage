@@ -13,8 +13,10 @@ import duckdb
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-EXT = ROOT / "data" / "external"
-DB = Path(sys.argv[sys.argv.index("--db") + 1]) if "--db" in sys.argv else ROOT / "data" / "lineage.duckdb"
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
+EXT = WORK / "data" / "external"
+DB = Path(sys.argv[sys.argv.index("--db") + 1]) if "--db" in sys.argv else WORK / "data" / "lineage.duckdb"
 
 ALIASES = {
     "penn state": "pennsylvania state university", "unc": "university of north carolina chapel hill",
@@ -64,7 +66,7 @@ def contains_run(hay, needle):
 
 
 def main():
-    f = pd.read_parquet(EXT / "faculty_hiring_sociology_flows.parquet")
+    f = pd.read_parquet(EXT / f"faculty_hiring_{FIELD}_flows.parquet")
     hi = pd.concat([f[["phd_institution_id", "phd_institution"]].set_axis(["id", "name"], axis=1),
                     f[["hiring_institution_id", "hiring_institution"]].set_axis(["id", "name"], axis=1)]).drop_duplicates("id")
     con = duckdb.connect(str(DB), read_only=True)

@@ -27,8 +27,10 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-EXT = ROOT / "data" / "external"
-LIN = ROOT / "explorer" / "data" / "lineage.json"
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
+EXT = WORK / "data" / "external"
+LIN = EXPL / "lineage.json"
 EXT_BASE = 900_000_000
 SUFFIX = {"jr", "sr", "ii", "iii", "iv", "phd"}
 STOP = {"university", "of", "the", "at", "college", "and", "state", "institute", "de", "la", "du", "school", "new"}

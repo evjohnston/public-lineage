@@ -24,8 +24,10 @@ import duckdb
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-EXT = ROOT / "data" / "external"
-OUT = ROOT / "explorer" / "data" / "careers.json"
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
+EXT = WORK / "data" / "external"
+OUT = EXPL / "careers.json"
 sys.path.insert(0, str(Path(__file__).parent))
 from merges import load_merges  # noqa: E402
 
@@ -46,12 +48,14 @@ def words(s):
 
 def main():
     R = (lambda m: lambda p: m.get(p, p))(load_merges())
+    if not (EXT / "orcid_affiliations.parquet").exists():  # no ORCID records fetched for this field yet
+        OUT.write_text("{}"); print("no orcid_affiliations.parquet; wrote empty", OUT); return
     aff = pd.read_parquet(EXT / "orcid_affiliations.parquet")
-    lin = json.loads((ROOT / "explorer" / "data" / "lineage.json").read_text())
+    lin = json.loads((EXPL / "lineage.json").read_text())
     people = {r[0]: r for r in lin["people"]}
 
     pid_of, basis = {}, {}
-    con = duckdb.connect(str(ROOT / "data" / "lineage.duckdb"), read_only=True)
+    con = duckdb.connect(str(WORK / "data" / "lineage.duckdb"), read_only=True)
     for pid, v in con.execute("SELECT pid, orcid_id FROM aft_people WHERE orcid_id IS NOT NULL").fetchall():
         for o in ORCID_RE.findall(v):
             pid_of.setdefault(o, R(pid)); basis.setdefault(o, "aft")

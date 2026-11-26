@@ -21,7 +21,9 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-REVIEW = ROOT / "data" / "review"
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
+REVIEW = WORK / "data" / "review"
 YES = {"yes", "y", "x", "1", "true", "accept"}
 COLS = ["advisor_pid", "advisor_name", "student_pid", "student_name", "year", "institution", "url", "note", "role", "degree"]
 # why someone has no doctoral advisor (known_roots*.csv "reason")
@@ -72,7 +74,7 @@ def collect(src: Path):
 def apply():
     edges, roots = [], []
     pid_of_q = {}
-    me = ROOT / "data" / "external" / "merged_edges.parquet"
+    me = WORK / "data" / "external" / "merged_edges.parquet"
     if me.exists():
         for r in pd.read_parquet(me).itertuples(index=False):
             if r.source == "wikidata" and "-" in str(r.source_id):
@@ -101,9 +103,9 @@ def apply():
         d = pd.read_csv(f, dtype=str).fillna("")
         for r in d[d.accept.str.strip().str.lower().isin(YES)].itertuples(index=False):
             fixes.append({"action": r.action, "advisor_pid": r.advisor_pid, "student_pid": r.student_pid, "reason": r.reason, "url": r.url})
-    pd.DataFrame(fixes, columns=["action", "advisor_pid", "student_pid", "reason", "url"]).to_csv(ROOT / "data" / "edge_corrections.csv", index=False)
-    pd.DataFrame(edges, columns=COLS).to_csv(ROOT / "data" / "manual_edges_reviewed.csv", index=False)
-    pd.DataFrame(roots, columns=["pid", "name", "url", "evidence", "reason"]).to_csv(ROOT / "data" / "known_roots.csv", index=False)
+    pd.DataFrame(fixes, columns=["action", "advisor_pid", "student_pid", "reason", "url"]).to_csv(WORK / "data" / "edge_corrections.csv", index=False)
+    pd.DataFrame(edges, columns=COLS).to_csv(WORK / "data" / "manual_edges_reviewed.csv", index=False)
+    pd.DataFrame(roots, columns=["pid", "name", "url", "evidence", "reason"]).to_csv(WORK / "data" / "known_roots.csv", index=False)
     print(f"{len(edges)} accepted advisor links -> data/manual_edges_reviewed.csv; {len(roots)} confirmed founders -> data/known_roots.csv; "
           f"{len(fixes)} link corrections -> data/edge_corrections.csv")
 

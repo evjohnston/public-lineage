@@ -9,8 +9,10 @@ person_merges_manual.csv, which the build never overwrites. LINEAGE_NO_MERGES=1 
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-MERGES = ROOT / "data" / "external" / "person_merges.csv"            # written by resolve_duplicates.py
-MANUAL = ROOT / "data" / "external" / "person_merges_manual.csv"     # yours: drop_pid,keep_pid[,note]
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
+MERGES = WORK / "data" / "external" / "person_merges.csv"            # written by resolve_duplicates.py
+MANUAL = WORK / "data" / "external" / "person_merges_manual.csv"     # yours: drop_pid,keep_pid[,note]
 
 
 def load_merges() -> dict[int, int]:

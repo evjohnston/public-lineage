@@ -26,7 +26,9 @@ import pandas as pd
 from defusedxml import ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
-EXT = ROOT / "data" / "external"
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
+EXT = WORK / "data" / "external"
 OUT = EXT / "orcid_affiliations.parquet"
 SOC = re.compile(rb"sociolog|soziolog|socjolog", re.I)
 ORCID_RE = re.compile(r"\d{4}-\d{4}-\d{4}-\d{3}[\dX]")
@@ -47,7 +49,7 @@ def known_orcids() -> set[str]:
                 ids.update(ORCID_RE.findall(str(v)))
     try:
         import duckdb
-        con = duckdb.connect(str(ROOT / "data" / "lineage.duckdb"), read_only=True)
+        con = duckdb.connect(str(WORK / "data" / "lineage.duckdb"), read_only=True)
         for (v,) in con.execute("SELECT orcid_id FROM aft_people WHERE orcid_id IS NOT NULL").fetchall():
             ids.update(ORCID_RE.findall(v))
     except Exception:

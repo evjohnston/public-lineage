@@ -13,6 +13,10 @@
 <body>
   <header class="top">
     <a class="brand" href="#/"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="4.5" r="2.6" class="f"/><circle cx="4.5" cy="15" r="2.3"/><circle cx="15.5" cy="15" r="2.3"/><path d="M8.7 6.8L5.6 12.8M11.3 6.8L14.4 12.8"/></svg>Lineage Explorer</a>
+    <nav class="field-switch" id="fieldSwitch" aria-label="Field">
+      <a href="./#/" data-field="sociology">Sociology</a>
+      <a href="./?field=physics#/" data-field="physics">Physics</a>
+    </nav>
     <div class="search" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-owns="search-results">
       <svg class="search-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4.5 4.5"/></svg>
       <input id="search" type="search" placeholder="Search people" autocomplete="off" spellcheck="false" aria-label="Search people" aria-controls="search-results" aria-autocomplete="list">
@@ -53,13 +57,13 @@
         </div>
         <div class="statusbar" id="legend">
           <span class="colorkey" id="colorkey" hidden></span>
-          <span class="lk"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/></svg>Sociology</span>
+          <span class="lk"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/></svg><span id="fieldLegend">Sociology</span></span>
           <span class="lk" data-k="out"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5" class="dash"/></svg>Outside the field</span>
           <span class="lk"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" class="fill"/></svg>In focus</span>
           <span class="lk acc" data-k="path"><svg viewBox="0 0 24 16"><path d="M2 8h18"/><path d="M15 3l6 5-6 5" class="head"/></svg>Traced path</span>
           <span class="lk"><svg viewBox="0 0 24 16"><path d="M2 8h18"/><path d="M15 3l6 5-6 5" class="head"/></svg>Advisor to student</span>
           <span class="lk" data-k="ext"><svg viewBox="0 0 24 16"><path d="M2 8h18" class="dot"/></svg>Outside source only</span>
-          <span class="lk" data-k="ment"><svg viewBox="0 0 24 16"><path d="M2 8h18" class="ment"/></svg>Mentor, not formal director</span>
+          <span class="lk" data-k="ment"><svg viewBox="0 0 24 16"><path d="M2 8h18" class="ment"/></svg>Mentor or postdoc, not formal director</span>
           <span class="tag" id="formalTag" hidden>Formal directors only</span>
         </div>
         <section class="strip" id="strip" hidden aria-label="List for the current view"></section>

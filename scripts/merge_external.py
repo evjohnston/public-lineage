@@ -30,8 +30,10 @@ import duckdb
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-EXT = ROOT / "data" / "external"
-DB = Path(sys.argv[sys.argv.index("--db") + 1]) if "--db" in sys.argv else ROOT / "data" / "lineage.duckdb"
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
+EXT = WORK / "data" / "external"
+DB = Path(sys.argv[sys.argv.index("--db") + 1]) if "--db" in sys.argv else WORK / "data" / "lineage.duckdb"
 EXT_BASE = 900_000_000
 VETTED = ["nsf_ddrig_edges.parquet", "wikidata_edges.parquet", "dissertations_edges.parquet",
           "wdanc_edges.parquet"]  # wdanc: Wikidata advisors of known people, any field (fetch_wikidata_ancestors.py)
@@ -77,7 +79,7 @@ def main() -> None:
         if f.name.startswith("wikidata"):
             # strict: one side has occupation sociologist or field sociology, not the wider subclass tree
             wp = pd.read_parquet(EXT / "wikidata_people.parquet")
-            strict = set(wp[wp.sociologist_basis.apply(lambda b: any(x in ("P106:Q2306091", "P101:Q21201") for x in (b if b is not None else [])))].qid)
+            strict = set(wp[wp.sociologist_basis.apply(lambda b: any(x in (f"P106:{CFG['wd_occ']}", f"P101:{CFG['wd_field']}") for x in (b if b is not None else [])))].qid)
             d = d[d.advisor_qid.isin(strict) | d.student_qid.isin(strict)]
         if f.name.startswith("dissertations") and "degree_level" in d.columns:
             d = d[d.degree_level == "doctoral"]  # drop master's theses (MINDS@UW is mostly MS)
@@ -170,7 +172,7 @@ def main() -> None:
     # person who trained them, not the formal director), or examiner (jury member / official
     # opponent: kept as a committee tie, never a lineage link). degree: optional, e.g. "doctorat de 3e cycle".
     manual_comm = []
-    for man in sorted((ROOT / "data").glob("manual_edges*.csv")):
+    for man in sorted((WORK / "data").glob("manual_edges*.csv")):
         md = pd.read_csv(man, dtype=str).fillna("")
         for i, r in enumerate(md.itertuples(index=False)):
             role = (getattr(r, "role", "") or "director").strip().lower()

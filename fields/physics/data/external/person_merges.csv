@@ -1,0 +1,530 @@
+drop_pid,keep_pid,reason,drop_name,keep_name
+135717,67248,shared+inst+years,Yeung Au,Yeung (Billy) Au
+123716,755450,shared+inst+years,Pierre Larochelle,Pierre Marc Larochelle
+758043,804996,shared+inst+years,Easwara Subramanian,Easwara Subramanian
+747721,607829,shared+inst+years,Maria G Kurnikova,Maria Kurnikova
+443083,686292,shared+years,Xiongjun Liu,Xiong-Jun Liu
+839100,363837,shared+years,Kacy L. Hollenback,Kacy L. Hollenback
+778848,364297,shared+years,Nikhil S. Malvankar,Nikhil S. Malvankar
+165642,732469,shared+years,Jiang Wei,Jiang Wei
+146940,820391,shared+years,Kishor T. Kapale,Kishor T Kapale
+110204,186135,shared+years,Derek M. Stein,Derek Stein
+407909,770641,shared+years,Shanti Deemyad,Shanti Deemyad
+456899,779873,shared+years,Yong M. Sua,Yong Meng Sua
+838546,797240,shared+years,Erich Schmid,Erich Schmid
+441737,831754,shared+years,Robert G. Knobel,Robert Knobel
+831990,831993,shared+years,Francesco Conto,Francesco Paolo Conto
+967304290,81341,shared+inst,William R. Davis,William Robert Davis
+957300783,122032,shared+inst,Yan-Bei Chen,Yanbei Chen
+910707981,91308,shared+inst,Chia-Chiao Lin,Chia-Chiao Lin
+917372948,832402,shared+inst,"Frank Lee Vernon, Jr.",Frank L. Vernon
+838614,350929,shared+inst,Mark D. Shattuck,Mark D. Shattuck
+850543,850542,shared+inst,Wen-Hong Zhang,Wen-Hong Zhang
+145297,54850,shared+inst,Eric R. Scerri,Eric R. Scerri
+924815000,728707,shared+inst,Xiang Zhang,Xiang Zhang
+768415,799574,shared+inst,Eilam Gross,Eilam Gross
+962118833,164041,shared+inst,Paul Linford Richards,Paul L. Richards
+984769193,164320,shared+inst,Richard A. Muller,Richard A. Muller
+502129,185621,shared+inst,Ilan B. Zvi,Ilan Ben-zvi
+727019,245204,shared+inst,Vayujeet Gokhale,Vayujeet Gokhale
+195512,802037,shared+inst,Roger D. Kirby,Roger D. Kirby
+738794,218429,shared+inst,Mathias Geisler,Mathias Geisler
+717548,772720,shared+inst,Richard I. Walton,Richard I. Walton
+922265747,128060,shared+inst,Robert Lee Walker,Robert L. Walker
+784583,784899,shared+inst,Håkan Olin,Håkan Olin
+460027,784902,shared+inst,Kim Venn,Kim Venn
+793832,797172,shared+inst,Michael Fang,Michael Y.-S. Fang
+794832,851790,shared+inst,Robin J Nicholas,Robin J. Nicholas
+629287,750195,shared+inst,Steven B. Haase,Steven B. Haase
+798178,797583,shared+inst,Gholam Hossein Bordbar,Gholam Hossein Bordbar
+852456,804758,shared+inst,Vladimir Dmitrievich Shiltsev,Vladimir Shiltsev
+381288,805869,shared+inst,Kent D. Chapman,Kent D. Chapman
+863548,830239,shared+inst,Christophe Pichon,Christophe N. C. Pichon
+839144,839143,shared+inst,Panayiota Katsamba,Panayiota Katsamba
+87227,843378,shared+inst,Adel Ahmed,Adel M Awad (Ahmed)
+853940,853780,shared+inst,Demir Akin,Demir Akin
+855302,393193,shared+inst,Martin Elvis,Martin Elvis
+861234,381149,shared+inst,Robert M Briber,Robert M. Briber
+732157,627654,shared+inst,ali esad ozmetin,Ali E. Ozmetin
+82786,79640,shared+inst,Bih-Yaw Jin,Bih-Yaw Jin
+72345,72326,shared+inst,Marco Govoni,Marco Govoni
+967658988,85059,shared+inst,Nick Holonyak,"Nick Holonyak, Jr."
+394169,180911,inst+years,Wei-Yuan Lu,Wei Lu
+386195,838134,inst+years,Nathan W. Mueggenburg,Nathan Walter Mueggenburg
+971904849,442791,shared,Jun Geng,Jun Geng
+925238868,675676,shared,J. J. Sakurai,Jun John Sakurai
+933363238,766574,shared,James Kent Blackburn,James Blackburn
+948923260,737487,shared,Robert T Fisher,Robert T. Fisher
+987476010,66185,shared,Tsung-Dao Lee,Tsung-Dao (政道) Lee (李)
+973578794,836421,shared,Z. Jane Wang,Zhiqiang Wang
+968786118,190592,shared,William T. M. Irvine,William T. Irvine
+954207576,281245,shared,S. Peng Oh,Siang Peng Oh
+518136,846635,shared,Hsiao-Mei Cho,Hsiao-Mei Sherry Cho
+956694522,468415,shared,Chao Li,Chao Li
+957772574,745239,shared,Young K. Park,Young K. Park
+928498157,797178,shared,Lin Feng-li,Lin Li
+965051355,125400,shared,David B. Kaplan,David B. Kaplan
+941553572,740110,shared,Xiao-Young Liu,Xiao Liu
+591843,841398,shared,Gabriel Popescu,Gabriel Popescu
+972994314,4206,shared,Daniel S. Fisher,Daniel S. Fisher
+902400828,722939,shared,Chun Chia Lin,Chun Chia Lin
+932772334,491073,shared,Hai Lin,Hai Lin
+831249,348787,shared,Pablo Laguna,Pablo Laguna
+924121098,5493,shared,Robert Lee White,Robert Lee White
+984655905,225605,shared,Don L. Anderson,Donald L. Anderson
+919253952,61969,shared,Donald Gordon M. Anderson,Donald G. M. Anderson
+979890082,448894,shared,Young Kee Kim,Young-Kee Kim
+900064711,679870,shared,Yong Baek Kim,Yong Baek Kim
+79827,853978,shared,JianHua Jiang,Jian-Hua Jiang
+912374157,745236,shared,Wei-Gang Li,Wei-Gang Li
+143238,818530,shared,Bong S. Shim,Bong Sup Shim
+959173034,58622,shared,Charles Thomson Rees Wilson,Charles Thomson Rees Wilson
+949951292,104013,shared,James Edward Young,James Edward Young
+903372058,38090,shared,Chien-Shiung Wu,Chien-Shiung Wu
+107055,853777,shared,Seung-min Park,Seung-min Park
+984203283,180797,shared,Joo Sang Lee,Joo S. Lee
+985430850,724224,shared,Jae Yong Lee,Jae Yong Lee
+929261498,769448,shared,Gang Chen,Gang Chen
+640245,728582,shared,Cheting CHAN,Che-Ting Chan
+951585274,691190,shared,David Atkinson,David Atkinson
+928135108,173168,shared,Ying Zhang,Ying Zhang
+924426183,84739,shared,"Jerome R. Cox, Jr.","Jerome R. Cox, Jr."
+900909501,25559,shared,John Archibald Wheeler,John Archibald Wheeler
+923239101,766575,shared,Dong-Hoon Kim,Dong-hoon Kim
+971539666,368796,shared,Richard R. Carlson,Richard R. Carlson
+906102640,166907,shared,Morris Cohen,Morris Cohen
+927856888,179486,shared,Michael Cohen,Michael Cohen
+926088777,144230,shared,James William Harrington,James W. Harrington
+985409528,67481,shared,Wolfgang Paul,Wolfgang Paul
+924867833,65267,shared,James Sturdevant Taylor,James Sturdevant Taylor
+10871,157429,shared,Seong Taek (Simon) Jeon,Seong-Taek Jeon
+149967,755106,shared,Lincoln J. Lauhon,Lincoln J Lauhon
+921708771,150270,shared,Michael Lester Norman,Michael Lester Norman
+930295197,52719,shared,Francis Wheeler Loomis,F. Wheeler Loomis
+728721,752848,shared,Jian Wang,Jian-Sheng Wang
+915228251,689427,shared,Michael Victor Berry,Michael V. Berry
+925270154,158219,shared,Wu-yen Chuang,Wu-yen Chuang
+900143284,66188,shared,Chen-ning Yang,Chen-Ning (振寧) Yang (楊)
+911289617,83156,shared,Karl Ferdinand Braun,K. Ferdinand Braun
+951322161,77111,shared,R. Victor Jones,R. Victor Jones
+913278744,1249,shared,August Herman Pfund,A. Hermann Pfund
+959323714,799574,shared,Eilam Gross,Eilam Gross
+928173456,163266,shared,Karl Alexander Müller,K. Alexander Müller
+964357068,2017,shared,Norman Foster Ramsey,Norman F. Ramsey
+926807544,71786,shared,David Lee,David Morris Lee
+948758088,62611,shared,William E. Gordon,William Edwin Gordon
+942559999,34754,shared,David Gross,David J. Gross
+974823238,49887,shared,John L. Hall,John Lewis Hall
+979538093,835122,shared,James L. Anderson,James LeRoy Anderson
+933920697,83786,shared,John August Anderson,John August Anderson
+935941194,165099,shared,"William Fuller Brown, Jr.","William Fuller Brown, Jr."
+942259612,165339,shared,John Clarke,John Clarke
+960916514,165446,shared,Stephen Gregory,Stephen Gregory
+789591,79467,shared,James Craig Greer,James C. Greer
+961514844,33331,shared,John Williams,John Harry Williams
+903695057,33690,shared,Edgar Bright Wilson,"Edgar Bright Wilson, Jr."
+947007689,783600,shared,Yi Li,Yi Li
+921437985,170981,shared,Sean E. Barrett,Sean E. Barrett
+966513662,77982,shared,Daniel Z. Freedman,Daniel Z. Freedman
+761296,179657,shared,Jorge Moreno,Jorge Moreno
+905431316,179657,shared,Jorge Moreno,Jorge Moreno
+716943,778372,shared,Amitava Datta,Amitava Datta
+968396306,176767,shared,William I. Newman,William I. Newman
+946235935,871813,shared,Albert Betz,Albert Betz
+960837119,783293,shared,W. Vincent Liu,Wengsheng Vincent Liu
+906105089,177994,shared,Jon Eckel,Jonathan D. Eckel
+969977965,690175,shared,Steven M. Christensen,Steven Mark Christensen
+968884845,138450,shared,John M. Dawson,John M. Dawson
+840289,183597,shared,Mickey Chiu,Mickey G. Chiu
+931331525,33698,shared,Robert Smith,Robert Smith
+978792002,809472,shared,John C. Reynolds,John C. Reynolds
+900437136,190816,shared,Kenneth Rose,Kenneth Rose
+985479718,192026,shared,Ernst Weber,Ernst Weber
+972191497,192067,shared,W. G. Unruh,William G. Unruh
+56805,80,shared,"John Joseph Hopfield, Sr.",John J. Hopfield
+714854,855301,shared,Marcy Wong,Marcy Zenobi-​Wong
+805058,791886,shared,jianwei pan,Jian-Wei Pan
+989439022,55719,shared,Robert Boyd,Robert William Boyd
+951414335,221340,shared,G. Ramachandran,Gopalasamudram Narayana Ramachandran
+917634781,221994,shared,Jonathan Engle,Jonathan S. Engle
+920590322,766578,shared,John Charles Miller,John Charles Miller
+964923612,687696,shared,Brian Charles Thomas,Brian Charles Thomas
+968973862,161882,shared,Johannes Hans Daniel Jensen,J. Hans D. Jensen
+982666628,52507,shared,Robert Joseph Maurer,Robert J. Maurer
+197392,817541,shared,Dennis S. Mackin,"Dennis Mackin, Jr."
+961105536,248875,shared,Błażej Ruszczycki,Blazej Ruszczycki
+935680813,96652,shared,Thomas F. Rosenbaum,Thomas F. Rosenbaum
+965146791,216687,shared,A. D. Bruce,Alastair Douglas Bruce
+595096,770215,shared,Peter H. Poole,Peter H. Poole
+940289410,770762,shared,Rod Davies,Rodney Deane Davies
+771407,853682,shared,Hamidreza Siampour,Hamidreza Siampour
+777318,25687,shared,Johann (III) Bernoulli,Johann Bernoulli
+923823502,25687,shared,Johann III Bernoulli,Johann Bernoulli
+932919593,783273,shared,Avinash Singh,Avinash Singh
+954466269,67032,shared,John T. Norton,John Torrey Norton
+989141360,847581,shared,Michel Brune,Michel Brune
+985661372,780447,shared,Timothy James B. Collins,Tim James Collins
+986643658,780789,shared,C. Daniel Gelatt,Charles Daniel Gelatt
+926962917,783372,shared,J. A. Todd,John Arthur Todd
+934692526,784232,shared,Ronald Kent Hanson,Ronald Hanson
+784617,723310,shared,Aditi Chakrabarti,Aditi Chakrabarti
+917116051,529788,shared,Amit Chakrabarti,Amitabha Chakrabarti
+928888659,459893,shared,Richard Nigel Edwards,R. Nigel Edwards
+951646925,116247,shared,J. Gregory Dash,Jay Gregory Dash
+914788759,787333,shared,Muhammad Suhail Zubairy,M. Suhail Zubairy
+937694012,787427,shared,Tarık Çelik,Tarik Çelik
+953510947,787496,shared,M. Stanley Livingston,Milton Stanley Livingston
+986127630,86907,shared,David D. Clark,David D. Clark
+787788,829619,shared,Yunlong Xiao,Yunlong Xiao
+932128035,788743,shared,Naum Landkof,N S Landkof
+900545608,788749,shared,David Moss,David Moss
+963367188,788834,shared,Christopher T. Hill,Christopher T Hill
+914301436,789242,shared,Rod Crewther,Rodney James Crewther
+910479958,793053,shared,Arthur Stanley Mackenzie,A Stanley Mackenzie
+937976777,793482,shared,Harold Lewis,Harold Warren Lewis
+947866384,73252,shared,John Stuart Foster,John Stuart Foster
+984253762,796115,shared,"William M. Fairbank, Jr.",William Martin Fairbank
+968595853,797240,shared,Erich Schmid,Erich Schmid
+975496360,797580,shared,"Brian Flowers, Baron Flowers",Brian Flowers
+947400164,768266,shared,Jon Butterworth,Jonathan M Butterworth
+902843275,732181,shared,Tian-rong Zhang,Tianrong Zhang
+944876408,190448,shared,David R. Morrison,David R. Morrison
+932516725,837706,shared,Frank S. Ham,Frank Slagle Ham
+922174144,63214,shared,James Charles Phillips,James C. Phillips
+754371,804254,shared,Gregory Kellogg,Gregory J Kellogg
+969203007,804758,shared,Vladimir Shiltsev,Vladimir Shiltsev
+912188895,806769,shared,William F. Miller,William Frederick Miller
+942270139,12313,shared,James Clerk Maxwell,James Clerk Maxwell
+923047252,809282,shared,Benjamin Wallis,Ben Wallis
+915964265,73945,shared,Peter Pershan,Peter S. Pershan
+985820135,811140,shared,Ron Giovanelli,Ronald Gordon Giovanelli
+941191431,820326,shared,Salman Habib,Salman Habib
+965341549,745175,shared,Yu-Tang Shen,Yu-Tang Shen
+985657827,397498,shared,Carl Friedrich von Weizsäcker,Carl Friedrich von Weizsäcker
+921168314,814733,shared,Patrick de Laverny,Patric de Laverny
+911819054,724222,shared,David Wright,David Wright
+820002,461738,shared,Marian Florescu,Marian L. Florescu
+902379401,820038,shared,Friedrich Engel,Friedrich Engel
+963581896,468312,shared,Kenneth Charles Jacobs,Kenneth Charles Jacobs
+972707891,822258,shared,Arnold Tubis,Arnold Tubis
+907263207,823451,shared,W. Jack Cunningham,Walter Jack Cunningham
+900846771,824620,shared,Albert John Coleman,A. John Coleman
+915824210,826093,shared,Antonio Dobado,Antonio Dobado
+923648076,826389,shared,Hermann Arthur Jahn,Herman Arthur Jahn
+958377817,216682,shared,David Wallace,David James Wallace
+980979826,829429,shared,William H. Parker,William H. Parker
+937989135,832647,shared,John Gerard Kennedy,John Kennedy
+917952975,832947,shared,Robert W. Cahn,Robert W Cahn
+988174009,689046,shared,William Clyde Martin,William Clyde Martin
+960521239,836238,shared,P. P. Lazarev,Petr Petrovich Lazarev
+901772114,841275,shared,Robert Milton Howe,Robert M. Howe
+841351,841349,shared,Raghu G. Raj,Raghu G. Raj
+142073,841349,shared,Raghu G. Raj,Raghu G. Raj
+916115054,456256,shared,R. J. Dwayne Miller,R.J D. Miller
+968250794,75074,shared,Richard Miller,Richard H. Miller
+977086141,842614,shared,David S. Saxon,David Stephen Saxon
+980357824,848180,shared,Alberto González Domínguez,Alberto González Domínguez
+900516959,128037,shared,Robert R. Wilson,Robert Rathbun Wilson
+909773108,31171,shared,Joseph-Nicolas Delisle,Joseph Nicolas Delisle
+917739624,58899,shared,Joseph Keller,Joseph Bishop Keller
+949659841,724045,shared,David H. Rank,David Herr Rank
+943226701,377057,shared,William Bell Thompson,William B. Thompson
+925572359,491201,shared,Amos de-Shalit,Amos de Shalit
+974673499,860127,shared,Joachim Rädler,Joachim Rädler
+952153859,724057,shared,Alexander Williamson,Alexander R. Williamson
+905303160,552583,shared,Bram van Leer,Bram v. Leer
+963837701,641092,shared,L. D. Wyly,Lemuel David Wyly
+973185572,663482,shared,S. Leslie Blatt,Sherwyn Leslie Blatt
+908066736,61380,shared,Thomas G. Phillips,Thomas G. Phillips
+941728864,97927,shared,John David Jackson,J. David Jackson
+949119477,410543,shared,Li-Sheng Tseng,Li-Sheng Tseng
+900385069,666890,shared,P. R. Wallace,Philip Russell Wallace
+942086799,164345,shared,John Beverley Oke,J. Beverley Oke
+912424846,677957,shared,Sam M. Berman,Samuel Morris Berman
+962841574,56868,shared,Horace Richard Crane,H. Richard Crane
+946404571,185790,shared,Sergey Luryi,Serge Luryi
+939740676,490902,shared,Michael A. Strauss,Michael Abram Strauss
+957417498,4177,shared,John G. King,John G. King
+931800513,680003,shared,John Francis Donoghue,John F. Donoghue
+940554392,92431,shared,A. Brooks Harris,Arthur Brooks Harris
+932507258,472148,shared,Robert Mann,Robert B. Mann
+909932248,686098,shared,P. C. Gugelot,Piet Cornelis Gugelot
+964377296,56961,shared,Sam Edwards,Samuel Frederick Edwards
+952192746,687748,shared,William H. Taylor,W. H. Taylor
+928490643,687773,shared,Fritz Sauter,Fritz Eduard Josef Maria Sauter
+917678035,493313,shared,M. J. Seaton,Michael J. Seaton
+926786420,690860,shared,A. G. de Bruyn,Antonius Gerardus de Bruyn
+932703891,691415,shared,Adriaan Daniel Fokker,Adriaan Daniël Fokker
+906458043,529319,shared,Ian Ellery McCarthy,Ian Ellery McCarthy
+933420696,703089,shared,"William Thomson, 1st Baron Kelvin",William Thomson (Lord Kelvin)
+902803812,440436,shared,Robert Sproull,Robert L. Sproull
+949193037,36674,shared,Hereward Lester Cooke,H. Lester Cooke
+920021784,58643,shared,Robert Pohl,Robert Wichard Pohl
+969307128,724066,shared,Fred Tappert,Frederick Drach Tappert
+962740606,31392,shared,Christian Wolff,Christian Wolff
+987377674,730638,shared,Nicola Allegra,Nicolas Allegra
+982120723,732171,shared,J.J. de Swart,Johan J. de Swart
+976588849,732265,shared,Isaak Khalatnikov,I.M. Khalatnikov
+931348167,732266,shared,Yuriy Rumer,Yuri B. Rumer
+943387107,735682,shared,Martin Haehnelt,M. Haehnelt
+909083487,736793,shared,Harold Hopkins,H. H. Hopkins
+920598321,70590,shared,Carlos Pérez-García,Carlos Pérez-García
+956521311,741937,shared,Ray J. Rivers,Raymond J Rivers
+71491,742762,shared,Tony Mroczkowski,Tony Mroczkowski
+918352155,745182,shared,William C. Ford,William C. Ford
+539628,749918,shared,Richard A. Witt,Richard A. Witt
+946236928,125886,shared,Robert Wagoner,Robert V. Wagoner
+968284515,757131,shared,W.R. van Wijk,Willem Rhijnvis van Wijk
+971276396,34830,shared,John W. Wilkins,John Warren Wilkins
+902282995,757351,shared,Robert Michael Rich,R. Michael Rich
+936394367,757920,shared,Hellmuth Kneser,Hellmuth Kneser
+932789211,7651,shared,Johann Friedrich Pfaff,Johann Friedrich Pfaff
+915876906,101204,shared,Andrew W. Lawson,Andrew Werner Lawson
+989021801,102424,shared,John Dirk Walecka,J. Dirk Walecka
+969231035,65836,shared,Philip Morrison,Philip Morrison
+980065758,395626,shared,Matt Strassler,Matthew J. Strassler
+915443472,395642,shared,"Claude Wendell Horton, Jr.",C. Wendell Horton
+954015066,411942,shared,T.E. Schlesinger,Tuviah Ehud Schlesinger
+437663,431487,shared,Chun N. Jeanie Lau,Chun Ning (Jeanie) Lau
+928665513,83516,shared,E. T. Whittaker,Edmund Taylor Whittaker
+985162103,59076,shared,Michael P. Brenner,Michael P. Brenner
+908993047,456167,shared,Norman J Morgenstern Horing,Norman Horing
+955067450,470533,shared,Edward Linfoot,E. Hubert Linfoot
+907526443,146990,shared,T. H. Laby,Thomas Howell Laby
+940076824,491031,shared,William Lauchlin McMillan,William Lauchlin McMillan
+907406304,76676,shared,Leslie Allen,Les Allen
+969985221,529042,shared,Steve R. Blattnig,Steven R. Blattnig
+917465896,187851,shared,H. R. Krishnamurthy,Hulikal Ramaiyengar Krishnamurthy
+932938812,59538,shared,Piet Brussaard,Pieter Johannes Brussaard
+934032386,62862,shared,M. S. Bartlett,Maurice Stevenson Bartlett
+986434876,590301,shared,M. Ronen Plesser,Moshe Ronen Plesser
+975175877,76791,shared,Kenneth William Harry Stevens,Kenneth W. H. Stevens
+903850068,58928,shared,Jook Walraven,J. T. M. Walraven
+910092368,11200,shared,Frans van Schooten,"Frans van Schooten, Jr."
+926419688,23416,shared,Pieter Johannes Uylenbroek,"Pieter Johannes Uylenbroek, Jr"
+910784195,23498,shared,Jan Frederik Schouten,Jan Frederik Schouten
+978623110,23537,shared,Michał Heller,Michal Kazimierz Heller
+975607814,29738,shared,Theodor Meyer,Theodore Meyer
+922258327,48052,shared,Wilhelmus Christoffel Maria Canisius Kokke,Wil C.M.C. Kokke
+913262612,55572,shared,L G Suttorp,Leendert G. Suttorp
+962212526,56520,shared,S. Francis Boys,Samuel Francis Boys
+911468984,73250,shared,Josiah Willard Gibbs,J. Willard Gibbs
+979083765,57088,shared,Włodzisław Duch,Wlodzislaw Duch
+946829830,58022,shared,Georg Ludwig Hofacker,G. Ludwig Hofacker
+951950870,58923,shared,Godefridus Jacobus Brakenhoff,G. J. Brakenhoff
+957551709,60141,shared,J. A. Ratcliffe,John Ashworth Ratcliffe
+960645963,62859,shared,A. P. Balachandran,Aiyalam P. Balachandran
+958036818,62893,shared,J.J.J. Kokkedee,Jaap J.J. Kokkedee
+931731510,67978,shared,Chris Adami,Christoph Carl Adami
+919718391,75622,shared,Theodorus Maria Nieuwenhuizen,Theo M. Nieuwenhuizen
+973818939,76640,shared,Rob Terwiel,Robert Harko Terwiel
+983348571,77931,shared,Ergin Sezgin,Ergin Sezgin
+969823984,82148,shared,C. H. D. Buys Ballot,Christophorus Henricus Didericus Buys Ballot
+951512277,84743,shared,G. W. Pierce,George Washington Pierce
+932138245,88500,shared,A.I. van de Vooren,Adriaan Isak van de Vooren
+935926433,91328,shared,Johannes Bosscha,"Johannes Bosscha, III"
+969665578,91501,shared,Johannes Theodorus Rossijn,Johan Theodorus Rossijn
+954490544,92372,shared,Ken Pounds,Kenneth Alwyne Pounds
+964402137,93607,shared,James David Litster,J. David Litster
+917843619,72604,shared,Yurii Aleksandrovich Krutkov,Yuri Krutkov
+977676986,32829,shared,H. Christopher Longuet-Higgins,Hugh Christopher Longuet-Higgins
+749164,833428,inst,Kwang-hee Lee,Kwang Lee
+828503,226837,inst,Haimin Wang,Haimin Wang
+565622,565494,inst,Ting-Yim Lee,Ting-Yin Lee
+285094,299651,inst,Gary Godfrey,Gary L. Godfrey
+185253,81341,inst,William Rhett Davis,William Robert Davis
+726994,97071,inst,Zhong Wang,Zhong Lin Wang
+805274,286846,inst,Mauricio Sacchi,Mauricio Sacchi
+770262,715878,inst,Souvik Banerjee,Souvik Banerjee
+106022,52118,inst,Yuan-Tai (Anthony) Lee,Yuan T. Lee
+723816,139033,inst,Junling Huang,Junling Huang
+849947,849953,inst,Chuang Li,Chuang Li
+850420,850421,inst,Chun Yan Li,Chun-Yan Li
+595163,605815,inst,Xiang-rong Wang,Xiangrong Wang
+824839,833260,inst,Duo Wang,Duo Wang
+349159,348794,inst,Liliya Williams,Liliya L. R. Williams
+638202,348801,inst,Yehuda B. Zion,Yehuda Ben-Zion
+380370,431457,inst,Petrus C. H. Martens,Petrus Martens
+348945,305022,inst,Garry K. C. Clarke,Garry Kenneth Connal Clarke
+380196,349040,inst,Frits Paerels,Frits B. S. Paerels
+832402,349102,inst,Frank L. Vernon,Frank L. Vernon
+856926,857141,inst,Mubashir Khan,Mubashir Khan
+380133,349056,inst,Jeffrey D. P. Kenney,Jeffrey D. Kenney
+790204,790203,inst,Liangduan liu,Liang-Duan Liu
+740933,71279,inst,Wei-Min Zhang,Wei Zhang
+605826,395605,inst,Yonghang Zhang,Yong-Hang Zhang
+852462,850609,inst,Junlin Li,Jun-Lin Li
+565391,59163,inst,Zhixun Shen,Zhi-Xun Shen
+855932,235386,inst,Richard Raspet,Richard Raspet
+167875,767596,inst,Si-Hui Tan,Si-Hui Tan
+858652,858651,inst,Shuang Zhang,Shuang Zhang
+849954,849956,inst,Wenyi Zhu,Wen-Yi Zhu
+808481,67481,inst,Wolfgang Paul,Wolfgang Paul
+858654,728707,inst,Xiang Zhang,Xiang Zhang
+21939,821264,inst,Stephen Smith,Stephen R.P Smith
+171869,740624,inst,Chieh Chang,Chieh-feng Chang
+860426,73496,inst,Bo-Hai Li,Bo-Hong Li
+837654,774571,inst,Sumathi Rao,Sumathi Rao
+789486,164945,inst,John David Anderson,John D. Anderson
+203656,169708,inst,Vahe' Petrosian,Vahe Petrosian
+499023,750637,inst,David C. Walker,David Walker
+772813,772812,inst,Sunethra Ratnakar Srinivas,Sunethra Ratnakar Srinivas
+730108,730110,inst,Yuan Li,Yuan Li
+816279,716945,inst,AseshKrishna Datta,Aseshkrishna Datta
+746154,176758,inst,Jean-Luc Margot,Jean-Luc Margot
+925746387,176758,inst,Jean-Luc Margot,Jean-Luc Margot
+754472,176943,inst,Tong Zhou,Tong Zhou
+552158,176753,inst,Hong-Wen Jiang,Hongwen Jiang
+808382,808383,inst,Wei Liu,Wei Liu
+830790,179442,inst,James Erik Aguirre,James Aguirre
+50068,583237,inst,Clare C. Yu,Clare Yu
+714897,180788,inst,Kunal Kumar,Kunal Kumar
+384136,176747,inst,Brad M. S. Hansen,Brad Hansen
+850432,850431,inst,Hai-Rui Wei,Hai-Rui Wei
+491126,869836,inst,Feng Liu,Feng Liu
+869836,55311,inst,Feng Liu,Feng Liu
+764146,735727,inst,Ao Li,Ao Li
+542260,213955,inst,Stephen McKeever,Stephen W. S. McKeever
+809995,221354,inst,Andrea Damascelli,Andrea Damascelli
+836423,176750,inst,Huan Huang,Huan Huang
+396089,235439,inst,"Roger A. Pielke, Sr",Roger Pielke
+249762,587768,inst,John E. Moore-Furneaux,John E. Furneaux
+789249,177452,inst,Jonas Stasys Zmuidzinas,Jonas Zmuidzinas
+807956,807965,inst,Zihan Chen,Zihan Chen
+859582,859581,inst,David Goldberg,David Goldberg
+767829,273099,inst,James Moeller Schombert,James Schombert
+725825,273199,inst,Larry Widrow,Larry Widrow
+770656,770104,inst,Santo Lunardi,Santo Lunardi
+13697,10612,inst,Michael Levine,Michael S. Levine
+777404,777405,inst,marianette wospakrik,Marianette Wospakrik
+813107,779149,inst,Kenjiro Yamakawa,Kenjiro Yamakawa
+783981,783984,inst,Luis Gabriel Dahmer,Luis Gabriel Dahmer
+784945,784944,inst,Niek F. van,Niek F. van
+785514,785513,inst,Egor Aleksandrovich Litvinov,Egor Aleksandrovich Litvinov
+734715,786351,inst,Jun Zhu,Jun Zhu
+786881,786882,inst,Robin Grimes,Robin William Grimes
+605726,787333,inst,M Suhail Zubairy,M. Suhail Zubairy
+855868,792182,inst,Smitha Vasudevan,Smitha Vasudevan .
+622862,443729,inst,Lai W. Helen Chan-Wong,Lai-wa H. Chan Wong
+438419,797196,inst,Lin Han,Lin Han
+798242,797583,inst,Gholam Hossein Bordbar,Gholam Hossein Bordbar
+798179,798180,inst,Zeinab Rezaei,Zeinab Rezaei
+798437,798438,inst,Haim Beidenkopf,Haim Beidenkopf
+802040,802041,inst,Donald Galliardt,Donald Galliardt
+823537,802247,inst,Igor V Minin,Igor V Minin
+802384,802383,inst,Paul W. M.,Paul W. M.
+831375,804759,inst,Bruce E Carlsten,Bruce Carlsten
+71961,805420,inst,Niccolo Corsini,Niccolo R. C. Corsini
+805723,805722,inst,matthew R. C.,Matthew R. C.
+805725,805722,inst,Matthew R. C.,Matthew R. C.
+842498,34408,inst,Johann Theodor Meyer,Johann Tobias Meyer
+685315,810713,inst,Jose MG Gomez,José María Gómez Gómez
+809996,380315,inst,Daniel Dessau,Daniel S. Dessau
+810149,73945,inst,Peter Pershan,Peter S. Pershan
+817629,817630,inst,arnon dar,Arnon Dar
+982566929,817630,inst,Arnon Dar,Arnon Dar
+819992,819991,inst,David Cesar,David Cesar
+529820,822258,inst,Arnold Tubis,Arnold Tubis
+822512,822510,inst,Afonso Duarte Leão,Afonso Duarte Leão
+822516,822510,inst,Afonso Duarte Leão,Afonso Duarte Leão
+822517,822510,inst,Afonso Duarte Leão,Afonso Duarte Leão
+823372,823373,inst,Glenn Orton,Glenn S. Orton
+859908,838642,inst,Rafael Calvo,Rafael Alejandro Calvo
+824183,764216,inst,Frederick W Smith,Frederick William Smith
+825496,826093,inst,Antonio Dobado,Antonio Dobado
+831381,187864,inst,Tomonari Miyashita,Tomonari Scott (Tomo) Miyashita
+832799,832800,inst,Gösta Gustafson,Gösta Gustafson
+835131,835195,inst,Denis Bulaev,Denis Bulaev
+390057,838138,inst,Ling-Nian Zou,Ling-Nan Zou
+844437,249759,inst,David Julian Sellmyer,David Julian Sellmyer
+687305,850280,inst,Brian J. Kirby,Brian Kirby
+850600,850602,inst,Yongchao Tang,Yong-chao Tang
+851233,851231,inst,Dr Sreedhar B,Dr Sreedhar B
+851231,851234,inst,Dr Sreedhar B,Dr Sreedhar B
+628067,851478,inst,Allen L. Landers,Allen L Landers
+742169,852094,inst,Kaniba Mady KEITA,Kaniba Mady KEITA
+525999,854160,inst,Carlos A. R. Sa,Carlos A. Sa
+856922,856931,inst,Antonio Capolupo,Antonio Capolupo
+856970,856969,inst,Andrea Shay Reber,Andrea Shay Reber
+860128,619452,inst,Onofre T DeJesus,Onofre DeJesus
+861500,861501,inst,Katherine W Tripp,Katherine W Tripp
+464087,864543,inst,Andrew B. Newman,Andrew Newman
+864927,864924,inst,"Magdaleno R. Vasquez,","Magdaleno R. Vasquez,"
+864924,864928,inst,"Magdaleno R. Vasquez,","Magdaleno R. Vasquez,"
+869819,869820,inst,Arturo Lopez Ariste,Arturo Lopez Ariste
+870385,870384,inst,Anish Thomas,Anish Thomas
+874439,874438,inst,Paul A.,Paul A.
+874445,874444,inst,Duane H Jaecks,Duane H Jaecks
+874444,594992,inst,Duane H Jaecks,Duane H. Jaecks
+874875,64574,inst,William D Nix,William D. Nix
+948661177,64574,inst,William D. Nix,William D. Nix
+635420,635419,inst,Prescott B. Chase,Prescott B. Chase
+635421,635422,inst,Jingbiao Cui,Jingbiao Cui
+635424,635423,inst,Edward H. Snell,Edward H. Snell
+635425,635426,inst,Kurt Cuffy,Kurt Cuffy
+635428,635427,inst,Heriberto D. Cerutti,Heriberto D. Cerutti
+635429,635430,inst,John E. Wyatt,John E. Wyatt
+635432,635431,inst,Zoran Ninkov,Zoran Ninkov
+635434,635433,inst,Sobolewski Roman,Sobolewski Roman
+635436,635435,inst,Paul F. Castellanos,Paul F. Castellanos
+635438,635437,inst,Michael S. Cosgrove,Michael S. Cosgrove
+635440,635439,inst,Artem R. Oganov,Artem R. Oganov
+635442,635441,inst,Eric A. D'Asaro,Eric A. D'Asaro
+635444,635443,inst,Matthew C. Trudau,Matthew C. Trudau
+635445,635446,inst,A Peter Klimley,A Peter Klimley
+625308,635461,inst,Earl E.Scime,Earl Scime
+723114,395561,inst,Louis Clavelli,Louis John Clavelli
+764073,764074,inst,T.S. (宗燧) Chang,T.S. (宗燧) Chang (张)
+556768,629257,inst,J Kevin Ingersent,J. Kevin Ingersent
+144325,594949,inst,Thomas I. Banks,Thomas Israel Banks
+577918,552157,inst,Henri J. F. Jansen,Henri Jansen
+582046,749721,inst,Francisco M. Morales Sanchez,Francisco Sanchez
+686198,737222,inst,Muad Ghaith,Muad Mohammad Ghaith
+448870,300436,inst,Laura J. Pyrak Nolte,Laura J. Pyrak-Nolte
+726995,25174,inst,"Benjamin Silliman, Jr.","Benjamin Silliman, Sr."
+732838,728148,inst,Alexander Bratch,Alexander Bratch
+728510,728511,inst,Prabhakar Damodar Prabhawalkar,Prabhakar Damodar Prabhawalkar
+459853,729000,inst,Daniel Haskel,Daniel Haskel
+732052,729864,inst,Ngoc Duc Doan,Ngoc Duc Doan
+735691,735690,inst,Juan K.,Juan K.
+736135,736134,inst,Shadab Ahamed,Shadab Ahamed
+737317,460029,inst,Michel Meunier,Michel Meunier
+741125,741128,inst,Ian M. Ward,Ian Macmillan Ward
+742388,742387,inst,David E J,David E J
+748923,748922,inst,Jairzinho Ramos,Jairzinho Ramos
+749747,749748,inst,jon Verlander,Jon Verlander
+754937,754936,inst,Juhani Huovelin,Juhani Huovelin
+757124,767690,inst,Will Steinhardt,Will Steinhardt
+759456,759455,inst,Md Kamrul Hoque Ome,Md Kamrul Hoque Ome
+760638,760637,inst,M. M. Makhlouf,M. M. Makhlouf
+764075,764076,inst,Min (敏) Yu,Min (敏) Yu (于)
+766694,767039,inst,Luis Foà Torres,Luis Foà-Torres
+768879,768878,inst,Loyal Durand,loyal durand
+516185,769206,inst,Fereydoon Family,Fereydoon Family
+769209,769210,inst,Mihail Popescu,Mihail N. Popescu
+448938,381193,inst,Daniel B. Kim Shapiro,Daniel B. Kim-Shapiro
+398902,384158,inst,Remco Zegers,Remco G. T. Zegers
+448941,393096,inst,Itzik B. Itzhak,Itzik Ben-Itzhak
+972738640,393096,inst,Itzik Ben-Itzhak,Itzik Ben-Itzhak
+443740,393194,inst,Jc Beall,J C. Beall
+398971,380287,inst,Kenneth P. Ritchie,Kenneth P. Ritchie
+625300,437452,inst,Michael S. Lysel,Michael S. Van Lysel
+437618,437552,inst,Joris J. J. Dirckx,Joris Dirckx
+625377,443601,inst,R.John Solaro,R John Solaro
+583284,456167,inst,Norman J. M. Horing,Norman Horing
+456203,143560,inst,"Milo W. Hyde, IV",Milo W. Hyde
+619402,491219,inst,James M. E. Harper,James McKell Edwin Harper
+607930,480028,inst,Shun-Lien Chuang,Shun L. Chuang
+519473,628022,inst,Douglas M. Pease,Douglas M Pease
+619456,538735,inst,Jose' M. Sasian,Jose Sasian
+573139,542263,inst,Leo W. Ming Lau,Leo W. M. Lau
+583325,556747,inst,Bettie S. S. Masters,Bettie S. Siler Masters
+565633,565632,inst,Michael L. W. Thewalt,Michael Thewalt
+583286,583320,inst,Ruirui Du,Rui-Rui Du
+595147,595117,inst,Paula Heron,Paula R. L. Heron
+615697,605794,inst,Darren J. G. Craig,Darren J G Craig
+605853,78981,inst,Andreas W. W. Ludwig,Andreas Ludwig
+622886,607938,inst,Michael M. T. Loy,Michael Loy
+628093,615646,inst,Alejandro Alvarez-Melcon,Alejandro A. Melcon
+80274,23306,inst,"Theodor Zwinger, III","Theodor Zwinger, Sr."
+77994,77931,inst,Ergin Sezgin,Ergin Sezgin

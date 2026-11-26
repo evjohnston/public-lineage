@@ -15,7 +15,9 @@ import pandas as pd
 from dotenv import dotenv_values
 
 ROOT = Path(__file__).resolve().parents[1]
-EXT = ROOT / "data" / "external"
+import sys as _sys; _sys.path.insert(0, str(ROOT / "scripts"))
+from field import WORK, EXPL, DOCS, FIELD, CFG, AUTHORPUB  # noqa: E402,F401
+EXT = WORK / "data" / "external"
 AFF = EXT / "orcid_affiliations.parquet"
 ENV = dotenv_values(ROOT / ".env")
 UA = {"User-Agent": "academic-lineage-research/0.1", "Accept": "application/json"}
@@ -36,10 +38,19 @@ def year(d, k):
 
 
 def main():
-    aff = pd.read_parquet(AFF)
+    # a field built without the bulk summaries file starts from an empty table
+    cols = ["orcid", "given_names", "family_name", "kind", "organization", "city", "country", "department", "role", "start_year", "end_year", "known"]
+    aff = pd.read_parquet(AFF) if AFF.exists() else pd.DataFrame(columns=cols)
     have = set(aff.orcid)
     oa = pd.read_parquet(EXT / "openalex_authors.parquet")
-    want = sorted({o for o in oa.orcid.dropna() if o not in have})
+    ids = set(oa.orcid.dropna())
+    if not AFF.exists():  # no bulk pass: also take the iDs the Academic Family Tree records
+        import re, duckdb
+        con = duckdb.connect(str(WORK / "data" / "lineage.duckdb"), read_only=True)
+        for (v,) in con.execute("SELECT orcid_id FROM aft_people WHERE orcid_id IS NOT NULL").fetchall():
+            ids |= set(re.findall(r"\d{4}-\d{4}-\d{4}-\d{3}[\dX]", v))
+        con.close()
+    want = sorted(o for o in ids if o not in have)
     print(f"{len(want):,} ORCID iDs to fetch", flush=True)
     H = {**UA, "Authorization": f"Bearer {token()}"}
     rows = []

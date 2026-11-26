@@ -14,3 +14,10 @@ data/external/*.json
 docs/drafts/
 .impeccable/hook.cache.json
 .claude/settings.local.json
+# other fields (scripts/build_field.sh): same rules under fields/<field>/
+fields/*/data/*.duckdb
+fields/*/data/*.duckdb.wal
+fields/*/data/*.parquet
+fields/*/data/external/*.parquet
+fields/*/data/external/*.json
+fields/*/logs/
