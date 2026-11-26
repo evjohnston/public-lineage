@@ -1406,7 +1406,7 @@
 
   async function netData() {
     if (NET.data) return NET.data;
-    const res = await fetch(DATA + "network.json");
+    const res = await fetch(DATA + "network.json", { cache: "no-cache" });
     if (!res.ok) throw new Error(DATA + "network.json: " + res.status);
     const d = await res.json();
     for (const [id, comp, deg, pr, bt, ev, core, x, y, z] of d.nodes) {
@@ -2555,7 +2555,7 @@
     const n = notice(`<h2>Loading the ${FLD.lower} tree</h2><p>Reading the people and their advisor links.</p>`, "loading");
     let data;
     try {
-      const res = await fetch(DATA + "lineage.json");
+      const res = await fetch(DATA + "lineage.json", { cache: "no-cache" });
       if (!res.ok) throw new Error(res.status + " " + res.statusText);
       data = await res.json();
     } catch (err) {
@@ -2570,15 +2570,15 @@
       return;
     }
     try {
-      const res = await fetch(DATA + "context.json");
+      const res = await fetch(DATA + "context.json", { cache: "no-cache" });
       if (res.ok) loadContext(await res.json());
     } catch (err) { console.warn("context.json not loaded; schools and institutions are unavailable", err); }
     try {
-      const res = await fetch(DATA + "careers.json");
+      const res = await fetch(DATA + "careers.json", { cache: "no-cache" });
       if (res.ok) CAREERS = await res.json();
     } catch (err) { console.warn("careers.json not loaded", err); }
     try {
-      const res = await fetch(DATA + "coauthors.json");
+      const res = await fetch(DATA + "coauthors.json", { cache: "no-cache" });
       if (res.ok) loadCoauthors(await res.json());
     } catch (err) { console.warn("coauthors.json not loaded; co-author views are unavailable", err); }
     await document.fonts.ready;
